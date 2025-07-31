@@ -56,6 +56,25 @@ class CustomLogoutView(LogoutView):
         return super().dispatch(request, *args, **kwargs)
 
 
+def user_profile_view(request, username):
+    """
+    View for displaying other users' profiles.
+    """
+    viewed_user = get_object_or_404(User, username=username)
+    profile = viewed_user.profile
+    solutions = Solution.objects.filter(
+        author=viewed_user,
+        is_published=True
+    ).order_by('-created_at')
+
+    context = {
+        'viewed_user': viewed_user,
+        'profile': profile,
+        'solutions': solutions,
+    }
+
+    return render(request, 'users/user_profile.html', context)
+
 @login_required
 def profile_view(request):
     """
@@ -96,20 +115,6 @@ def account_delete_view(request):
     
     return render(request, 'users/account_delete.html', {'form': form})
 
-
-def user_profile_view(request, username):
-    """
-    View for displaying other users' profiles.
-    """
-    user = get_object_or_404(User, username=username)
-    profile = user.profile
-    solutions = Solution.objects.filter(author=user).order_by('-created_at')
-
-    return render(request, 'users/profile.html', {
-        'profile': profile,
-        'solutions': solutions,
-        'viewed_user': user
-    })
 
 class CustomPasswordResetView(PasswordResetView):
     """

@@ -164,6 +164,27 @@
         border-top: 1px solid rgba(0,0,0,0.05);
     }
 
+    .solution-summary {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin: 0.75rem 0;
+        line-height: 1.5;
+    }
+
+    .solution-summary:before {
+        content: '"';
+        font-size: 1.2em;
+        color: var(--primary);
+        margin-right: 0.2rem;
+    }
+
+    .solution-summary:after {
+        content: '"';
+        font-size: 1.2em;
+        color: var(--primary);
+        margin-left: 0.2rem;
+    }
+
     @media (max-width: 768px) {
         .search-card {
             margin-top: 0;
@@ -260,72 +281,50 @@
             <!-- Solutions Feed -->
             <div class="solutions-feed">
                 {% for solution in page_obj %}
-                    <div class="card solution-card">
+                    <div class="card solution-card mb-4">
                         <div class="card-body">
-                            <div class="author-info mb-3">
-                                {% if solution.author.profile.profile_image %}
-                                    <img src="{{ solution.author.profile.profile_image.url }}" alt="{{ solution.author.username }}" class="author-avatar">
-                                {% else %}
-                                    <div class="author-avatar">
-                                        {{ solution.author.username.0|upper }}
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h2 class="h5 card-title mb-0">
+                                    <a href="{% url 'solutions:detail' solution.slug %}" class="text-decoration-none">
+                                        {{ solution.title }}
+                                    </a>
+                                </h2>
+                                {% if solution.get_average_rating > 0 %}
+                                    <div class="text-warning">
+                                        <i class="bi bi-star-fill"></i> {{ solution.get_average_rating }}
                                     </div>
                                 {% endif %}
-                                <div>
-                                    <span class="author-name">{{ solution.author.username }}</span>
-                                    <div class="text-muted small">{{ solution.created_at|date:"M d, Y" }}</div>
-                                </div>
                             </div>
 
-                            <h2 class="h5 card-title mb-3">
-                                <a href="{% url 'solutions:detail' solution.slug %}">{{ solution.title }}</a>
-                            </h2>
+                            {% if solution.summary %}
+                                <div class="solution-summary">
+                                    {{ solution.summary }}
+                                </div>
+                            {% endif %}
 
-                            <p class="card-text text-muted mb-3">
-                                {{ solution.content|truncatechars:150 }}
-                            </p>
-
-                            <div class="tags-container mb-3">
+                            <div class="d-flex flex-wrap gap-2 mb-3">
                                 {% for tag in solution.tags.all %}
-                                    <a href="{% url 'solutions:list' %}?tags={{ tag.name }}" class="tag-badge">
+                                    <a href="{% url 'solutions:list' %}?tags={{ tag.name }}" class="badge bg-primary text-decoration-none">
                                         {{ tag.name }}
                                     </a>
                                 {% endfor %}
                             </div>
-                        </div>
 
-                        <div class="solution-meta">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="solution-stats">
-                                    <!-- Rating -->
-                                    <div class="stat-item">
-                                        <div class="mini-rating">
-                                            {% if solution.get_average_rating > 0 %}
-                                                <i class="bi bi-star-fill stars"></i>
-                                                <span class="rating-value">{{ solution.get_average_rating }}</span>
-                                                <small class="text-muted">({{ solution.get_rating_count }})</small>
-                                            {% else %}
-                                                <i class="bi bi-star text-muted"></i>
-                                                <small class="text-muted">Not rated</small>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <!-- Comment count -->
-                                    <div class="stat-item">
-                                        <i class="bi bi-chat-left-text"></i>
-                                        <span>{{ solution.comments.count }}</span>
-                                    </div>
-
-                                    <!-- View count -->
-                                    <div class="stat-item">
-                                        <i class="bi bi-eye"></i>
-                                        <span>{{ solution.view_count }}</span>
-                                    </div>
+                            <div class="d-flex justify-content-between align-items-center text-muted small">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person me-2"></i>
+                                    <a href="{% url 'users:user_profile' username=solution.author.username %}" class="text-decoration-none">
+                                        {{ solution.author.username }}
+                                    </a>
                                 </div>
-
-                                <a href="{% url 'solutions:detail' solution.slug %}" class="btn btn-sm btn-outline-primary">
-                                    Read More
-                                </a>
+                                <div class="d-flex gap-3">
+                                    <span title="{{ solution.created_at|date:'Y-m-d H:i' }}">
+                                        <i class="bi bi-calendar me-1"></i> {{ solution.created_at|date:"M d, Y" }}
+                                    </span>
+                                    <span>
+                                        <i class="bi bi-eye me-1"></i> {{ solution.view_count }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>

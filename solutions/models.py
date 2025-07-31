@@ -8,11 +8,12 @@ import difflib
 import uuid
 
 from tags.models import Tag
+from .ai_services import generate_summary
 
 
 class Solution(models.Model):
     """
-    Model for storing solutions with markdown content.
+    Model for storing solutions with markdown content and AI-generated summaries.
     """
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, allow_unicode=False)
@@ -22,7 +23,8 @@ class Solution(models.Model):
     # We'll store the current version's content here for quick access
     content = models.TextField()
     content_html = models.TextField(editable=False, blank=True)
-    
+    summary = models.TextField(editable=False, blank=True, help_text="AI-generated summary of the solution")
+
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -49,7 +51,7 @@ class Solution(models.Model):
                 self.slug = f"{original_slug}-{counter}"
                 counter += 1
         
-        # Convert markdown to HTML
+        # Generate HTML from markdown
         self.content_html = markdown.markdown(
             self.content,
             extensions=[
@@ -60,6 +62,18 @@ class Solution(models.Model):
             ]
         )
         
+        # Generate summary if this is a new solution or content has changed
+        if not self.pk or 'content' in kwargs.get('update_fields', []) or kwargs.get('force_summary', False):
+            from .ai_services import generate_summary
+            self.summary = generate_summary(self.content)
+
+            # Make sure summary is included in update_fields if it's being used
+            if 'update_fields' in kwargs:
+                kwargs['update_fields'] = list(kwargs['update_fields']) + ['summary']
+
+        # Remove force_summary from kwargs if it exists
+        kwargs.pop('force_summary', None)
+
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
