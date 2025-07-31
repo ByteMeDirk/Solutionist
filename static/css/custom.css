@@ -1,0 +1,123 @@
+/* Solutionist Custom Theme - Purple & Black */
+
+:root {
+  /* Primary colors */
+  --primary: #6f42c1;        /* Purple */
+  --primary-dark: #5a32a3;   /* Darker Purple */
+  --primary-light: #8c68d6;  /* Lighter Purple */
+
+  /* Secondary colors */
+  --secondary: #212529;      /* Dark Gray (almost black) */
+  --secondary-light: #343a40; /* Lighter Gray */
+  --secondary-dark: #121416; /* Darker Gray (closer to black) */
+
+  /* Accent colors */
+  --accent: #fd7e14;         /* Orange for accents */
+  --success: #20c997;        /* Teal for success messages */
+  --danger: #dc3545;         /* Red for errors */
+  --warning: #ffc107;        /* Yellow for warnings */
+  --info: #0dcaf0;           /* Cyan for info messages */
+
+  /* Background and text colors */
+  --bg-dark: #121212;        /* Dark background */
+  --bg-light: #f8f9fa;       /* Light background */
+  --text-dark: #212529;      /* Dark text */
+  --text-light: #f8f9fa;     /* Light text */
+}
+
+/* Override Bootstrap colors */
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--secondary) !important;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.text-secondary {
+  color: var(--secondary) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+  background-color: var(--secondary-light);
+  border-color: var(--secondary-light);
+}
+
+/* Custom navbar styling */
+.navbar-dark {
+  background-color: var(--secondary-dark);
+}
+
+.navbar-dark .navbar-brand {
+  color: var(--primary-light);
+}
+
+.navbar-dark .nav-link {
+  color: var(--text-light);
+}
+
+.navbar-dark .nav-link:hover {
+  color: var(--primary-light);
+}
+
+/* Custom card styling */
+.card {
+  border-color: var(--secondary-light);
+}
+
+.card-header {
+  background-color: var(--secondary-light);
+  color: var(--text-light);
+}
+
+/* Custom footer styling */
+footer {
+  background-color: var(--secondary-dark);
+  color: var(--text-light);
+}
+
+/* Custom link styling */
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+/* Custom form styling */
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+}
+
+/* Custom badge styling */
+.badge.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+/* Custom alert styling */
+.alert-primary {
+  background-color: rgba(111, 66, 193, 0.1);
+  border-color: rgba(111, 66, 193, 0.2);
+  color: var(--primary-dark);
+}

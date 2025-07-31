@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Solutionist{% endblock %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-4 fw-bold text-primary">Solutionist</h1>
+    <div class="col-lg-8 mx-auto">
+        <p class="lead mb-4">
+            A modern, collaborative, developer-focused solution-sharing platform inspired by StackOverflow
+            but with a gist-like solutions repository.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="/solutions/" class="btn btn-primary btn-lg px-4 gap-3">Browse Solutions</a>
+            <a href="/solutions/create/" class="btn btn-outline-secondary btn-lg px-4">Share a Solution</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4 py-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">Find Solutions</h3>
+                    <p class="card-text">
+                        Discover high-quality, well-documented solutions to common programming problems.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">Share Knowledge</h3>
+                    <p class="card-text">
+                        Contribute your expertise by sharing solutions with the developer community.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">Collaborate</h3>
+                    <p class="card-text">
+                        Improve existing solutions through comments, suggestions, and version control.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

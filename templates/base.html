@@ -1,0 +1,117 @@
+{% load django_bootstrap5 %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Solutionist{% endblock %}</title>
+
+    {# Bootstrap CSS #}
+    {% bootstrap_css %}
+
+    {# Custom CSS #}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    {# Additional CSS block for page-specific styles #}
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {# Navigation #}
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <strong>Solutionist</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/solutions/">Solutions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags/">Tags</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="/users/profile/">Profile</a></li>
+                                <li><a class="dropdown-item" href="/users/settings/">Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/users/logout/">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users/login/">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users/register/">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {# Main content #}
+    <main class="container py-4">
+        {# Messages #}
+        {% bootstrap_messages %}
+
+        {# Content block for page-specific content #}
+        {% block content %}{% endblock %}
+    </main>
+
+    {# Footer #}
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Solutionist</h5>
+                    <p>A modern, collaborative, developer-focused solution-sharing platform.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/about/">About</a></li>
+                        <li><a href="/privacy/">Privacy Policy</a></li>
+                        <li><a href="/terms/">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Connect</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/solutionist" target="_blank">GitHub</a></li>
+                        <li><a href="https://twitter.com/solutionist" target="_blank">Twitter</a></li>
+                        <li><a href="/contact/">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; {% now "Y" %} Solutionist. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    {# Bootstrap JavaScript #}
+    {% bootstrap_javascript %}
+
+    {# Additional JavaScript block for page-specific scripts #}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,55 @@
+[project]
+name = "solutionist"
+version = "0.1.0"
+description = "A modern, collaborative, developer-focused solution-sharing platform"
+authors = [
+    {name = "Solutionist Team"}
+]
+readme = "README.md"
+requires-python = "^3.9"
+dependencies = [
+    "django (<5.0)",
+    "django-bootstrap5 (>=25.2,<26.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.1"
+flake8 = "^7.3.0"
+pytest = "^8.4.1"
+pre-commit = "^4.2.0"
+pytest-django = "^4.11.1"
+pytest-cov = "^6.2.1"
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+skip_glob = ["*/migrations/*", "*/settings/*"]
