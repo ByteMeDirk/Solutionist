@@ -20,6 +20,25 @@ class Tag(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
+        # Convert name to lowercase before saving
+        self.name = self.name.lower()
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    @classmethod
+    def get_or_create_tags(cls, tag_names):
+        """
+        Get or create tags from a list of names.
+        Handles case sensitivity and returns a list of Tag objects.
+        """
+        tags = []
+        for name in tag_names:
+            name = name.strip().lower()
+            if name:
+                tag, _ = cls.objects.get_or_create(
+                    name=name,
+                    defaults={'slug': slugify(name)}
+                )
+                tags.append(tag)
+        return tags

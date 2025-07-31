@@ -55,56 +55,42 @@ class SolutionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
-        instance = kwargs.get('instance', None)
         super().__init__(*args, **kwargs)
 
-        # If we're editing an existing solution, pre-populate the tags input
-        if instance:
-            self.initial['tags_input'] = ', '.join([tag.name for tag in instance.tags.all()])
-
-        # Make change_comment field required only when editing existing solutions
-        if instance:
-            self.fields['change_comment'].required = True
+        if self.instance.pk:
+            # Pre-populate tags field when editing
+            self.initial['tags_input'] = ','.join(tag.name for tag in self.instance.tags.all())
 
     def clean_tags_input(self):
-        """Validate that at least 5 tags are provided."""
-        tags_text = self.cleaned_data.get('tags_input', '').strip()
-        tag_list = [t.strip() for t in tags_text.split(',') if t.strip()]
+        tags_input = self.cleaned_data.get('tags_input', '')
+        tag_names = [name.strip() for name in tags_input.split(',') if name.strip()]
 
-        if len(tag_list) < 5:
-            raise ValidationError("Please provide at least 5 tags to categorize your solution.")
+        if len(tag_names) < 5:
+            raise ValidationError("Please provide at least 5 tags.")
 
-        return tags_text
+        return tag_names
 
     def save(self, commit=True):
         solution = super().save(commit=False)
 
-        if not solution.pk:  # New solution
+        if not solution.pk:  # If creating new solution
             solution.author = self.user
 
         if commit:
             solution.save()
 
-            # Process tags
-            if 'tags_input' in self.cleaned_data:
-                tags_text = self.cleaned_data['tags_input']
-                tag_names = [tag.strip() for tag in tags_text.split(',') if tag.strip()]
+            # Handle tags using the new get_or_create_tags method
+            tag_names = self.cleaned_data.get('tags_input', [])
+            tags = Tag.get_or_create_tags(tag_names)
+            solution.tags.set(tags)
 
-                # Clear existing tags if editing
-                solution.tags.clear()
-
-                # Add tags, creating new ones if needed
-                for tag_name in tag_names:
-                    tag, created = Tag.objects.get_or_create(name=tag_name)
-                    solution.tags.add(tag)
-
-            # Create a version record for this save
-            SolutionVersion.objects.create(
-                solution=solution,
-                content=solution.content,
-                created_by=self.user,
-                change_comment=self.cleaned_data.get('change_comment', "Updated solution")
-            )
+            # Create version history if this is an edit
+            if solution.pk and self.cleaned_data.get('change_comment'):
+                SolutionVersion.objects.create(
+                    solution=solution,
+                    content=solution.content,
+                    comment=self.cleaned_data['change_comment']
+                )
 
         return solution
 

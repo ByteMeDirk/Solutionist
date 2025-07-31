@@ -168,20 +168,20 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="stats-card shadow-sm">
-                    <div class="stats-number">500+</div>
-                    <div class="stats-label">Solutions Shared</div>
+                    <div class="stats-number">{{ stats.solution_count }}</div>
+                    <div class="stats-label">{% if stats.solution_count == 1 %}Solution{% else %}Solutions{% endif %} Shared</div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stats-card shadow-sm">
-                    <div class="stats-number">1.2K+</div>
-                    <div class="stats-label">Developers</div>
+                    <div class="stats-number">{{ stats.user_count }}</div>
+                    <div class="stats-label">{% if stats.user_count == 1 %}Developer{% else %}Developers{% endif %}</div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stats-card shadow-sm">
-                    <div class="stats-number">24</div>
-                    <div class="stats-label">Languages</div>
+                    <div class="stats-number">{{ stats.language_count }}</div>
+                    <div class="stats-label">{% if stats.language_count == 1 %}Language{% else %}Languages{% endif %}</div>
                 </div>
             </div>
         </div>
