@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 
 from .forms import UserRegistrationForm, CustomAuthenticationForm, UserProfileForm, UserDeleteForm
 from .models import UserProfile
+from solutions.models import Solution
 
 
 class RegisterView(CreateView):
@@ -95,6 +96,20 @@ def account_delete_view(request):
     
     return render(request, 'users/account_delete.html', {'form': form})
 
+
+def user_profile_view(request, username):
+    """
+    View for displaying other users' profiles.
+    """
+    user = get_object_or_404(User, username=username)
+    profile = user.profile
+    solutions = Solution.objects.filter(author=user).order_by('-created_at')
+
+    return render(request, 'users/profile.html', {
+        'profile': profile,
+        'solutions': solutions,
+        'viewed_user': user
+    })
 
 class CustomPasswordResetView(PasswordResetView):
     """

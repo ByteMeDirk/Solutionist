@@ -12,7 +12,8 @@ urlpatterns = [
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
     
     # Profile management URLs
-    path('profile/', views.profile_view, name='profile'),
+    path('profile/', views.profile_view, name='profile'),  # Own profile
+    path('profile/<str:username>/', views.user_profile_view, name='user_profile'),  # Other user's profile
     path('delete/', views.account_delete_view, name='delete'),
     
     # Password reset URLs

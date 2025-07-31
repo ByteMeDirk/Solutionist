@@ -320,14 +320,16 @@
                     <!-- Author Info -->
                     <div class="author-info">
                         {% if solution.author.profile.profile_image %}
-                            <img src="{{ solution.author.profile.profile_image.url }}" alt="{{ solution.author.username }}" class="author-avatar">
+                            <a href="{% url 'users:user_profile' username=solution.author.username %}">
+                                <img src="{{ solution.author.profile.profile_image.url }}" alt="{{ solution.author.username }}" class="author-avatar">
+                            </a>
                         {% else %}
-                            <div class="avatar-placeholder">
+                            <a href="{% url 'users:user_profile' username=solution.author.username %}" class="author-avatar d-flex align-items-center justify-content-center">
                                 {{ solution.author.username.0|upper }}
-                            </div>
+                            </a>
                         {% endif %}
-                        <div>
-                            <div class="author-name">{{ solution.author.username }}</div>
+                        <div class="d-flex flex-column">
+                            <a href="{% url 'users:user_profile' username=solution.author.username %}" class="author-name text-decoration-none">{{ solution.author.username }}</a>
                             <div class="text-muted">
                                 Posted on {{ solution.created_at|date:"M d, Y" }}
                                 {% if solution.created_at != solution.updated_at %}
@@ -389,16 +391,21 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         {% if solution.author.profile.profile_image %}
-                            <img src="{{ solution.author.profile.profile_image.url }}" alt="{{ solution.author.username }}"
-                                 class="rounded-circle me-3" width="64" height="64" style="object-fit: cover;">
+                            <a href="{% url 'users:user_profile' username=solution.author.username %}">
+                                <img src="{{ solution.author.profile.profile_image.url }}" alt="{{ solution.author.username }}"
+                                     class="rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
+                            </a>
                         {% else %}
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
-                                 style="width: 64px; height: 64px; font-size: 1.5rem;">
+                            <a href="{% url 'users:user_profile' username=solution.author.username %}"
+                               class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                               style="width: 64px; height: 64px; text-decoration: none;">
                                 <span>{{ solution.author.username.0|upper }}</span>
-                            </div>
+                            </a>
                         {% endif %}
-                        <div>
-                            <h5 class="mb-0">{{ solution.author.username }}</h5>
+                        <div class="ms-3">
+                            <a href="{% url 'users:user_profile' username=solution.author.username %}" class="text-decoration-none">
+                                <h5 class="mb-0">{{ solution.author.username }}</h5>
+                            </a>
                             <div class="text-muted">
                                 Member since {{ solution.author.date_joined|date:"M Y" }}
                             </div>
