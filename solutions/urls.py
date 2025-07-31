@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import ratings_views
 
 app_name = 'solutions'
 
@@ -19,4 +20,8 @@ urlpatterns = [
     path('<slug:slug>/history/', views.solution_history, name='history'),
     path('<slug:slug>/version/<int:version_number>/', views.solution_version, name='version'),
     path('<slug:slug>/compare/', views.solution_compare, name='compare'),
+
+    # Rating functionality
+    path('<slug:slug>/rate/', ratings_views.rate_solution, name='rate'),
+    path('<slug:slug>/unrate/', ratings_views.delete_rating, name='unrate'),
 ]

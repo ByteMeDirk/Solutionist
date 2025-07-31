@@ -26,9 +26,9 @@ urlpatterns = [
     path("", include("core.urls")),
     path("users/", include("users.urls")),
     path("solutions/", include("solutions.urls")),
-    # path("tags/", include("tags.urls")),
-    # path("comments/", include("comments.urls")),
-    
+    path("tags/", include("tags.urls")),
+    path("comments/", include("comments.urls")),
+
     # Markdownx
     path('markdownx/', include('markdownx.urls')),
 ]

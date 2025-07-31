@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Solution, SolutionVersion
+from .ratings import Rating
 
 
 class SolutionVersionInline(admin.TabularInline):
@@ -72,3 +73,11 @@ class SolutionVersionAdmin(admin.ModelAdmin):
     
     def has_add_permission(self, request):
         return False  # Don't allow adding versions directly through the admin
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ('solution', 'user', 'value', 'created_at')
+    list_filter = ('value', 'created_at')
+    search_fields = ('solution__title', 'user__username')
+    readonly_fields = ('created_at', 'updated_at')

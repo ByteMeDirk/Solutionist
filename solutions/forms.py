@@ -1,8 +1,7 @@
 from django import forms
-from django.contrib.auth import get_user_model
-from markdownx.fields import MarkdownxFormField
-from markdownx.widgets import MarkdownxWidget
-
+from django.core.validators import MinLengthValidator
+from django.core.exceptions import ValidationError
+from .ratings import Rating
 from .models import Solution, SolutionVersion
 from tags.models import Tag
 
@@ -11,94 +10,86 @@ class SolutionForm(forms.ModelForm):
     """
     Form for creating and editing solutions.
     """
-    content = MarkdownxFormField(
-        widget=MarkdownxWidget(
-            attrs={
-                'class': 'form-control',
-                'data-markdownx-editor-resizable': 'true',
-                'data-markdownx-urls-path': '/markdownx/upload/',
-                'rows': '20',
-            }
-        )
+    content = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 15,
+            'placeholder': 'Write your solution using Markdown...'
+        }),
+        validators=[MinLengthValidator(10, message="Content must be at least 10 characters long.")]
     )
-    
+
+    # Replace ModelMultipleChoiceField with CharField for custom tag input
     tags_input = forms.CharField(
-        required=False,
+        required=True,
+        label="Tags",
+        help_text="Enter at least 5 tags separated by commas (e.g., python,django,api,rest,database)",
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Enter tags separated by commas',
-        }),
-        help_text='Enter tags separated by commas (e.g., python, django, web)'
+            'data-role': 'tagsinput'
+        })
     )
-    
-    change_comment = forms.CharField(
-        required=False,
-        max_length=255,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Brief description of changes (optional)',
-        }),
-        help_text='Briefly describe what changed in this version'
-    )
-    
+
     class Meta:
         model = Solution
         fields = ['title', 'content', 'is_published']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Solution title'
+            }),
         }
-    
+
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        instance = kwargs.get('instance', None)
         super().__init__(*args, **kwargs)
-        
-        # If editing an existing solution, populate tags_input
-        if self.instance.pk:
-            self.fields['tags_input'].initial = ', '.join([tag.name for tag in self.instance.tags.all()])
-    
+
+        # If we're editing an existing solution, pre-populate the tags input
+        if instance:
+            self.initial['tags_input'] = ', '.join([tag.name for tag in instance.tags.all()])
+
     def clean_tags_input(self):
-        """
-        Process the tags_input field to create or get Tag objects.
-        """
-        tags_input = self.cleaned_data.get('tags_input', '')
-        if not tags_input:
-            return []
-        
-        tag_names = [name.strip() for name in tags_input.split(',') if name.strip()]
-        tags = []
-        
-        for name in tag_names:
-            tag, created = Tag.objects.get_or_create(name=name)
-            tags.append(tag)
-        
-        return tags
-    
+        """Validate that at least 5 tags are provided."""
+        tags_text = self.cleaned_data.get('tags_input', '').strip()
+        tag_list = [t.strip() for t in tags_text.split(',') if t.strip()]
+
+        if len(tag_list) < 5:
+            raise ValidationError("Please provide at least 5 tags to categorize your solution.")
+
+        return tags_text
+
     def save(self, commit=True):
-        """
-        Save the solution and create a new version.
-        """
-        # Set the author if this is a new solution
-        if not self.instance.pk and self.user:
-            self.instance.author = self.user
-        
-        solution = super().save(commit=commit)
-        
-        # Add tags
+        solution = super().save(commit=False)
+
+        if not solution.pk:  # New solution
+            solution.author = self.user
+
         if commit:
-            tags = self.cleaned_data.get('tags_input', [])
-            if tags:
+            solution.save()
+
+            # Process tags
+            if 'tags_input' in self.cleaned_data:
+                tags_text = self.cleaned_data['tags_input']
+                tag_names = [tag.strip() for tag in tags_text.split(',') if tag.strip()]
+
+                # Clear existing tags if editing
                 solution.tags.clear()
-                solution.tags.add(*tags)
-            
-            # Create a new version
-            change_comment = self.cleaned_data.get('change_comment', '')
+
+                # Add tags, creating new ones if needed
+                for tag_name in tag_names:
+                    tag, created = Tag.objects.get_or_create(name=tag_name)
+                    solution.tags.add(tag)
+
+            # Create a version record for this save
             SolutionVersion.objects.create(
                 solution=solution,
                 content=solution.content,
-                created_by=self.user or solution.author,
-                change_comment=change_comment
+                created_by=self.user,
+                change_comment="Initial version" if not solution.pk else "Updated solution"
             )
-        
+
         return solution
 
 
@@ -106,26 +97,69 @@ class SolutionVersionCompareForm(forms.Form):
     """
     Form for comparing two versions of a solution.
     """
-    version_a = forms.ModelChoiceField(
-        queryset=SolutionVersion.objects.none(),
-        empty_label=None,
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
-    
-    version_b = forms.ModelChoiceField(
-        queryset=SolutionVersion.objects.none(),
-        empty_label=None,
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
-    
+    version_a = forms.UUIDField(widget=forms.Select(), required=True)
+    version_b = forms.UUIDField(widget=forms.Select(), required=True)
+
     def __init__(self, solution, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        versions = solution.versions.all().order_by('-version_number')
-        
-        self.fields['version_a'].queryset = versions
-        self.fields['version_b'].queryset = versions
-        
-        # Default to comparing the latest two versions
-        if versions.count() >= 2:
-            self.fields['version_a'].initial = versions[0].pk
-            self.fields['version_b'].initial = versions[1].pk
+        versions = solution.versions.all()
+        choices = [(str(v.id), f"Version {v.version_number} - {v.created_at.strftime('%Y-%m-%d %H:%M')}") for v in versions]
+
+        self.fields['version_a'].widget.choices = choices
+        self.fields['version_b'].widget.choices = choices
+
+        # Set initial values if not provided
+        if not self.initial.get('version_a') and len(choices) > 1:
+            self.initial['version_a'] = choices[1][0]  # Second latest version
+
+        if not self.initial.get('version_b') and choices:
+            self.initial['version_b'] = choices[0][0]  # Latest version
+
+
+class RatingForm(forms.ModelForm):
+    """
+    Form for users to rate solutions on a scale of 1-5 stars.
+    """
+    value = forms.ChoiceField(
+        choices=Rating.RATING_CHOICES,
+        widget=forms.RadioSelect(attrs={'class': 'star-rating'})
+    )
+
+    class Meta:
+        model = Rating
+        fields = ['value']
+
+
+class SolutionSearchForm(forms.Form):
+    """
+    Form for searching solutions with various filters.
+    """
+    query = forms.CharField(
+        required=False,
+        label='Search',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Search solutions...'
+        })
+    )
+    tags = forms.CharField(
+        required=False,
+        label='Tags',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Tags (comma separated)',
+            'data-role': 'tagsinput'
+        })
+    )
+    sort_by = forms.ChoiceField(
+        required=False,
+        label='Sort by',
+        choices=[
+            ('', 'Relevance'),
+            ('date_desc', 'Newest first'),
+            ('date_asc', 'Oldest first'),
+            ('rating_desc', 'Highest rated'),
+            ('views_desc', 'Most viewed'),
+        ],
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )

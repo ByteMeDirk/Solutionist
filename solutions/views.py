@@ -2,55 +2,75 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Count, Avg
 from django.http import HttpResponseForbidden
 from django.utils.safestring import mark_safe
 import difflib
 import markdown
 
 from .models import Solution, SolutionVersion
-from .forms import SolutionForm, SolutionVersionCompareForm
+from .forms import SolutionForm, SolutionVersionCompareForm, SolutionSearchForm
 from tags.models import Tag
 
 
 def solution_list(request):
     """
-    View for listing all published solutions.
+    View for listing all published solutions with enhanced search functionality.
     """
-    # Get query parameters
-    query = request.GET.get('q', '')
-    tag_slug = request.GET.get('tag', '')
-    
+    # Initialize the search form
+    search_form = SolutionSearchForm(request.GET or None)
+
     # Start with all published solutions
     solutions = Solution.objects.filter(is_published=True)
     
-    # Apply tag filter if provided
-    if tag_slug:
-        tag = get_object_or_404(Tag, slug=tag_slug)
-        solutions = solutions.filter(tags=tag)
-        tag_filter = tag.name
+    # Apply filters based on form data
+    if search_form.is_valid():
+        # Apply text search filter
+        query = search_form.cleaned_data.get('query')
+        if query:
+            solutions = solutions.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(author__username__icontains=query)
+            ).distinct()
+
+        # Apply tag filters
+        tags_input = search_form.cleaned_data.get('tags')
+        if tags_input:
+            # Split comma-separated tags
+            tag_names = [t.strip() for t in tags_input.split(',') if t.strip()]
+
+            # Filter by each tag
+            for tag_name in tag_names:
+                solutions = solutions.filter(tags__name__icontains=tag_name)
+
+        # Apply sorting
+        sort_by = search_form.cleaned_data.get('sort_by')
+        if sort_by:
+            if sort_by == 'date_desc':
+                solutions = solutions.order_by('-created_at')
+            elif sort_by == 'date_asc':
+                solutions = solutions.order_by('created_at')
+            elif sort_by == 'rating_desc':
+                solutions = solutions.annotate(avg_rating=Avg('ratings__value')).order_by('-avg_rating')
+            elif sort_by == 'views_desc':
+                solutions = solutions.order_by('-view_count')
     else:
-        tag_filter = None
-    
-    # Apply search filter if provided
-    if query:
-        solutions = solutions.filter(
-            Q(title__icontains=query) | 
-            Q(content__icontains=query) |
-            Q(author__username__icontains=query) |
-            Q(tags__name__icontains=query)
-        ).distinct()
-    
+        # Default sort by most recently updated
+        solutions = solutions.order_by('-updated_at')
+
     # Paginate results
     paginator = Paginator(solutions, 10)  # 10 solutions per page
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     
+    # Get popular tags
+    popular_tags = Tag.objects.annotate(solution_count=Count('solutions')).order_by('-solution_count')[:10]
+
     context = {
         'page_obj': page_obj,
-        'query': query,
-        'tag_filter': tag_filter,
-        'tag_slug': tag_slug,
+        'search_form': search_form,
+        'popular_tags': popular_tags
     }
     
     return render(request, 'solutions/solution_list.html', context)
@@ -58,7 +78,7 @@ def solution_list(request):
 
 def solution_detail(request, slug):
     """
-    View for displaying a solution.
+    View for displaying a solution with comments and ratings.
     """
     solution = get_object_or_404(Solution, slug=slug)
     
@@ -76,9 +96,32 @@ def solution_detail(request, slug):
         tags__in=solution.tags.all()
     ).exclude(id=solution.id).distinct()[:5]
     
+    # Get top-level comments (no parent)
+    comments = solution.comments.filter(parent=None, is_active=True)
+
+    # Comment form
+    from comments.forms import CommentForm, ReplyForm
+    comment_form = CommentForm()
+    reply_form = ReplyForm()
+
+    # Rating form
+    from .forms import RatingForm
+    rating_form = RatingForm()
+    user_rating = None
+
+    if request.user.is_authenticated:
+        user_rating = solution.get_user_rating(request.user)
+        if user_rating:
+            rating_form.initial = {'value': user_rating}
+
     context = {
         'solution': solution,
         'related_solutions': related_solutions,
+        'comments': comments,
+        'comment_form': comment_form,
+        'reply_form': reply_form,
+        'rating_form': rating_form,
+        'user_rating': user_rating
     }
     
     return render(request, 'solutions/solution_detail.html', context)

@@ -1,3 +1,64 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import JsonResponse
 
-# Create your views here.
+from solutions.models import Solution
+from .models import Comment
+from .forms import CommentForm, ReplyForm
+
+
+@login_required
+def add_comment(request, slug):
+    """Add a new comment to a solution."""
+    solution = get_object_or_404(Solution, slug=slug)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.solution = solution
+            comment.author = request.user
+            comment.save()
+            messages.success(request, 'Your comment was added successfully.')
+            return redirect('solutions:detail', slug=slug)
+    else:
+        form = CommentForm()
+
+    return redirect('solutions:detail', slug=slug)
+
+
+@login_required
+def add_reply(request, slug, comment_id):
+    """Add a reply to an existing comment."""
+    solution = get_object_or_404(Solution, slug=slug)
+    parent_comment = get_object_or_404(Comment, id=comment_id, solution=solution)
+
+    if request.method == 'POST':
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.solution = solution
+            reply.author = request.user
+            reply.parent = parent_comment
+            reply.save()
+            messages.success(request, 'Your reply was added successfully.')
+
+    return redirect('solutions:detail', slug=slug)
+
+
+@login_required
+def delete_comment(request, comment_id):
+    """Delete a comment."""
+    comment = get_object_or_404(Comment, id=comment_id, author=request.user)
+    solution_slug = comment.solution.slug
+
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, 'Your comment was deleted successfully.')
+
+        # If AJAX request, return JSON response
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'success'})
+
+    return redirect('solutions:detail', slug=solution_slug)

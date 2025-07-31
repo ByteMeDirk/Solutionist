@@ -1,0 +1,79 @@
+{% load static %}
+
+<div class="comment mb-3" id="comment-{{ comment.id }}">
+    <div class="card {% if comment.parent %}ms-5{% endif %} border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center py-3">
+            <div class="d-flex align-items-center">
+                {% if comment.author.profile.profile_image %}
+                    <img src="{{ comment.author.profile.profile_image.url }}" alt="{{ comment.author.username }}"
+                         class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                {% else %}
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+                         style="width: 40px; height: 40px; font-size: 16px;">
+                        <span>{{ comment.author.username.0|upper }}</span>
+                    </div>
+                {% endif %}
+                <div>
+                    <span class="fw-bold text-dark">{{ comment.author.username }}</span>
+                    <small class="text-muted d-block">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+                </div>
+            </div>
+            {% if user.is_authenticated and user == comment.author %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-light text-muted border-0 rounded-pill" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <li>
+                            <form method="post" action="{% url 'comments:delete_comment' comment.id %}" class="delete-comment-form">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-trash me-2"></i>Delete
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-body pt-0 pb-3">
+            <!-- Display Markdown-formatted content -->
+            <div class="comment-content markdown-content">
+                {{ comment.get_content_html }}
+            </div>
+
+            {% if user.is_authenticated and not comment.parent %}
+                <button class="btn btn-sm bg-dark text-white rounded-0 reply-btn"
+                        data-comment-id="{{ comment.id }}">
+                    <i class="bi bi-reply me-1"></i> Reply
+                </button>
+
+                <div class="reply-form-container mt-3" id="reply-form-{{ comment.id }}" style="display: none;">
+                    <form method="post" action="{% url 'comments:add_reply' solution.slug comment.id %}">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            {{ reply_form.content }}
+                            <small class="form-text text-muted">
+                                <i class="bi bi-markdown me-1"></i>
+                                Markdown is supported. You can use **bold**, *italic*, `code`, and ```language code blocks```.
+                            </small>
+                        </div>
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-sm bg-dark text-white rounded-0 me-2">
+                                <i class="bi bi-send me-1"></i> Submit
+                            </button>
+                            <button type="button" class="btn btn-sm btn-light rounded-0 cancel-reply"
+                                    data-comment-id="{{ comment.id }}">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if comment.replies.all %}
+        {% for reply in comment.replies.all %}
+            {% include 'comments/comment.html' with comment=reply %}
+        {% endfor %}
+    {% endif %}
+</div>

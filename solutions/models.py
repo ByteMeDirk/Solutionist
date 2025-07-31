@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django.utils.text import slugify
+from django.db.models import Avg
 import markdown
 import difflib
 import uuid
@@ -73,6 +74,32 @@ class Solution(models.Model):
     def increment_view_count(self):
         self.view_count += 1
         self.save(update_fields=['view_count'])
+
+    def get_average_rating(self):
+        """Returns the average rating for this solution."""
+        avg = self.ratings.aggregate(Avg('value'))['value__avg']
+        if avg is not None:
+            return round(avg, 1)
+        return 0
+
+    def get_rating_count(self):
+        """Returns the number of ratings for this solution."""
+        return self.ratings.count()
+
+    def user_has_rated(self, user):
+        """Check if a user has already rated this solution."""
+        if user.is_authenticated:
+            return self.ratings.filter(user=user).exists()
+        return False
+
+    def get_user_rating(self, user):
+        """Get a specific user's rating for this solution."""
+        if user.is_authenticated:
+            try:
+                return self.ratings.get(user=user).value
+            except:
+                return None
+        return None
 
 
 class SolutionVersion(models.Model):

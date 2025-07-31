@@ -7,6 +7,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css">
 <style>
     .markdownx-editor {
         min-height: 300px;
@@ -46,6 +47,35 @@
     }
     .markdown-help {
         font-size: 0.875rem;
+    }
+
+    /* Tag input styling */
+    .bootstrap-tagsinput {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        min-height: 38px;
+    }
+
+    .bootstrap-tagsinput .tag {
+        margin-right: 2px;
+        margin-bottom: 2px;
+        display: inline-block;
+        color: white;
+        background-color: var(--primary);
+        padding: 0.25em 0.6em;
+        font-size: 0.875em;
+        font-weight: 500;
+        border-radius: 0.25rem;
+    }
+
+    .bootstrap-tagsinput input {
+        min-width: 150px;
     }
 </style>
 {% endblock %}
@@ -207,6 +237,7 @@ def hello_world():
 {% block extra_js %}
 {{ form.media }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 <script>
     // Apply syntax highlighting to the preview
     const applyHighlighting = () => {
@@ -225,6 +256,40 @@ def hello_world():
             // Initial highlighting
             applyHighlighting();
         }
+    });
+
+    // Initialize tagsinput
+    document.addEventListener('DOMContentLoaded', function() {
+        $('#id_tags_input').tagsinput({
+            trimValue: true,
+            confirmKeys: [13, 44, 32], // Enter, comma, space
+            tagClass: 'tag'
+        });
+
+        // Add placeholder for the tagsinput
+        $('.bootstrap-tagsinput input').attr('placeholder', 'Add tag and press Enter');
+
+        // Add autocomplete functionality
+        var tagsInput = $('#id_tags_input');
+
+        // Fetch existing tags for autocomplete
+        fetch("{% url 'tags:autocomplete' %}")
+            .then(response => response.json())
+            .then(data => {
+                if (data.results && data.results.length > 0) {
+                    // Create an array of tag names
+                    const existingTags = data.results.map(tag => tag.text);
+
+                    // Setup typeahead for the tagsinput
+                    tagsInput.tagsinput('input').typeahead({
+                        source: existingTags
+                    }).bind('typeahead:selected', function(obj, datum) {
+                        tagsInput.tagsinput('add', datum);
+                        tagsInput.tagsinput('input').typeahead('val', '');
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching tags:', error));
     });
 </script>
 {% endblock %}

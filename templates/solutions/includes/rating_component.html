@@ -1,0 +1,50 @@
+{% load static %}
+
+<div class="rating-container mb-4">
+    <div class="d-flex align-items-center">
+        <div class="rating-stars me-2">
+            {% for i in '12345'|make_list %}
+                <span class="star {% if solution.get_average_rating >= forloop.counter %}filled{% endif %}"
+                      data-value="{{ forloop.counter }}">★</span>
+            {% endfor %}
+        </div>
+        <div class="rating-text">
+            {% if solution.get_rating_count > 0 %}
+                <span class="rating-value">{{ solution.get_average_rating }}</span>/5
+                <span class="rating-count text-muted">({{ solution.get_rating_count }} rating{{ solution.get_rating_count|pluralize }})</span>
+            {% else %}
+                <span class="text-muted">No ratings yet</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+        <div class="user-rating mt-2">
+            <form method="post" action="{% url 'solutions:rate' solution.slug %}" id="rating-form">
+                {% csrf_token %}
+                <p class="mb-1 small">{% if user_rating %}Your rating:{% else %}Rate this solution:{% endif %}</p>
+                <div class="d-flex align-items-center">
+                    <!-- Rating input with stars in reverse order for proper hover effect -->
+                    <div class="rating-input">
+                        {% for i in '54321'|make_list %}
+                            <label class="star-label {% if user_rating == i|add:'0' %}selected{% endif %}" title="{{ i|add:'0' }} star{{ i|add:'0'|pluralize }}">
+                                <input type="radio" name="value" value="{{ i|add:'0' }}"
+                                       {% if user_rating == i|add:'0' %}checked{% endif %}
+                                       class="rating-radio">
+                                <span class="star-icon">★</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary ms-2">Submit</button>
+                    {% if user_rating %}
+                        <form method="post" action="{% url 'solutions:unrate' solution.slug %}" id="unrate-form" class="ms-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Remove Rating</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="rating-feedback" class="mt-2" style="display: none;"></div>
+        </div>
+    {% endif %}
+</div>

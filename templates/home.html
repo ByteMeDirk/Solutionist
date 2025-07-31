@@ -1,90 +1,205 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Home - Solutionist{% endblock %}
 
-{% block content %}
-<div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-4 fw-bold text-primary">Solutionist</h1>
-    <div class="col-lg-8 mx-auto">
-        <p class="lead mb-4">
-            A modern, collaborative, developer-focused solution-sharing platform inspired by StackOverflow
-            but with a gist-like solutions repository.
-        </p>
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <a href="/solutions/" class="btn btn-primary btn-lg px-4 gap-3">Browse Solutions</a>
-            <a href="/solutions/create/" class="btn btn-outline-secondary btn-lg px-4">Share a Solution</a>
-        </div>
-    </div>
-</div>
+{% block extra_css %}
+<style>
+    .hero-section {
+        padding: 5rem 0;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border-radius: 0 0 3rem 3rem;
+        margin-top: -1.5rem;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
 
-<div class="container">
-    <div class="row g-4 py-5">
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3 class="card-title">Find Solutions</h3>
-                    <p class="card-text">
-                        Discover high-quality, well-documented solutions to common programming problems.
-                    </p>
+    .feature-card {
+        transition: all 0.3s ease;
+        height: 100%;
+        border: none;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary);
+    }
+
+    .stats-card {
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+        border-top: 4px solid var(--primary);
+        background-color: white;
+    }
+
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .testimonial-card {
+        padding: 2rem;
+        border-radius: 1rem;
+        background-color: white;
+        margin-bottom: 1rem;
+    }
+
+    .testimonial-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .testimonial-author {
+        font-weight: 600;
+    }
+
+    .cta-section {
+        background-color: var(--primary);
+        color: white;
+        padding: 3rem 0;
+        border-radius: 1rem;
+        margin-top: 3rem;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 3rem 0;
+            text-align: center;
+            border-radius: 0 0 1.5rem 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 class="display-4 fw-bold mb-3">Share & discover coding solutions</h1>
+                <p class="lead mb-4">
+                    A modern, collaborative platform for developers to share, find, and improve solutions to common programming challenges.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'solutions:list' %}" class="btn btn-light btn-lg px-4">
+                        <i class="bi bi-search me-2"></i>Browse Solutions
+                    </a>
+                    <a href="{% url 'solutions:create' %}" class="btn btn-dark btn-lg px-4">
+                        <i class="bi bi-plus-circle me-2"></i>Share a Solution
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3 class="card-title">Share Knowledge</h3>
-                    <p class="card-text">
-                        Contribute your expertise by sharing solutions with the developer community.
-                    </p>
-                </div>
+            <div class="col-lg-6">
+                <img src="{% static 'images/hero-illustration.svg' %}" alt="Illustration" class="img-fluid" onerror="this.style.display='none'">
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3 class="card-title">Collaborate</h3>
-                    <p class="card-text">
-                        Improve existing solutions through comments, suggestions, and version control.
-                    </p>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="mb-3">Why use Solutionist?</h2>
+                <p class="text-muted">Our platform helps developers share knowledge and find solutions efficiently</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card h-100 p-4">
+                    <div class="card-body text-center">
+                        <div class="feature-icon">
+                            <i class="bi bi-search"></i>
+                        </div>
+                        <h3 class="card-title h4">Find Solutions</h3>
+                        <p class="card-text text-muted">
+                            Search and discover high-quality, well-documented solutions to common programming problems.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card feature-card h-100 p-4">
+                    <div class="card-body text-center">
+                        <div class="feature-icon">
+                            <i class="bi bi-share"></i>
+                        </div>
+                        <h3 class="card-title h4">Share Knowledge</h3>
+                        <p class="card-text text-muted">
+                            Contribute your expertise by sharing solutions with the global developer community.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card feature-card h-100 p-4">
+                    <div class="card-body text-center">
+                        <div class="feature-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h3 class="card-title h4">Collaborate</h3>
+                        <p class="card-text text-muted">
+                            Comment, rate, and improve solutions through community collaboration and feedback.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Recent Solutions -->
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Recent Solutions</h2>
-                <a href="{% url 'solutions:list' %}" class="btn btn-outline-primary">View All</a>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="stats-card shadow-sm">
+                    <div class="stats-number">500+</div>
+                    <div class="stats-label">Solutions Shared</div>
+                </div>
             </div>
-            
-            {% if recent_solutions %}
-                <div class="list-group">
-                    {% for solution in recent_solutions %}
-                        <a href="{% url 'solutions:detail' solution.slug %}" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ solution.title }}</h5>
-                                <small>{{ solution.created_at|date:"M d, Y" }}</small>
-                            </div>
-                            <p class="mb-1">{{ solution.content|truncatechars:150 }}</p>
-                            <div>
-                                {% for tag in solution.tags.all %}
-                                    <span class="badge bg-secondary">{{ tag.name }}</span>
-                                {% endfor %}
-                                <small class="text-muted ms-2">
-                                    by {{ solution.author.username }} • {{ solution.view_count }} views
-                                </small>
-                            </div>
-                        </a>
-                    {% endfor %}
+            <div class="col-md-4">
+                <div class="stats-card shadow-sm">
+                    <div class="stats-number">1.2K+</div>
+                    <div class="stats-label">Developers</div>
                 </div>
-            {% else %}
-                <div class="alert alert-info">
-                    <p class="mb-0">No solutions have been shared yet. Be the first to <a href="{% url 'solutions:create' %}">share a solution</a>!</p>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card shadow-sm">
+                    <div class="stats-number">24</div>
+                    <div class="stats-label">Languages</div>
                 </div>
-            {% endif %}
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- CTA Section -->
+<section class="container">
+    <div class="cta-section">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-3">Ready to share your solutions?</h2>
+                <p class="mb-4">Join our community of developers sharing knowledge and expertise.</p>
+                <a href="{% url 'users:register' %}" class="btn btn-light btn-lg px-5">
+                    Join Solutionist
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
