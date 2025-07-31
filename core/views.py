@@ -1,11 +1,19 @@
 from django.shortcuts import render
+from solutions.models import Solution
 
 
 def home(request):
     """
     View function for the home page.
     """
-    return render(request, "home.html")
+    # Get recent published solutions
+    recent_solutions = Solution.objects.filter(is_published=True).order_by('-created_at')[:5]
+    
+    context = {
+        'recent_solutions': recent_solutions,
+    }
+    
+    return render(request, "home.html", context)
 
 
 def handler404(request, exception):

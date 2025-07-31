@@ -31,13 +31,24 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="{% url 'core:home' %}">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="solutionsDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Solutions
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="solutionsDropdown">
+                            <li><a class="dropdown-item" href="{% url 'solutions:list' %}">Browse Solutions</a></li>
+                            <li><a class="dropdown-item" href="{% url 'solutions:create' %}">Share a Solution</a></li>
+                            {% if user.is_authenticated %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'solutions:list' %}?q={{ user.username }}">My Solutions</a></li>
+                            {% endif %}
+                        </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/solutions/">Solutions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/tags/">Tags</a>
+                        <a class="nav-link" href="{% url 'solutions:list' %}">Tags</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

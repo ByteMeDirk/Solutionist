@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Version History - {{ solution.title }} - Solutionist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>
+    .version-timeline {
+        position: relative;
+    }
+    
+    .version-timeline::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 20px;
+        width: 2px;
+        background-color: var(--primary);
+    }
+    
+    .version-item {
+        position: relative;
+        padding-left: 50px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .version-item::before {
+        content: '';
+        position: absolute;
+        left: 13px;
+        top: 0;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: var(--primary);
+    }
+    
+    .version-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .version-badge {
+        position: absolute;
+        left: 40px;
+        top: -10px;
+        z-index: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'solutions:list' %}">Solutions</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'solutions:detail' solution.slug %}">{{ solution.title }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Version History</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'solutions:compare' solution.slug %}" class="btn btn-primary">
+                <i class="bi bi-arrows-angle-contract"></i> Compare Versions
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="card-title h3 mb-0">Version History: {{ solution.title }}</h1>
+                </div>
+                <div class="card-body">
+                    {% if versions %}
+                        <div class="version-timeline">
+                            {% for version in versions %}
+                                <div class="version-item">
+                                    <span class="version-badge badge bg-primary">v{{ version.version_number }}</span>
+                                    <div class="card">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>Version {{ version.version_number }}</strong>
+                                                {% if version.version_number == 1 %}
+                                                    <span class="badge bg-info ms-2">Initial Version</span>
+                                                {% endif %}
+                                                {% if forloop.first %}
+                                                    <span class="badge bg-success ms-2">Current Version</span>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <a href="{% url 'solutions:version' solution.slug version.version_number %}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i> View
+                                                </a>
+                                                {% if not forloop.first %}
+                                                    <a href="{% url 'solutions:compare' solution.slug %}?version_a={{ versions.0.pk }}&version_b={{ version.pk }}" class="btn btn-sm btn-outline-secondary">
+                                                        <i class="bi bi-arrows-angle-contract"></i> Compare with Current
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <div>
+                                                    <small class="text-muted">
+                                                        Created by <strong>{{ version.created_by.username }}</strong> 
+                                                        on {{ version.created_at|date:"F j, Y, g:i a" }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            
+                                            {% if version.change_comment %}
+                                                <div class="alert alert-info">
+                                                    <i class="bi bi-info-circle"></i> {{ version.change_comment }}
+                                                </div>
+                                            {% endif %}
+                                            
+                                            {% if not forloop.first %}
+                                                <div class="mt-3">
+                                                    <h6>Changes from previous version:</h6>
+                                                    {% with diff=version.get_diff_to_previous %}
+                                                        {% if diff %}
+                                                            <pre class="bg-light p-3 rounded"><code>{{ diff }}</code></pre>
+                                                        {% else %}
+                                                            <p class="text-muted"><em>No changes detected or this is the initial version.</em></p>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p>No version history available for this solution.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'solutions:detail' solution.slug %}" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left"></i> Back to Solution
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

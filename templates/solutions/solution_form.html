@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}{{ title }} - Solutionist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+<style>
+    .markdownx-editor {
+        min-height: 300px;
+        resize: vertical;
+    }
+    .markdownx-preview {
+        padding: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        min-height: 300px;
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    .markdownx-preview img {
+        max-width: 100%;
+        height: auto;
+    }
+    .markdownx-preview pre {
+        padding: 1rem;
+        border-radius: 0.25rem;
+        background-color: #f8f9fa;
+    }
+    .markdownx-preview code {
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .markdownx-preview table {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-collapse: collapse;
+    }
+    .markdownx-preview th, .markdownx-preview td {
+        padding: 0.5rem;
+        border: 1px solid #dee2e6;
+    }
+    .markdownx-preview th {
+        background-color: #f8f9fa;
+    }
+    .markdown-help {
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'solutions:list' %}">Solutions</a></li>
+                    {% if solution %}
+                        <li class="breadcrumb-item"><a href="{% url 'solutions:detail' solution.slug %}">{{ solution.title }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                    {% else %}
+                        <li class="breadcrumb-item active" aria-current="page">Create</li>
+                    {% endif %}
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="card-title h3 mb-0">{{ title }}</h1>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                {% bootstrap_field form.title %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                {% bootstrap_field form.tags_input %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="{{ form.content.id_for_label }}" class="form-label">{{ form.content.label }}</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form.content }}
+                                        <div class="form-text">Write your solution in Markdown format.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="markdownx-preview"></div>
+                                        <div class="form-text">Live preview of your solution.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                {% bootstrap_field form.is_published %}
+                            </div>
+                        </div>
+                        
+                        {% if solution %}
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    {% bootstrap_field form.change_comment %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% if solution %}{% url 'solutions:detail' solution.slug %}{% else %}{% url 'solutions:list' %}{% endif %}" class="btn btn-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if solution %}Update{% else %}Create{% endif %} Solution
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Markdown Help -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">Markdown Cheat Sheet</h5>
+                </div>
+                <div class="card-body markdown-help">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Basic Syntax</h6>
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td><code># Heading 1</code></td>
+                                        <td>Creates a heading level 1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>## Heading 2</code></td>
+                                        <td>Creates a heading level 2</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>**bold text**</code></td>
+                                        <td>Creates <strong>bold text</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>*italic text*</code></td>
+                                        <td>Creates <em>italic text</em></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>[link text](https://example.com)</code></td>
+                                        <td>Creates a <a href="#">link</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>![alt text](image.jpg)</code></td>
+                                        <td>Inserts an image</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>- List item</code></td>
+                                        <td>Creates a bullet list item</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>1. Ordered item</code></td>
+                                        <td>Creates a numbered list item</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Code Blocks</h6>
+                            <p>For inline code, use backticks: <code>`code`</code></p>
+                            <p>For code blocks, use triple backticks with optional language name:</p>
+<pre><code>```python
+def hello_world():
+    print("Hello, world!")
+```</code></pre>
+                            <h6>Tables</h6>
+<pre><code>| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1   | Cell 2   |
+| Cell 3   | Cell 4   |</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ form.media }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>
+    // Apply syntax highlighting to the preview
+    const applyHighlighting = () => {
+        document.querySelectorAll('.markdownx-preview pre code').forEach((block) => {
+            hljs.highlightElement(block);
+        });
+    };
+    
+    // Set up a MutationObserver to watch for changes in the preview
+    document.addEventListener('DOMContentLoaded', () => {
+        const preview = document.querySelector('.markdownx-preview');
+        if (preview) {
+            const observer = new MutationObserver(applyHighlighting);
+            observer.observe(preview, { childList: true, subtree: true });
+            
+            // Initial highlighting
+            applyHighlighting();
+        }
+    });
+</script>
+{% endblock %}

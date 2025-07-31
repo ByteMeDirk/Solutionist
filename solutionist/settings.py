@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third-party apps
     "django_bootstrap5",
+    "markdownx",
     # Custom apps
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
@@ -147,3 +148,22 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Email settings for development (console backend)
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# Markdownx settings
+MARKDOWNX_UPLOAD_MAX_SIZE = 5 * 1024 * 1024  # 5MB - maximum file size
+MARKDOWNX_MEDIA_PATH = 'markdownx/'  # Media path relative to MEDIA_ROOT
+MARKDOWNX_UPLOAD_URLS_PATH = '/markdownx/upload/'  # URL path for uploading images
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.codehilite',
+    'markdown.extensions.toc',
+    'markdown.extensions.tables',
+    'markdown.extensions.fenced_code',
+]
+MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
+    'codehilite': {
+        'use_pygments': True,
+        'css_class': 'highlight',
+        'linenums': False,
+    }
+}
