@@ -2,57 +2,117 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, Count, Avg
-from django.http import HttpResponseForbidden
+from django.db.models import Q, Count, Avg, F
+from django.http import HttpResponseForbidden, JsonResponse
 from django.utils.safestring import mark_safe
 import difflib
 import markdown
+import re
 
 from .models import Solution, SolutionVersion
 from .forms import SolutionForm, SolutionVersionCompareForm, SolutionSearchForm
 from tags.models import Tag
 
 
+def highlight_search_terms(text, query):
+    """Highlight search terms in text while preserving HTML safety"""
+    if not query:
+        return text
+
+    terms = query.split()
+    text = str(text)  # Ensure we're working with a string
+
+    for term in terms:
+        pattern = re.compile(re.escape(term), re.IGNORECASE)
+        text = pattern.sub(f'<mark class="search-highlight">{term}</mark>', text)
+
+    return mark_safe(text)
+
+
+def get_search_suggestions(query):
+    """Generate search suggestions based on existing solutions and tags"""
+    suggestions = []
+
+    # Add tag-based suggestions
+    tag_suggestions = Tag.objects.filter(
+        name__icontains=query
+    ).values_list('name', flat=True)[:3]
+    suggestions.extend([f"#{tag}" for tag in tag_suggestions])
+
+    # Add title-based suggestions
+    title_suggestions = Solution.objects.filter(
+        is_published=True,
+        title__icontains=query
+    ).values_list('title', flat=True)[:3]
+    suggestions.extend(list(title_suggestions))
+
+    return suggestions
+
+
 def solution_list(request):
     """
-    View for listing all published solutions with enhanced search functionality.
+    Enhanced view for listing solutions with Google-like search capabilities.
     """
+    # Handle AJAX search suggestions
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        query = request.GET.get('q', '').strip()
+        if query:
+            suggestions = get_search_suggestions(query)
+            return JsonResponse({'suggestions': suggestions})
+        return JsonResponse({'suggestions': []})
+
     # Initialize the search form
     search_form = SolutionSearchForm(request.GET or None)
+    search_query = request.GET.get('q', '').strip()
 
     # Start with all published solutions
     solutions = Solution.objects.filter(is_published=True)
     
-    # Check for author filter (for "My Solutions")
-    author = request.GET.get('author')
-    if author:
-        solutions = solutions.filter(author__username=author)
+    # Apply search filters
+    if search_query:
+        # Split the query into terms and tags
+        terms = []
+        tags = []
+        for term in search_query.split():
+            if term.startswith('#'):
+                tags.append(term[1:])
+            else:
+                terms.append(term)
 
-    # Apply filters based on form data
+        # Build the search query
+        query_filters = Q()
+        if terms:
+            query_string = ' '.join(terms)
+            query_filters |= (
+                Q(title__icontains=query_string) |
+                Q(content__icontains=query_string) |
+                Q(summary__icontains=query_string) |
+                Q(author__username__icontains=query_string)
+            )
+
+        if tags:
+            query_filters &= Q(tags__name__in=tags)
+
+        solutions = solutions.filter(query_filters).distinct()
+
+    # Apply form filters
     if search_form.is_valid():
-        # Apply text search filter
-        query = search_form.cleaned_data.get('query')
-        if query:
-            solutions = solutions.filter(
-                Q(title__icontains=query) |
-                Q(content__icontains=query) |
-                Q(author__username__icontains=query)
-            ).distinct()
-
-        # Apply tag filters
+        # Apply tag filters from the form
         tags_input = search_form.cleaned_data.get('tags')
         if tags_input:
-            # Split comma-separated tags
             tag_names = [t.strip() for t in tags_input.split(',') if t.strip()]
-
-            # Filter by each tag
             for tag_name in tag_names:
                 solutions = solutions.filter(tags__name__icontains=tag_name)
 
         # Apply sorting
         sort_by = search_form.cleaned_data.get('sort_by')
         if sort_by:
-            if sort_by == 'date_desc':
+            if sort_by == 'relevance' and search_query:
+                # Custom relevance scoring
+                solutions = solutions.annotate(
+                    relevance=Count('ratings') + F('view_count') * 0.1
+                ).order_by('-relevance')
+            elif sort_by == 'date_desc':
                 solutions = solutions.order_by('-created_at')
             elif sort_by == 'date_asc':
                 solutions = solutions.order_by('created_at')
@@ -64,19 +124,30 @@ def solution_list(request):
         # Default sort by most recently updated
         solutions = solutions.order_by('-updated_at')
 
+    # Enhance solutions with highlighted content
+    if search_query:
+        for solution in solutions:
+            solution.highlighted_title = highlight_search_terms(solution.title, search_query)
+            if solution.summary:
+                solution.highlighted_summary = highlight_search_terms(solution.summary, search_query)
+
     # Paginate results
     paginator = Paginator(solutions, 10)  # 10 solutions per page
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     
-    # Get popular tags
-    popular_tags = Tag.objects.annotate(solution_count=Count('solutions')).order_by('-solution_count')[:10]
+    # Get popular tags for suggestions
+    popular_tags = Tag.objects.annotate(
+        solution_count=Count('solutions')
+    ).order_by('-solution_count')[:10]
 
     context = {
         'page_obj': page_obj,
         'search_form': search_form,
         'popular_tags': popular_tags,
-        'author_filter': author  # Pass the author filter to the template
+        'search_query': search_query,
+        'total_results': solutions.count(),
+        'search_time': 0.1,  # You could add actual search timing if needed
     }
     
     return render(request, 'solutions/solution_list.html', context)

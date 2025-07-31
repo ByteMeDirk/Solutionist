@@ -7,10 +7,13 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.db.models import Count, Sum, Avg
+from django.utils import timezone
 
 from .forms import UserRegistrationForm, CustomAuthenticationForm, UserProfileForm, UserDeleteForm
 from .models import UserProfile
 from solutions.models import Solution
+from tags.models import Tag
 
 
 class RegisterView(CreateView):
@@ -58,19 +61,55 @@ class CustomLogoutView(LogoutView):
 
 def user_profile_view(request, username):
     """
-    View for displaying other users' profiles.
+    View for displaying other users' profiles with comprehensive statistics and data.
     """
     viewed_user = get_object_or_404(User, username=username)
     profile = viewed_user.profile
     solutions = Solution.objects.filter(
         author=viewed_user,
         is_published=True
-    ).order_by('-created_at')
+    ).select_related('author').prefetch_related('tags', 'ratings')
+
+    # Calculate user statistics
+    total_solutions = solutions.count()
+    total_views = solutions.aggregate(total_views=Sum('view_count'))['total_views'] or 0
+    avg_rating = solutions.annotate(
+        avg_rating=Avg('ratings__value')
+    ).aggregate(total_avg=Avg('avg_rating'))['total_avg'] or 0
+
+    # Get most used tags
+    top_tags = Tag.objects.filter(
+        solutions__author=viewed_user,
+        solutions__is_published=True
+    ).annotate(
+        usage_count=Count('solutions')
+    ).order_by('-usage_count')[:5]
+
+    # Get recent activity (newest solutions)
+    recent_solutions = solutions.order_by('-created_at')[:5]
+
+    # Get top rated solutions
+    top_rated_solutions = solutions.annotate(
+        avg_rating=Avg('ratings__value')
+    ).filter(avg_rating__isnull=False).order_by('-avg_rating')[:5]
+
+    # Get most viewed solutions
+    most_viewed_solutions = solutions.order_by('-view_count')[:5]
 
     context = {
         'viewed_user': viewed_user,
         'profile': profile,
         'solutions': solutions,
+        'stats': {
+            'total_solutions': total_solutions,
+            'total_views': total_views,
+            'avg_rating': round(avg_rating, 1),
+            'member_days': (timezone.now() - viewed_user.date_joined).days
+        },
+        'top_tags': top_tags,
+        'recent_solutions': recent_solutions,
+        'top_rated_solutions': top_rated_solutions,
+        'most_viewed_solutions': most_viewed_solutions,
     }
 
     return render(request, 'users/user_profile.html', context)
