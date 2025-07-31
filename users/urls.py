@@ -16,6 +16,9 @@ urlpatterns = [
     path('profile/<str:username>/', views.user_profile_view, name='user_profile'),  # Other user's profile
     path('delete/', views.account_delete_view, name='delete'),
     
+    # User settings URL
+    path('settings/', views.settings_view, name='settings'),
+
     # MCP token management URLs
     path('mcp-tokens/', views.mcp_tokens_view, name='mcp_tokens'),
     path('mcp-tokens/create/', views.create_mcp_token, name='create_mcp_token'),

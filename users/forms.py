@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from .models import UserProfile
+from .models import UserProfile, UserSettings
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -117,3 +117,26 @@ class UserDeleteForm(forms.Form):
         if not self.user.check_password(password):
             raise ValidationError("Incorrect password. Please try again.")
         return password
+
+
+class UserSettingsForm(forms.ModelForm):
+    """
+    Form for managing user settings related to theme and accessibility
+    """
+    class Meta:
+        model = UserSettings
+        fields = ['theme', 'font_size', 'reduced_motion', 'high_contrast']
+        widgets = {
+            'theme': forms.RadioSelect(),
+            'font_size': forms.RadioSelect(),
+            'reduced_motion': forms.CheckboxInput(),
+            'high_contrast': forms.CheckboxInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['theme'].help_text = "Choose your preferred theme for the site"
+        self.fields['font_size'].help_text = "Select your preferred text size"
+        # Make labels more user-friendly
+        self.fields['reduced_motion'].label = "Reduce animations"
+        self.fields['high_contrast'].label = "High contrast mode"

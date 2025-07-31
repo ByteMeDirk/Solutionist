@@ -25,6 +25,34 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s profile"
 
+class UserSettings(models.Model):
+    """
+    User settings for site preferences like theme and accessibility options
+    """
+    THEME_CHOICES = [
+        ('light', 'Light Mode'),
+        ('dark', 'Dark Mode'),
+        ('system', 'System Default'),
+    ]
+
+    FONT_SIZE_CHOICES = [
+        ('small', 'Small'),
+        ('medium', 'Medium'),
+        ('large', 'Large'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='settings')
+    theme = models.CharField(max_length=20, choices=THEME_CHOICES, default='system')
+    font_size = models.CharField(max_length=10, choices=FONT_SIZE_CHOICES, default='medium')
+    reduced_motion = models.BooleanField(default=False, help_text="Reduce animation effects")
+    high_contrast = models.BooleanField(default=False, help_text="Enable high contrast mode")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s settings"
+
 # Signal to create user profile when a new user is created
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -34,3 +62,14 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+# Signal to create user settings when a new user is created
+@receiver(post_save, sender=User)
+def create_user_settings(sender, instance, created, **kwargs):
+    if created:
+        UserSettings.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_settings(sender, instance, **kwargs):
+    if hasattr(instance, 'settings'):
+        instance.settings.save()

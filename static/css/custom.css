@@ -62,6 +62,131 @@
   border-color: var(--secondary-light);
 }
 
+/* ========== Theme Settings Styles ========== */
+
+/* Font Size Settings */
+.font-size-small {
+  font-size: 0.875rem;
+}
+
+.font-size-medium {
+  font-size: 1rem;
+}
+
+.font-size-large {
+  font-size: 1.125rem;
+}
+
+/* Apply font size to elements */
+.font-size-small body {
+  font-size: 0.875rem;
+}
+
+.font-size-large body {
+  font-size: 1.125rem;
+}
+
+.font-size-large h1 {
+  font-size: 2.5rem;
+}
+
+.font-size-large h2 {
+  font-size: 2.1rem;
+}
+
+.font-size-large h3 {
+  font-size: 1.8rem;
+}
+
+.font-size-large h4 {
+  font-size: 1.5rem;
+}
+
+.font-size-small h1 {
+  font-size: 2rem;
+}
+
+.font-size-small h2 {
+  font-size: 1.7rem;
+}
+
+.font-size-small h3 {
+  font-size: 1.4rem;
+}
+
+.font-size-small h4 {
+  font-size: 1.2rem;
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  --primary: #9669ff;
+  --bg-dark: #000000;
+  --bg-light: #ffffff;
+  --text-dark: #000000;
+  --text-light: #ffffff;
+}
+
+.high-contrast [data-bs-theme=dark] {
+  --bs-body-color: #ffffff;
+  --bs-body-bg: #000000;
+  --bs-border-color: #ffffff;
+}
+
+.high-contrast [data-bs-theme=light] {
+  --bs-body-color: #000000;
+  --bs-body-bg: #ffffff;
+  --bs-border-color: #000000;
+}
+
+.high-contrast a {
+  text-decoration: underline;
+}
+
+.high-contrast .btn {
+  border-width: 2px;
+}
+
+/* Reduced Motion */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.001s !important;
+  animation-delay: 0.001s !important;
+  transition-duration: 0.001s !important;
+  transition-delay: 0.001s !important;
+}
+
+/* Dark mode specific styles */
+[data-bs-theme=dark] .card {
+  background-color: var(--secondary-light);
+  border-color: var(--secondary);
+}
+
+[data-bs-theme=dark] .navbar {
+  background-color: var(--secondary-dark) !important;
+}
+
+[data-bs-theme=dark] .footer {
+  background-color: var(--secondary-dark);
+  color: var(--text-light);
+}
+
+/* Light mode specific styles */
+[data-bs-theme=light] .card {
+  background-color: #ffffff;
+  border-color: #dee2e6;
+}
+
+[data-bs-theme=light] .navbar {
+  background-color: var(--primary) !important;
+}
+
+[data-bs-theme=light] .footer {
+  background-color: var(--secondary-light);
+  color: var(--text-light);
+}
+
 /* Custom navbar styling */
 .navbar-dark {
   background-color: var(--secondary-dark);

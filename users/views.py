@@ -11,8 +11,8 @@ from django.db.models import Count, Sum, Avg
 from django.utils import timezone
 from datetime import timedelta
 
-from .forms import UserRegistrationForm, CustomAuthenticationForm, UserProfileForm, UserDeleteForm
-from .models import UserProfile
+from .forms import UserRegistrationForm, CustomAuthenticationForm, UserProfileForm, UserDeleteForm, UserSettingsForm
+from .models import UserProfile, UserSettings
 from solutions.models import Solution
 from tags.models import Tag
 from .mcp import MCPToken
@@ -238,3 +238,29 @@ def revoke_mcp_token(request, token_id):
         messages.success(request, f"Token '{token.name}' has been revoked.")
 
     return redirect('users:mcp_tokens')
+
+
+@login_required
+def settings_view(request):
+    """
+    View for user settings page to manage theme and accessibility preferences
+    """
+    try:
+        user_settings = request.user.settings
+    except UserSettings.DoesNotExist:
+        # Create settings if they don't exist
+        user_settings = UserSettings.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        form = UserSettingsForm(request.POST, instance=user_settings)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your settings have been updated successfully.")
+            return redirect('users:settings')
+    else:
+        form = UserSettingsForm(instance=user_settings)
+
+    return render(request, 'users/settings.html', {
+        'form': form,
+        'active_tab': 'settings'
+    })
