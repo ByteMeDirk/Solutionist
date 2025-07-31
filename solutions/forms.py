@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import MinLengthValidator
 from django.core.exceptions import ValidationError
-from .ratings import Rating
+from solutions.ratings import Rating
 from .models import Solution, SolutionVersion
 from tags.models import Tag
 
@@ -72,24 +72,41 @@ class SolutionForm(forms.ModelForm):
 
     def save(self, commit=True):
         solution = super().save(commit=False)
+        is_new = not solution.pk  # Check if this is a new solution
 
-        if not solution.pk:  # If creating new solution
+        if is_new:  # If creating new solution
             solution.author = self.user
 
         if commit:
+            # Get the original content before saving if this is an edit
+            original_content = None
+            if not is_new:
+                original_content = Solution.objects.get(pk=solution.pk).content
+
+            # Save the solution
             solution.save()
 
-            # Handle tags using the new get_or_create_tags method
+            # Handle tags using the get_or_create_tags method
             tag_names = self.cleaned_data.get('tags_input', [])
             tags = Tag.get_or_create_tags(tag_names)
             solution.tags.set(tags)
 
-            # Create version history if this is an edit
-            if solution.pk and self.cleaned_data.get('change_comment'):
+            # Create initial version if this is a new solution
+            if is_new:
                 SolutionVersion.objects.create(
                     solution=solution,
                     content=solution.content,
-                    comment=self.cleaned_data['change_comment']
+                    change_comment="Initial version",
+                    created_by=self.user
+                )
+            # Create a new version if content changed (regardless of comment)
+            elif not is_new and solution.content != original_content:
+                comment = self.cleaned_data.get('change_comment') or "Content updated"
+                SolutionVersion.objects.create(
+                    solution=solution,
+                    content=solution.content,
+                    change_comment=comment,
+                    created_by=self.user
                 )
 
         return solution

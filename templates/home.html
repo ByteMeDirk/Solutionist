@@ -4,469 +4,748 @@
 {% block title %}Home - Solutionist{% endblock %}
 
 {% block extra_css %}
-<style>
-    /* Parallax and hero section styles */
-    .parallax-container {
-        position: relative;
-        height: 100vh;
-        overflow: hidden;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    }
-
-    .parallax-layer {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-    }
-
-    .layer-1 {
-        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-        transform: translateY(0);
-        opacity: 0.7;
-    }
-
-    .layer-2 {
-        background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.05) 100%);
-        transform: translateY(0);
-    }
-
-    .search-container {
-        position: relative;
-        max-width: 800px;
-        margin: 2rem auto;
-    }
-
-    .search-input {
-        width: 100%;
-        padding: 1rem 1.5rem;
-        font-size: 1.1rem;
-        border: none;
-        border-radius: 2rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        padding-right: 4rem;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-    }
-
-    .search-input:focus {
-        outline: none;
-        box-shadow: 0 4px 30px rgba(0,0,0,0.3);
-        background: white;
-    }
-
-    .search-button {
-        position: absolute;
-        right: 0.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--primary);
-        color: white;
-        border: none;
-        width: 3rem;
-        height: 3rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .search-button:hover {
-        background: var(--primary-dark);
-        transform: translateY(-50%) scale(1.05);
-    }
-
-    .search-suggestions {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        margin-top: 0.5rem;
-        display: none;
-        z-index: 1000;
-    }
-
-    .suggestion-item {
-        padding: 0.75rem 1.5rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: background-color 0.2s ease;
-        color: #212529;
-    }
-
-    .suggestion-item:hover {
-        background-color: #f8f9fa;
-        color: var(--primary);
-    }
-
-    .suggestion-item i {
-        color: var(--primary);
-        width: 1.2rem;
-    }
-
-    .floating-shapes {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        z-index: 1;
-    }
-
-    .shape {
-        position: absolute;
-        opacity: 0.1;
-        animation: float 15s infinite linear;
-    }
-
-    .shape:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
-    .shape:nth-child(2) { left: 30%; top: 40%; animation-delay: 2s; }
-    .shape:nth-child(3) { left: 50%; top: 60%; animation-delay: 4s; }
-    .shape:nth-child(4) { left: 70%; top: 20%; animation-delay: 6s; }
-    .shape:nth-child(5) { left: 90%; top: 40%; animation-delay: 8s; }
-
-    @keyframes float {
-        0% {
-            transform: translateY(0) rotate(0deg);
+    <style>
+        /* Parallax and hero section styles */
+        .parallax-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
         }
-        50% {
-            transform: translateY(-20px) rotate(180deg);
+
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
         }
-        100% {
-            transform: translateY(0) rotate(360deg);
+
+        .layer-1 {
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: translateY(0);
+            opacity: 0.7;
         }
-    }
 
-    .hero-content {
-        position: relative;
-        z-index: 2;
-        padding-top: 15vh;
-        color: white;
-        text-align: center;
-    }
-
-    .hero-title {
-        font-size: 4rem;
-        font-weight: 800;
-        margin-bottom: 1.5rem;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fadeInUp 0.8s ease forwards;
-    }
-
-    .hero-subtitle {
-        font-size: 1.5rem;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.8s ease 0.3s forwards;
-    }
-
-    .hero-buttons {
-        margin-top: 2rem;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.8s ease 0.6s forwards;
-    }
-
-    @keyframes fadeInUp {
-        to {
-            opacity: 1;
+        .layer-2 {
+            background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.05) 100%);
             transform: translateY(0);
         }
-    }
 
-    .hero-stat {
-        text-align: center;
-        padding: 1.5rem;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 1rem;
-        backdrop-filter: blur(10px);
-        margin-top: 3rem;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.8s ease 0.9s forwards;
-    }
+        .search-container {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
 
-    .hero-stat h3 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding-right: 4rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
 
-    .scroll-indicator {
-        position: absolute;
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
-        color: white;
-        text-align: center;
-        opacity: 0;
-        animation: fadeIn 1s ease 1.2s forwards;
-    }
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            background: white;
+        }
 
-    .scroll-indicator i {
-        font-size: 2rem;
-        animation: bounce 2s infinite;
-    }
+        .search-button {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-    @keyframes fadeIn {
-        to { opacity: 1; }
-    }
+        .search-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-50%) scale(1.05);
+        }
 
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-        40% { transform: translateY(-10px); }
-        60% { transform: translateY(-5px); }
-    }
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 0.5rem;
+            display: none;
+            z-index: 1000;
+        }
 
-    /* Feature section styles */
-    .features-section {
-        position: relative;
-        z-index: 3;
-        background: white;
-        padding: 5rem 0;
-        margin-top: -3rem;
-        border-radius: 3rem 3rem 0 0;
-    }
+        .suggestion-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s ease;
+            color: #212529;
+        }
 
-    .feature-card {
-        height: 100%;
-        padding: 2rem;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
+        .suggestion-item:hover {
+            background-color: #f8f9fa;
+            color: var(--primary);
+        }
 
-    .feature-icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 1.5rem;
-        background: var(--primary);
-        color: white;
-        border-radius: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        transform: rotate(0deg);
-        transition: all 0.3s ease;
-    }
+        .suggestion-item i {
+            color: var(--primary);
+            width: 1.2rem;
+        }
 
-    .feature-card:hover .feature-icon {
-        transform: rotate(360deg);
-        background: var(--primary-dark);
-    }
-</style>
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+
+        .shape:nth-child(1) {
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            left: 30%;
+            top: 40%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            left: 50%;
+            top: 60%;
+            animation-delay: 4s;
+        }
+
+        .shape:nth-child(4) {
+            left: 70%;
+            top: 20%;
+            animation-delay: 6s;
+        }
+
+        .shape:nth-child(5) {
+            left: 90%;
+            top: 40%;
+            animation-delay: 8s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding-top: 15vh;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+        }
+
+        .hero-buttons {
+            margin-top: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            margin-top: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.9s forwards;
+        }
+
+        .hero-stat h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.2s forwards;
+        }
+
+        .scroll-indicator i {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Feature section styles */
+        .features-section {
+            position: relative;
+            z-index: 3;
+            background: white;
+            padding: 5rem 0;
+            margin-top: -3rem;
+            border-radius: 3rem 3rem 0 0;
+        }
+
+        .feature-card {
+            height: 100%;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            transform: rotate(0deg);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotate(360deg);
+            background: var(--primary-dark);
+        }
+
+        /* How It Works section styles */
+        .how-it-works {
+            padding: 5rem 0;
+            background-color: #f8f9fa;
+        }
+
+        .step-card {
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            background: white;
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        /* About section styles */
+        .about-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .about-image {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Future Features section styles */
+        .future-features {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .feature-preview {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            height: 100%;
+        }
+
+        .feature-preview h4 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-preview h4 i {
+            margin-right: 0.75rem;
+        }
+
+        /* CTA section styles */
+        .cta-section {
+            padding: 5rem 0;
+            background: white;
+            text-align: center;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-<!-- Parallax Hero Section -->
-<div class="parallax-container">
-    <div class="parallax-layer layer-1"></div>
-    <div class="parallax-layer layer-2"></div>
-    <div class="floating-shapes">
-        <div class="shape">{ }</div>
-        <div class="shape">[ ]</div>
-        <div class="shape">&lt;/&gt;</div>
-        <div class="shape">{*}</div>
-        <div class="shape">#</div>
+    <!-- Parallax Hero Section -->
+    <div class="parallax-container">
+        <div class="parallax-layer layer-1"></div>
+        <div class="parallax-layer layer-2"></div>
+        <div class="floating-shapes">
+            <div class="shape text-black">{ }</div>
+            <div class="shape text-black">[ ]</div>
+            <div class="shape text-black">&lt;/&gt;</div>
+            <div class="shape text-black">{*}</div>
+            <div class="shape text-black">#</div>
+            <div class="shape text-black">@</div>
+            <div class="shape text-black">&</div>
+            <div class="shape text-black">*</div>
+        </div>
+
+        <div class="hero-content">
+            <div class="container">
+                <h1 class="hero-title">Solutionist</h1>
+                <p class="hero-subtitle">Share knowledge. Find solutions. Build together.</p>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <form method="get" action="{% url 'solutions:list' %}" id="searchForm">
+                        <input type="text"
+                               name="q"
+                               class="search-input"
+                               placeholder="Search solutions..."
+                               autocomplete="off"
+                               id="searchInput">
+                        <button type="submit" class="search-button">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="{% url 'solutions:create' %}" class="btn btn-light btn-lg mx-2">
+                        <i class="bi bi-plus-circle me-2"></i>Share a Solution
+                    </a>
+                    <a href="{% url 'solutions:list' %}" class="btn btn-outline-light btn-lg mx-2">
+                        <i class="bi bi-grid me-2"></i>Browse All
+                    </a>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-3">
+                        <div class="hero-stat">
+                            <h3>{{ stats.solution_count }}</h3>
+                            <p class="mb-0">Solutions Shared</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="hero-stat">
+                            <h3>{{ stats.user_count }}</h3>
+                            <p class="mb-0">Active Developers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="hero-stat">
+                            <h3>{{ stats.language_count }}</h3>
+                            <p class="mb-0">Languages</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <p class="mb-2">Scroll to explore</p>
+            <i class="bi bi-mouse"></i>
+        </div>
     </div>
 
-    <div class="hero-content">
+    <!-- Features Section -->
+    <section class="features-section">
         <div class="container">
-            <h1 class="hero-title">Solutionist</h1>
-            <p class="hero-subtitle">Share knowledge. Find solutions. Build together.</p>
-
-            <!-- Search Bar -->
-            <div class="search-container">
-                <form method="get" action="{% url 'solutions:list' %}" id="searchForm">
-                    <input type="text"
-                           name="q"
-                           class="search-input"
-                           placeholder="Search solutions..."
-                           autocomplete="off"
-                           id="searchInput">
-                    <button type="submit" class="search-button">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </form>
-                <div class="search-suggestions" id="searchSuggestions"></div>
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold">Welcome to Solutionist</h2>
+                <p class="lead text-muted">A collaborative platform where developers share and discover solutions to
+                    programming challenges</p>
             </div>
-
-            <div class="hero-buttons">
-                <a href="{% url 'solutions:create' %}" class="btn btn-light btn-lg mx-2">
-                    <i class="bi bi-plus-circle me-2"></i>Share a Solution
-                </a>
-                <a href="{% url 'solutions:list' %}" class="btn btn-outline-light btn-lg mx-2">
-                    <i class="bi bi-grid me-2"></i>Browse All
-                </a>
-            </div>
-
-            <div class="row justify-content-center">
-                <div class="col-md-3">
-                    <div class="hero-stat">
-                        <h3>{{ stats.solution_count }}</h3>
-                        <p class="mb-0">Solutions Shared</p>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-search"></i>
+                        </div>
+                        <h3>Find Solutions</h3>
+                        <p>Discover solutions to common programming challenges with our smart search and AI-powered
+                            summaries.</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="hero-stat">
-                        <h3>{{ stats.user_count }}</h3>
-                        <p class="mb-0">Active Developers</p>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-share"></i>
+                        </div>
+                        <h3>Share Knowledge</h3>
+                        <p>Contribute your expertise and help others by sharing your programming solutions and
+                            insights.</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="hero-stat">
-                        <h3>{{ stats.language_count }}</h3>
-                        <p class="mb-0">Languages</p>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h3>Build Together</h3>
+                        <p>Join a community of developers, collaborate on solutions, and grow your skills together.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="scroll-indicator">
-        <p class="mb-2">Scroll to explore</p>
-        <i class="bi bi-mouse"></i>
-    </div>
-</div>
-
-<!-- Features Section -->
-<section class="features-section">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-search"></i>
-                    </div>
-                    <h3>Find Solutions</h3>
-                    <p>Discover solutions to common programming challenges with our smart search and AI-powered summaries.</p>
-                </div>
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">How Solutionist Works</h2>
+                <p class="lead text-muted">Get started in just a few simple steps</p>
             </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-share"></i>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Search for Solutions</h3>
+                        <p>Use our powerful search engine to find solutions to specific programming problems across
+                            multiple languages and frameworks.</p>
+                        <p class="text-muted"><i class="bi bi-lightbulb me-2"></i>Try searching by language, framework,
+                            or problem description.</p>
                     </div>
-                    <h3>Share Knowledge</h3>
-                    <p>Contribute your expertise and help others by sharing your programming solutions and insights.</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-people"></i>
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Create an Account</h3>
+                        <p>Sign up to unlock additional features including saving favorites, posting comments, and
+                            rating solutions.</p>
+                        <p class="text-muted"><i class="bi bi-lightbulb me-2"></i>Registration takes less than a minute
+                            and is completely free.</p>
                     </div>
-                    <h3>Build Together</h3>
-                    <p>Join a community of developers, collaborate on solutions, and grow your skills together.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Share Your Own Solutions</h3>
+                        <p>Contribute to the community by sharing your expertise. Write solutions using Markdown and tag
+                            them appropriately.</p>
+                        <p class="text-muted"><i class="bi bi-lightbulb me-2"></i>Our AI automatically generates a
+                            summary of your solution.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="display-5 fw-bold mb-4">What Makes Solutionist Different</h2>
+                    <p class="lead mb-4">Solutionist combines the best aspects of Q&A platforms, documentation, and code
+                        sharing in one seamless experience.</p>
+
+                    <div class="d-flex mb-3">
+                        <div class="me-3 text-primary"><i class="bi bi-check-circle-fill fs-4"></i></div>
+                        <div>
+                            <h5>AI-Powered Summaries</h5>
+                            <p>Each solution comes with an AI-generated summary for quick understanding.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-3">
+                        <div class="me-3 text-primary"><i class="bi bi-check-circle-fill fs-4"></i></div>
+                        <div>
+                            <h5>Version History</h5>
+                            <p>Solutions can evolve over time with full version tracking to see how they improve.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-3">
+                        <div class="me-3 text-primary"><i class="bi bi-check-circle-fill fs-4"></i></div>
+                        <div>
+                            <h5>Community Ratings</h5>
+                            <p>Find the best solutions with our community rating system.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-image">
+                        <img src="{% static 'images/collaboration.svg' %}" alt="Collaboration" class="img-fluid"
+                             onerror="this.src='https://via.placeholder.com/600x400?text=Solutionist';this.onerror='';">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Features Section -->
+    <section class="future-features">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">Advanced Solutionist Features</h2>
+                <p class="lead">Cutting-edge tools to enhance your development workflow</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="feature-preview">
+                        <h4><i class="bi bi-robot"></i> Model Context Protocol Integration</h4>
+                        <p>Solutionist is fully integrated with Model Context Protocols (MCP), revolutionizing how you
+                            interact with solutions.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle me-2"></i> Read solutions directly from your AI assistant
+                            </li>
+                            <li><i class="bi bi-check-circle me-2"></i> Write and publish solutions without leaving
+                                your coding environment
+                            </li>
+                            <li><i class="bi bi-check-circle me-2"></i> Get solution recommendations while you code
+                            </li>
+                            <li><i class="bi bi-check-circle me-2"></i> Seamless integration with popular AI coding
+                                assistants
+                            </li>
+                        </ul>
+                        <p class="mt-3">
+                            <a href="#" class="btn btn-outline-light btn-sm">
+                                <i class="bi bi-book me-1"></i> View Documentation
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-preview">
+                        <h4><i class="bi bi-code-square"></i> Interactive Code Playground</h4>
+                        <p>Test and experiment with solutions directly in your browser with our integrated code
+                            playground.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle me-2"></i> Run code examples in multiple languages</li>
+                            <li><i class="bi bi-check-circle me-2"></i> Fork and modify solutions to fit your needs
+                            </li>
+                            <li><i class="bi bi-check-circle me-2"></i> Share your modified solutions with the
+                                community
+                            </li>
+                            <li><i class="bi bi-check-circle me-2"></i> Built-in debugging tools</li>
+                        </ul>
+                        <p class="mt-3">
+                            <a href="#" class="btn btn-outline-light btn-sm">
+                                <i class="bi bi-play-fill me-1"></i> Try Playground
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="display-5 fw-bold mb-4">Ready to Get Started?</h2>
+            <p class="lead mb-5">Join thousands of developers who are already sharing and finding solutions on
+                Solutionist.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'solutions:create' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle me-2"></i>Share Your First Solution
+                </a>
+                <a href="{% url 'users:register' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-person-plus me-2"></i>Create an Account
+                </a>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Parallax effect code
-    const parallaxContainer = document.querySelector('.parallax-container');
-    const layers = document.querySelectorAll('.parallax-layer');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Parallax effect code
+            const parallaxContainer = document.querySelector('.parallax-container');
+            const layers = document.querySelectorAll('.parallax-layer');
 
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        layers.forEach((layer, index) => {
-            const speed = (index + 1) * 0.5;
-            const yPos = -(scrolled * speed);
-            layer.style.transform = `translateY(${yPos}px)`;
-        });
-    });
+            window.addEventListener('scroll', function () {
+                const scrolled = window.pageYOffset;
+                layers.forEach((layer, index) => {
+                    const speed = (index + 1) * 0.5;
+                    const yPos = -(scrolled * speed);
+                    layer.style.transform = `translateY(${yPos}px)`;
+                });
+            });
 
-    // Search suggestions functionality
-    const searchInput = document.getElementById('searchInput');
-    const searchSuggestions = document.getElementById('searchSuggestions');
-    let searchTimeout;
+            // Search suggestions functionality
+            const searchInput = document.getElementById('searchInput');
+            const searchSuggestions = document.getElementById('searchSuggestions');
+            let searchTimeout;
 
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const query = this.value.trim();
+            searchInput.addEventListener('input', function () {
+                clearTimeout(searchTimeout);
+                const query = this.value.trim();
 
-        if (query.length > 1) {
-            searchTimeout = setTimeout(() => {
-                fetch(`{% url 'solutions:list' %}?q=${encodeURIComponent(query)}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.suggestions && data.suggestions.length > 0) {
-                        searchSuggestions.innerHTML = data.suggestions.map(suggestion => `
+                if (query.length > 1) {
+                    searchTimeout = setTimeout(() => {
+                        fetch(`{% url 'solutions:list' %}?q=${encodeURIComponent(query)}`, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.suggestions && data.suggestions.length > 0) {
+                                    searchSuggestions.innerHTML = data.suggestions.map(suggestion => `
                             <div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">
                                 <i class="bi bi-${suggestion.startsWith('#') ? 'tag' : 'search'}"></i>
                                 ${suggestion}
                             </div>
                         `).join('');
-                        searchSuggestions.style.display = 'block';
-                    } else {
-                        searchSuggestions.style.display = 'none';
-                    }
-                });
-            }, 300);
-        } else {
-            searchSuggestions.style.display = 'none';
-        }
-    });
-
-    // Hide suggestions when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
-            searchSuggestions.style.display = 'none';
-        }
-    });
-
-    // Handle Enter key in search
-    searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            document.getElementById('searchForm').submit();
-        }
-    });
-
-    // Add scroll reveal for features
-    const features = document.querySelectorAll('.feature-card');
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
-                    entry.target.style.transform = 'translateY(0)';
+                                    searchSuggestions.style.display = 'block';
+                                } else {
+                                    searchSuggestions.style.display = 'none';
+                                }
+                            });
+                    }, 300);
+                } else {
+                    searchSuggestions.style.display = 'none';
                 }
             });
-        },
-        { threshold: 0.1 }
-    );
 
-    features.forEach(feature => {
-        feature.style.opacity = 0;
-        feature.style.transform = 'translateY(20px)';
-        feature.style.transition = 'all 0.6s ease';
-        observer.observe(feature);
-    });
-});
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                    searchSuggestions.style.display = 'none';
+                }
+            });
 
-// Helper function for search suggestions
-function selectSuggestion(suggestion) {
-    document.getElementById('searchInput').value = suggestion;
-    document.getElementById('searchForm').submit();
-}
-</script>
+            // Handle Enter key in search
+            searchInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('searchForm').submit();
+                }
+            });
+
+            // Add scroll reveal for features
+            const features = document.querySelectorAll('.feature-card');
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = 1;
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                },
+                {threshold: 0.1}
+            );
+
+            features.forEach(feature => {
+                feature.style.opacity = 0;
+                feature.style.transform = 'translateY(20px)';
+                feature.style.transition = 'all 0.6s ease';
+                observer.observe(feature);
+            });
+        });
+
+        // Helper function for search suggestions
+        function selectSuggestion(suggestion) {
+            document.getElementById('searchInput').value = suggestion;
+            document.getElementById('searchForm').submit();
+        }
+    </script>
 {% endblock %}

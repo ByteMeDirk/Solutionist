@@ -349,8 +349,16 @@ def solution_compare(request, slug):
     if request.method == 'POST':
         form = SolutionVersionCompareForm(solution, request.POST)
         if form.is_valid():
-            version_a = form.cleaned_data['version_a']
-            version_b = form.cleaned_data['version_b']
+            # The form returns UUIDs, not SolutionVersion objects
+            version_a_id = form.cleaned_data['version_a']
+            version_b_id = form.cleaned_data['version_b']
+
+            # Fetch the actual SolutionVersion objects
+            try:
+                version_a = SolutionVersion.objects.get(pk=version_a_id, solution=solution)
+                version_b = SolutionVersion.objects.get(pk=version_b_id, solution=solution)
+            except SolutionVersion.DoesNotExist:
+                pass
     else:
         form = SolutionVersionCompareForm(solution)
         # Check if version_a and version_b are provided in GET parameters
@@ -383,18 +391,33 @@ def solution_compare(request, slug):
 def generate_diff_html(text_a, text_b):
     """
     Generate HTML diff between two texts with custom styling.
+
+    Args:
+        text_a: Text from the first version (typically older)
+        text_b: Text from the second version (typically newer)
+
+    Returns:
+        HTML formatted diff table with custom styling
     """
-    # Create a HtmlDiff object with custom settings
-    diff = difflib.HtmlDiff(tabsize=4)
-    
+    # Ensure we have strings to compare
+    text_a = str(text_a) if text_a else ""
+    text_b = str(text_b) if text_b else ""
+
+    # Split the text into lines, preserving empty lines
+    lines_a = text_a.splitlines()
+    lines_b = text_b.splitlines()
+
+    # Create a HtmlDiff object with custom settings for better readability
+    diff = difflib.HtmlDiff(tabsize=4, wrapcolumn=80)
+
     # Generate the diff table
     diff_table = diff.make_table(
-        text_a.splitlines(),
-        text_b.splitlines(),
+        lines_a,
+        lines_b,
         fromdesc='Previous Version',
         todesc='Current Version',
         context=True,
-        numlines=3
+        numlines=5  # Show more context lines
     )
     
     # Apply custom styling to the diff table
@@ -412,7 +435,20 @@ def generate_diff_html(text_a, text_b):
     # Add classes to cells for easier styling
     diff_table = diff_table.replace('<td class="diff_header"', '<td class="diff-line-num"')
     
+    # Add classes to the content cells to improve styling
+    diff_table = diff_table.replace('<td nowrap="nowrap">', '<td class="diff-text">')
+
     # Remove the legend and other unnecessary elements
     diff_table = diff_table.split('<table class="diff" summary="Legends">')[0]
     
+    # If no changes detected, add a clear message
+    if "diff_add" not in diff_table and "diff_sub" not in diff_table:
+        no_changes_message = """
+        <div class="alert alert-info mb-3">
+            <i class="bi bi-info-circle me-2"></i>
+            No differences found between these versions.
+        </div>
+        """
+        diff_table = no_changes_message + diff_table
+
     return diff_table
