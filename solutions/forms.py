@@ -31,6 +31,18 @@ class SolutionForm(forms.ModelForm):
         })
     )
 
+    # Add change_comment field for tracking version changes when editing
+    change_comment = forms.CharField(
+        required=False,
+        label="Change Comment",
+        help_text="Briefly describe what you changed (optional)",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'e.g., Fixed code example, Updated API documentation'
+        }),
+        max_length=255
+    )
+
     class Meta:
         model = Solution
         fields = ['title', 'content', 'is_published']
@@ -49,6 +61,10 @@ class SolutionForm(forms.ModelForm):
         # If we're editing an existing solution, pre-populate the tags input
         if instance:
             self.initial['tags_input'] = ', '.join([tag.name for tag in instance.tags.all()])
+
+        # Make change_comment field required only when editing existing solutions
+        if instance:
+            self.fields['change_comment'].required = True
 
     def clean_tags_input(self):
         """Validate that at least 5 tags are provided."""
@@ -87,7 +103,7 @@ class SolutionForm(forms.ModelForm):
                 solution=solution,
                 content=solution.content,
                 created_by=self.user,
-                change_comment="Initial version" if not solution.pk else "Updated solution"
+                change_comment=self.cleaned_data.get('change_comment', "Updated solution")
             )
 
         return solution

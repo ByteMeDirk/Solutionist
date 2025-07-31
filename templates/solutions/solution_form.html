@@ -238,6 +238,7 @@ def hello_world():
 {{ form.media }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
 <script>
     // Apply syntax highlighting to the preview
     const applyHighlighting = () => {
@@ -246,50 +247,80 @@ def hello_world():
         });
     };
     
-    // Set up a MutationObserver to watch for changes in the preview
     document.addEventListener('DOMContentLoaded', () => {
-        const preview = document.querySelector('.markdownx-preview');
-        if (preview) {
-            const observer = new MutationObserver(applyHighlighting);
-            observer.observe(preview, { childList: true, subtree: true });
-            
-            // Initial highlighting
-            applyHighlighting();
-        }
-    });
-
-    // Initialize tagsinput
-    document.addEventListener('DOMContentLoaded', function() {
-        $('#id_tags_input').tagsinput({
-            trimValue: true,
-            confirmKeys: [13, 44, 32], // Enter, comma, space
-            tagClass: 'tag'
+        // Configure marked.js options
+        marked.setOptions({
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(code, { language: lang }).value;
+                    } catch (err) {}
+                }
+                return hljs.highlightAuto(code).value;
+            },
+            breaks: true
         });
 
-        // Add placeholder for the tagsinput
-        $('.bootstrap-tagsinput input').attr('placeholder', 'Add tag and press Enter');
+        // Get elements
+        const contentTextarea = document.getElementById('id_content');
+        const previewElement = document.querySelector('.markdownx-preview');
 
-        // Add autocomplete functionality
-        var tagsInput = $('#id_tags_input');
+        if (contentTextarea && previewElement) {
+            // Function to update preview
+            const updatePreview = () => {
+                const content = contentTextarea.value;
+                const html = marked.parse(content);
+                previewElement.innerHTML = html;
+                applyHighlighting();
+            };
 
-        // Fetch existing tags for autocomplete
-        fetch("{% url 'tags:autocomplete' %}")
-            .then(response => response.json())
-            .then(data => {
-                if (data.results && data.results.length > 0) {
-                    // Create an array of tag names
-                    const existingTags = data.results.map(tag => tag.text);
+            // Initial preview
+            updatePreview();
 
-                    // Setup typeahead for the tagsinput
-                    tagsInput.tagsinput('input').typeahead({
-                        source: existingTags
-                    }).bind('typeahead:selected', function(obj, datum) {
-                        tagsInput.tagsinput('add', datum);
-                        tagsInput.tagsinput('input').typeahead('val', '');
-                    });
-                }
-            })
-            .catch(error => console.error('Error fetching tags:', error));
+            // Update preview on input
+            contentTextarea.addEventListener('input', updatePreview);
+
+            // Update preview on keyup with debounce for better performance
+            let timeout;
+            contentTextarea.addEventListener('keyup', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(updatePreview, 300);
+            });
+        }
+
+        // Initialize tagsinput
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#id_tags_input').tagsinput({
+                trimValue: true,
+                confirmKeys: [13, 44, 32], // Enter, comma, space
+                tagClass: 'tag'
+            });
+
+            // Add placeholder for the tagsinput
+            $('.bootstrap-tagsinput input').attr('placeholder', 'Add tag and press Enter');
+
+            // Add autocomplete functionality
+            var tagsInput = $('#id_tags_input');
+
+            // Fetch existing tags for autocomplete
+            fetch("{% url 'tags:autocomplete' %}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        // Create an array of tag names
+                        const existingTags = data.results.map(tag => tag.text);
+
+                        // Setup typeahead for the tagsinput
+                        tagsInput.tagsinput('input').typeahead({
+                            source: existingTags
+                        }).bind('typeahead:selected', function(obj, datum) {
+                            tagsInput.tagsinput('add', datum);
+                            tagsInput.tagsinput('input').typeahead('val', '');
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching tags:', error));
+        });
     });
 </script>
 {% endblock %}
