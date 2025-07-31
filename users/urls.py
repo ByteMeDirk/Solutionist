@@ -16,6 +16,11 @@ urlpatterns = [
     path('profile/<str:username>/', views.user_profile_view, name='user_profile'),  # Other user's profile
     path('delete/', views.account_delete_view, name='delete'),
     
+    # MCP token management URLs
+    path('mcp-tokens/', views.mcp_tokens_view, name='mcp_tokens'),
+    path('mcp-tokens/create/', views.create_mcp_token, name='create_mcp_token'),
+    path('mcp-tokens/revoke/<int:token_id>/', views.revoke_mcp_token, name='revoke_mcp_token'),
+
     # Password reset URLs
     path('password-reset/', views.CustomPasswordResetView.as_view(), name='password_reset'),
     path('password-reset/done/', 

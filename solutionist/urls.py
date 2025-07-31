@@ -20,6 +20,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from users.mcp_api import mcp_endpoint
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     # Add app-specific URL patterns here
@@ -28,6 +30,9 @@ urlpatterns = [
     path("solutions/", include("solutions.urls")),
     path("tags/", include("tags.urls")),
     path("comments/", include("comments.urls")),
+
+    # MCP API endpoint
+    path("api/mcp/", mcp_endpoint, name="mcp_endpoint"),
 
     # Markdownx
     path('markdownx/', include('markdownx.urls')),

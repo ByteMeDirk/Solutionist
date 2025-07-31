@@ -27,6 +27,9 @@
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                             Edit Profile
                         </button>
+                        <a href="{% url 'users:mcp_tokens' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-key me-2"></i>Manage MCP Tokens
+                        </a>
                         <a href="{% url 'users:password_change' %}" class="btn btn-outline-secondary">Change Password</a>
                         <a href="{% url 'users:delete' %}" class="btn btn-outline-danger">Delete Account</a>
                     </div>

@@ -193,6 +193,11 @@
                             <i class="bi bi-tags me-1"></i> Tags
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/docs/mcp/' in request.path %}active{% endif %}" href="{% url 'core:mcp_docs' %}">
+                            <i class="bi bi-robot me-1"></i> MCP Integration
+                        </a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}

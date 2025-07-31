@@ -9,11 +9,13 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.db.models import Count, Sum, Avg
 from django.utils import timezone
+from datetime import timedelta
 
 from .forms import UserRegistrationForm, CustomAuthenticationForm, UserProfileForm, UserDeleteForm
 from .models import UserProfile
 from solutions.models import Solution
 from tags.models import Tag
+from .mcp import MCPToken
 
 
 class RegisterView(CreateView):
@@ -171,3 +173,68 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     """
     template_name = 'users/password_reset_confirm.html'
     success_url = reverse_lazy('users:password_reset_complete')
+
+
+@login_required
+def mcp_tokens_view(request):
+    """
+    View for managing MCP tokens.
+    """
+    tokens = MCPToken.objects.filter(user=request.user).order_by('-created_at')
+
+    # Build the MCP endpoint URL for display
+    host = request.get_host()
+    protocol = 'https' if request.is_secure() else 'http'
+    mcp_endpoint = f"{protocol}://{host}/api/mcp/"
+
+    context = {
+        'tokens': tokens,
+        'mcp_endpoint': mcp_endpoint,
+    }
+    return render(request, 'users/mcp_tokens.html', context)
+
+
+@login_required
+def create_mcp_token(request):
+    """
+    View for creating a new MCP token.
+    """
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        expiry_days = int(request.POST.get('expiry', 365))
+
+        if not name:
+            messages.error(request, "Token name is required.")
+            return redirect('users:mcp_tokens')
+
+        # Create the token
+        token = MCPToken(user=request.user, name=name)
+
+        # Set expiration date if specified
+        if expiry_days > 0:
+            token.expires_at = timezone.now() + timedelta(days=expiry_days)
+        else:
+            token.expires_at = None
+
+        token.save()
+
+        # Pass the newly created token to the template for display
+        messages.success(request, "MCP token created successfully. Please copy your token now, you won't be able to see it again.")
+        return redirect('users:mcp_tokens')
+
+    # If not POST, redirect to tokens page
+    return redirect('users:mcp_tokens')
+
+
+@login_required
+def revoke_mcp_token(request, token_id):
+    """
+    View for revoking an MCP token.
+    """
+    token = get_object_or_404(MCPToken, id=token_id, user=request.user)
+
+    if request.method == 'POST':
+        token.revoke()
+        messages.success(request, f"Token '{token.name}' has been revoked.")
+
+    return redirect('users:mcp_tokens')

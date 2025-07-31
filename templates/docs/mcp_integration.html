@@ -1,0 +1,694 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}MCP Integration Documentation - Solutionist{% endblock %}
+
+{% block extra_css %}
+<style>
+    .docs-sidebar {
+        position: sticky;
+        top: 2rem;
+    }
+
+    .docs-toc {
+        border-left: 2px solid var(--bs-primary);
+        padding-left: 1rem;
+    }
+
+    .docs-toc .nav-link {
+        padding: 0.25rem 0.5rem;
+        color: var(--bs-secondary);
+    }
+
+    .docs-toc .nav-link.active {
+        color: var(--bs-primary);
+        font-weight: 500;
+    }
+
+    .docs-content h2 {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .docs-content h3 {
+        margin-top: 1.5rem;
+    }
+
+    .docs-content pre {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin: 1rem 0;
+    }
+
+    .api-endpoint {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--bs-primary);
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0.25rem;
+    }
+
+    .api-method {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        background-color: #6c757d;
+        color: white;
+        font-weight: 500;
+        margin-right: 0.5rem;
+    }
+
+    .api-method.post {
+        background-color: #28a745;
+    }
+
+    .copy-button {
+        cursor: pointer;
+    }
+
+    .clipboard-container {
+        position: relative;
+    }
+
+    .code-block {
+        position: relative;
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        margin: 1rem 0;
+    }
+
+    .code-block pre {
+        margin-bottom: 0;
+        padding-top: 2rem;
+    }
+
+    .code-header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.25rem 0.5rem;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        border-bottom: 1px solid #dee2e6;
+        background-color: #e9ecef;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+
+    .language-label {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-right: auto;
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .example-block {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 4px solid #17a2b8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="docs-sidebar">
+                <h5 class="mb-3">MCP Documentation</h5>
+                <nav class="docs-toc" id="toc">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#introduction">Introduction</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#getting-started">Getting Started</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#token-management">Token Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#using-with-ai">Using with AI Assistants</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#api-reference">API Reference</a>
+                            <ul class="nav flex-column ms-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#get-solutions">Get Solutions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#get-solution">Get Solution</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#create-solution">Create Solution</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#update-solution">Update Solution</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#examples">Example Use Cases</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#security">Security Best Practices</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#troubleshooting">Troubleshooting</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="col-lg-9 docs-content">
+            <h1 class="mb-4">Model Context Protocol (MCP) Integration</h1>
+
+            <div class="alert alert-primary">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong>Solutionist MCP</strong> allows you to integrate your solutions with AI assistants and other tools.
+            </div>
+
+            <!-- Introduction Section -->
+            <section id="introduction">
+                <h2>Introduction</h2>
+                <p>
+                    The Model Context Protocol (MCP) is an integration layer that allows you to interact with your Solutionist
+                    content through AI assistants and other tools. With MCP, you can:
+                </p>
+                <ul>
+                    <li>Read your solutions directly from AI assistants like GitHub Copilot, ChatGPT, and others</li>
+                    <li>Create new solutions without leaving your AI assistant interface</li>
+                    <li>Update existing solutions with version tracking</li>
+                    <li>Search through your solution library while writing code</li>
+                </ul>
+                <p>
+                    MCP works through a secure token system, allowing tools to make requests to Solutionist on your behalf
+                    without you having to share your password.
+                </p>
+            </section>
+
+            <!-- Getting Started Section -->
+            <section id="getting-started">
+                <h2>Getting Started</h2>
+                <p>To start using MCP integration with Solutionist, follow these steps:</p>
+
+                <ol>
+                    <li>
+                        <strong>Create an MCP token</strong>
+                        <p>
+                            Navigate to your profile and click on "Manage MCP Tokens". Then click "Create New Token"
+                            and give it a descriptive name (e.g., "GitHub Copilot").
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Copy your token and endpoint</strong>
+                        <p>
+                            After creating a token, you'll see it displayed once. Copy it to a secure location.
+                            Also note the MCP endpoint URL shown on the page.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Use your token with compatible tools</strong>
+                        <p>
+                            When a tool or AI assistant asks for your Solutionist integration, provide the MCP endpoint
+                            and your token when prompted.
+                        </p>
+                    </li>
+                </ol>
+
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Important:</strong> Your token is shown only once when created. If you lose it,
+                    you'll need to create a new one and revoke the old token.
+                </div>
+            </section>
+
+            <!-- Token Management Section -->
+            <section id="token-management">
+                <h2>Token Management</h2>
+                <p>
+                    MCP tokens are your keys to accessing Solutionist programmatically. They should be managed carefully:
+                </p>
+
+                <h3>Creating Tokens</h3>
+                <p>
+                    You can create multiple tokens for different purposes or tools. When creating a token, you'll need to:
+                </p>
+                <ul>
+                    <li>Give it a descriptive name to remember where it's used</li>
+                    <li>Set an expiration period (30 days, 90 days, 1 year, or never)</li>
+                </ul>
+
+                <h3>Viewing Active Tokens</h3>
+                <p>
+                    The MCP Tokens page shows all your active tokens with information about:
+                </p>
+                <ul>
+                    <li>When they were created</li>
+                    <li>When they were last used</li>
+                    <li>When they expire</li>
+                    <li>Their current status (active or inactive)</li>
+                </ul>
+
+                <h3>Revoking Tokens</h3>
+                <p>
+                    If you suspect a token has been compromised or you no longer need it, you should revoke it immediately:
+                </p>
+                <ol>
+                    <li>Go to the MCP Tokens page</li>
+                    <li>Find the token you want to revoke</li>
+                    <li>Click the revoke button (X icon)</li>
+                </ol>
+                <p>
+                    Once revoked, a token can never be used again. You'll need to create a new token if you need access later.
+                </p>
+            </section>
+
+            <!-- Using with AI Assistants Section -->
+            <section id="using-with-ai">
+                <h2>Using with AI Assistants</h2>
+                <p>
+                    MCP integration works with various AI assistants. Here's how to use it with popular tools:
+                </p>
+
+                <h3>GitHub Copilot</h3>
+                <div class="example-block">
+                    <p><strong>Example Prompt:</strong></p>
+                    <p>"I want to access my Solutionist account. My MCP endpoint is https://solutionist.example.com/api/mcp/ and my token is [YOUR_TOKEN]."</p>
+                    <p><strong>Follow-up Command Examples:</strong></p>
+                    <ul>
+                        <li>"Show me my latest solutions about Django"</li>
+                        <li>"Create a new solution about Docker optimization"</li>
+                        <li>"Update my solution on React hooks with this new content"</li>
+                    </ul>
+                </div>
+
+                <h3>ChatGPT</h3>
+                <div class="example-block">
+                    <p><strong>Example Prompt:</strong></p>
+                    <p>"I'd like to integrate my Solutionist account using MCP. My endpoint is https://solutionist.example.com/api/mcp/ and my access token is [YOUR_TOKEN]."</p>
+                    <p><strong>Follow-up Command Examples:</strong></p>
+                    <ul>
+                        <li>"Find solutions in my library related to Python concurrency"</li>
+                        <li>"Write a new solution about GraphQL and add it to my account"</li>
+                        <li>"Get my solution about Kubernetes and help me improve it"</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-lightbulb-fill me-2"></i>
+                    <strong>Tip:</strong> Different AI assistants may have varying capabilities with MCP.
+                    If one doesn't work well, try being more specific with your instructions or try another assistant.
+                </div>
+            </section>
+
+            <!-- API Reference Section -->
+            <section id="api-reference">
+                <h2>API Reference</h2>
+                <p>
+                    The MCP API is a REST-like API that accepts JSON payloads. All requests must include your token in the
+                    Authorization header as a Bearer token.
+                </p>
+
+                <div class="alert alert-secondary">
+                    <strong>Base URL:</strong> <code id="mcp-endpoint">{{ mcp_endpoint }}</code>
+                    <button class="btn btn-sm btn-outline-secondary ms-2 copy-button" data-clipboard-target="#mcp-endpoint">
+                        <i class="bi bi-clipboard"></i> Copy
+                    </button>
+                </div>
+
+                <div class="alert alert-secondary">
+                    <strong>Authentication Header:</strong> <code>Authorization: Bearer YOUR_TOKEN</code>
+                </div>
+
+                <h3 id="get-solutions">Get Solutions</h3>
+                <div class="api-endpoint">
+                    <span class="api-method post">POST</span> <strong>{{ mcp_endpoint }}</strong>
+                    <p class="mt-2 mb-1">Retrieves a list of your solutions with optional filtering.</p>
+
+                    <div class="code-block mt-3">
+                        <div class="code-header">
+                            <span class="language-label">Request JSON</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-button" data-clipboard-target="#get-solutions-code">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <pre id="get-solutions-code">{
+  "action": "get_solutions",
+  "query": "django",  // Optional search term
+  "tag": "python",    // Optional tag filter
+  "limit": 10         // Optional result limit
+}</pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="language-label">Response</span>
+                        </div>
+                        <pre>{
+  "solutions": [
+    {
+      "id": 1,
+      "title": "Django REST Framework Best Practices",
+      "slug": "django-rest-framework-best-practices",
+      "summary": "A collection of best practices for building APIs with Django REST Framework...",
+      "tags": ["django", "python", "api", "rest", "backend"],
+      "created_at": "2025-06-15T14:30:45.123456Z",
+      "updated_at": "2025-07-01T09:22:15.654321Z",
+      "view_count": 42
+    },
+    // ... more solutions
+  ]
+}</pre>
+                    </div>
+                </div>
+
+                <h3 id="get-solution">Get Solution</h3>
+                <div class="api-endpoint">
+                    <span class="api-method post">POST</span> <strong>{{ mcp_endpoint }}</strong>
+                    <p class="mt-2 mb-1">Retrieves a specific solution by its slug.</p>
+
+                    <div class="code-block mt-3">
+                        <div class="code-header">
+                            <span class="language-label">Request JSON</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-button" data-clipboard-target="#get-solution-code">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <pre id="get-solution-code">{
+  "action": "get_solution",
+  "slug": "django-rest-framework-best-practices"
+}</pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="language-label">Response</span>
+                        </div>
+                        <pre>{
+  "solution": {
+    "id": 1,
+    "title": "Django REST Framework Best Practices",
+    "slug": "django-rest-framework-best-practices",
+    "content": "# Django REST Framework Best Practices\n\nIn this solution, I'll cover...",
+    "summary": "A collection of best practices for building APIs with Django REST Framework...",
+    "tags": ["django", "python", "api", "rest", "backend"],
+    "created_at": "2025-06-15T14:30:45.123456Z",
+    "updated_at": "2025-07-01T09:22:15.654321Z",
+    "view_count": 42
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <h3 id="create-solution">Create Solution</h3>
+                <div class="api-endpoint">
+                    <span class="api-method post">POST</span> <strong>{{ mcp_endpoint }}</strong>
+                    <p class="mt-2 mb-1">Creates a new solution in your account.</p>
+
+                    <div class="code-block mt-3">
+                        <div class="code-header">
+                            <span class="language-label">Request JSON</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-button" data-clipboard-target="#create-solution-code">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <pre id="create-solution-code">{
+  "action": "create_solution",
+  "title": "Advanced Docker Optimization Techniques",
+  "content": "# Advanced Docker Optimization Techniques\n\nIn this solution, I'll explore...",
+  "tags": ["docker", "optimization", "devops", "containers", "performance"],
+  "is_published": true  // Optional, defaults to true
+}</pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="language-label">Response</span>
+                        </div>
+                        <pre>{
+  "solution": {
+    "id": 2,
+    "title": "Advanced Docker Optimization Techniques",
+    "slug": "advanced-docker-optimization-techniques",
+    "summary": "This solution explores various techniques for optimizing Docker containers...",
+    "url": "/solutions/advanced-docker-optimization-techniques/"
+  },
+  "message": "Solution created successfully"
+}</pre>
+                    </div>
+                </div>
+
+                <h3 id="update-solution">Update Solution</h3>
+                <div class="api-endpoint">
+                    <span class="api-method post">POST</span> <strong>{{ mcp_endpoint }}</strong>
+                    <p class="mt-2 mb-1">Updates an existing solution with new content and automatically creates a new version.</p>
+
+                    <div class="code-block mt-3">
+                        <div class="code-header">
+                            <span class="language-label">Request JSON</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-button" data-clipboard-target="#update-solution-code">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <pre id="update-solution-code">{
+  "action": "update_solution",
+  "slug": "django-rest-framework-best-practices",
+  "content": "# Django REST Framework Best Practices (Updated)\n\nIn this updated solution...",
+  "tags": ["django", "python", "api", "rest", "backend", "security"],  // Optional
+  "is_published": true,  // Optional
+  "comment": "Added section on security best practices"  // Optional version comment
+}</pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="language-label">Response</span>
+                        </div>
+                        <pre>{
+  "solution": {
+    "id": 1,
+    "title": "Django REST Framework Best Practices",
+    "slug": "django-rest-framework-best-practices",
+    "summary": "A collection of best practices for building APIs with Django REST Framework...",
+    "url": "/solutions/django-rest-framework-best-practices/"
+  },
+  "message": "Solution updated successfully"
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Examples Section -->
+            <section id="examples">
+                <h2>Example Use Cases</h2>
+
+                <h3>Scenario 1: Finding Related Solutions While Coding</h3>
+                <p>
+                    Imagine you're working on a Django project and need to remember how you implemented authentication in a previous project:
+                </p>
+                <div class="example-block">
+                    <p><strong>Ask your AI assistant:</strong></p>
+                    <p>"Using my Solutionist MCP integration, find solutions I've written about Django authentication"</p>
+                    <p>The assistant will search your solutions and show relevant ones, saving you time from having to switch contexts.</p>
+                </div>
+
+                <h3>Scenario 2: Creating Documentation as You Code</h3>
+                <p>
+                    You've just implemented a complex feature and want to document it while it's fresh in your mind:
+                </p>
+                <div class="example-block">
+                    <p><strong>Ask your AI assistant:</strong></p>
+                    <p>"I just implemented a Redis caching layer for my Django application. Help me create a new solution about it and publish it to my Solutionist account."</p>
+                    <p>The assistant can help draft the solution and publish it directly without you having to switch to your browser.</p>
+                </div>
+
+                <h3>Scenario 3: Improving Existing Solutions</h3>
+                <p>
+                    You've learned a better way to implement something you've documented before:
+                </p>
+                <div class="example-block">
+                    <p><strong>Ask your AI assistant:</strong></p>
+                    <p>"Get my solution about Docker optimization from Solutionist and help me update it with information about multi-stage builds."</p>
+                    <p>The assistant can retrieve your existing solution, help you enhance it, and then update it with a new version.</p>
+                </div>
+            </section>
+
+            <!-- Security Section -->
+            <section id="security">
+                <h2>Security Best Practices</h2>
+                <p>
+                    When using MCP tokens, follow these security best practices:
+                </p>
+
+                <ul>
+                    <li>
+                        <strong>Never share your tokens publicly</strong>
+                        <p>Treat MCP tokens like passwords. Never include them in code repositories, public chat logs, or screenshots.</p>
+                    </li>
+                    <li>
+                        <strong>Use different tokens for different tools</strong>
+                        <p>Create separate tokens for each integration. This limits exposure if one token is compromised.</p>
+                    </li>
+                    <li>
+                        <strong>Set appropriate expiration dates</strong>
+                        <p>Unless absolutely necessary, avoid "never expires" tokens. Choose a reasonable expiration period.</p>
+                    </li>
+                    <li>
+                        <strong>Regularly review active tokens</strong>
+                        <p>Periodically check your active tokens and revoke any that are no longer needed.</p>
+                    </li>
+                    <li>
+                        <strong>Revoke tokens immediately if compromised</strong>
+                        <p>If you suspect a token has been exposed, revoke it immediately and create a new one if needed.</p>
+                    </li>
+                </ul>
+
+                <div class="alert alert-warning">
+                    <i class="bi bi-shield-lock-fill me-2"></i>
+                    <strong>Security Note:</strong> MCP tokens grant access to create and modify your solutions.
+                    Always keep them secure and monitor for any unauthorized activity.
+                </div>
+            </section>
+
+            <!-- Troubleshooting Section -->
+            <section id="troubleshooting">
+                <h2>Troubleshooting</h2>
+
+                <h3>Common Issues</h3>
+
+                <div class="accordion" id="troubleshootingAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                "Invalid or expired token" error
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#troubleshootingAccordion">
+                            <div class="accordion-body">
+                                <p>This error occurs when:</p>
+                                <ul>
+                                    <li>Your token has expired</li>
+                                    <li>The token has been revoked</li>
+                                    <li>The token is incorrectly formatted in the request</li>
+                                </ul>
+                                <p><strong>Solution:</strong> Create a new token in your MCP Tokens management page and ensure you're using the complete token string.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                AI assistant doesn't recognize MCP commands
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#troubleshootingAccordion">
+                            <div class="accordion-body">
+                                <p>If your AI assistant doesn't understand MCP commands:</p>
+                                <ul>
+                                    <li>Try being more explicit about what you're trying to do</li>
+                                    <li>Provide the endpoint and token again in your prompt</li>
+                                    <li>Try formatting your request more like the API examples</li>
+                                </ul>
+                                <p><strong>Example:</strong> "Using my Solutionist MCP integration with endpoint [ENDPOINT] and token [TOKEN], I want to retrieve my solution about Docker."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                "Solution not found" error
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#troubleshootingAccordion">
+                            <div class="accordion-body">
+                                <p>This occurs when:</p>
+                                <ul>
+                                    <li>The solution slug is incorrect</li>
+                                    <li>You're trying to access a solution that isn't yours</li>
+                                    <li>The solution has been deleted</li>
+                                </ul>
+                                <p><strong>Solution:</strong> First try listing your solutions with <code>get_solutions</code> to see the correct slugs, then use the exact slug in your request.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="mt-4">Getting Help</h3>
+                <p>
+                    If you're experiencing issues with MCP integration that aren't covered here, please:
+                </p>
+                <ul>
+                    <li>Check that you're using the correct endpoint and token format</li>
+                    <li>Review your browser console for any network errors</li>
+                    <li>Contact support at support@solutionist.example.com with details about the issue</li>
+                </ul>
+            </section>
+
+            <div class="mt-5 pt-4 border-top">
+                <p class="text-muted">
+                    <i class="bi bi-clock"></i> Last updated: July 31, 2025
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize clipboard.js
+        var clipboard = new ClipboardJS('.copy-button');
+
+        clipboard.on('success', function(e) {
+            var button = e.trigger;
+            var originalHTML = button.innerHTML;
+
+            button.innerHTML = '<i class="bi bi-check"></i> Copied!';
+
+            setTimeout(function() {
+                button.innerHTML = originalHTML;
+            }, 2000);
+
+            e.clearSelection();
+        });
+
+        // Active link handling for TOC
+        const sections = document.querySelectorAll('.docs-content section');
+        const navLinks = document.querySelectorAll('.docs-toc .nav-link');
+
+        function setActiveLink() {
+            let currentSection = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+
+                if (pageYOffset >= (sectionTop - 100)) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', setActiveLink);
+        setActiveLink(); // Set initial active link
+    });
+</script>
+{% endblock %}

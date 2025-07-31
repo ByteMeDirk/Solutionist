@@ -40,3 +40,19 @@ def handler500(request):
     Custom 500 error handler.
     """
     return render(request, "errors/500.html", status=500)
+
+
+def mcp_documentation(request):
+    """
+    View function for the MCP integration documentation page.
+    """
+    # Build the MCP endpoint URL for display in the docs
+    host = request.get_host()
+    protocol = 'https' if request.is_secure() else 'http'
+    mcp_endpoint = f"{protocol}://{host}/api/mcp/"
+
+    context = {
+        'mcp_endpoint': mcp_endpoint,
+    }
+
+    return render(request, "docs/mcp_integration.html", context)
