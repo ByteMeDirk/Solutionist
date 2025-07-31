@@ -23,6 +23,11 @@ def solution_list(request):
     # Start with all published solutions
     solutions = Solution.objects.filter(is_published=True)
     
+    # Check for author filter (for "My Solutions")
+    author = request.GET.get('author')
+    if author:
+        solutions = solutions.filter(author__username=author)
+
     # Apply filters based on form data
     if search_form.is_valid():
         # Apply text search filter
@@ -70,7 +75,8 @@ def solution_list(request):
     context = {
         'page_obj': page_obj,
         'search_form': search_form,
-        'popular_tags': popular_tags
+        'popular_tags': popular_tags,
+        'author_filter': author  # Pass the author filter to the template
     }
     
     return render(request, 'solutions/solution_list.html', context)

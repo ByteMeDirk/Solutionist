@@ -179,14 +179,14 @@
                             </li>
                             {% if user.is_authenticated %}
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'solutions:list' %}?q={{ user.username }}">
+                                <li><a class="dropdown-item" href="{% url 'solutions:list' %}?author={{ user.username }}">
                                     <i class="bi bi-person-badge me-2"></i>My Solutions</a>
                                 </li>
                             {% endif %}
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if '/tags/' in request.path %}active{% endif %}" href="{% url 'solutions:list' %}">
+                        <a class="nav-link {% if '/tags/' in request.path %}active{% endif %}" href="{% url 'tags:list' %}">
                             <i class="bi bi-tags me-1"></i> Tags
                         </a>
                     </li>
