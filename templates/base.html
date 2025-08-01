@@ -9,7 +9,8 @@
     <title>{% block title %}Solutionist{% endblock %}</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='70'>{*}</text></svg>">
+    <link rel="icon" type="image/svg+xml"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='70'>{*}</text></svg>">
 
     {# Bootstrap CSS #}
     {% bootstrap_css %}
@@ -17,7 +18,8 @@
     {# Google Fonts - Adding modern fonts #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+          rel="stylesheet">
 
     {# Font Awesome Icons #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -53,7 +55,7 @@
         /* Modern navbar styling */
         .navbar {
             background-color: var(--secondary);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 0.75rem 1rem;
         }
 
@@ -64,7 +66,7 @@
         }
 
         .navbar-dark .navbar-nav .nav-link {
-            color: rgba(255,255,255,0.85);
+            color: rgba(255, 255, 255, 0.85);
             font-weight: 500;
             padding: 0.5rem 1rem;
             transition: color 0.2s ease;
@@ -78,14 +80,14 @@
         .card {
             border: none;
             border-radius: 0.75rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             overflow: hidden;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         /* Modern buttons */
@@ -157,7 +159,7 @@
             }
 
             .navbar .dropdown-item {
-                color: rgba(255,255,255,0.85);
+                color: rgba(255, 255, 255, 0.85);
             }
 
             .navbar .dropdown-item:hover {
@@ -168,225 +170,239 @@
     </style>
 </head>
 <body>
-    {# Navigation #}
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="bi bi-braces-asterisk me-2"></i>Solutionist
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'core:home' %}">
-                            <i class="bi bi-house me-1"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if '/solutions/' in request.path %}active{% endif %}" href="#"
-                           id="solutionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-journals me-1"></i> Solutions
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="solutionsDropdown">
-                            <li><a class="dropdown-item" href="{% url 'solutions:list' %}">
-                                <i class="bi bi-grid me-2"></i>Browse Solutions</a>
+{# Navigation #}
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-braces-asterisk me-2"></i>Solutionist
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'core:home' %}">
+                        <i class="bi bi-house me-1"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if '/solutions/' in request.path %}active{% endif %}" href="#"
+                       id="solutionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-journals me-1"></i> Solutions
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="solutionsDropdown">
+                        <li><a class="dropdown-item" href="{% url 'solutions:list' %}">
+                            <i class="bi bi-grid me-2"></i>Browse Solutions</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'solutions:create' %}">
+                            <i class="bi bi-plus-circle me-2"></i>Share a Solution</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                            <li>
+                                <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="{% url 'solutions:create' %}">
-                                <i class="bi bi-plus-circle me-2"></i>Share a Solution</a>
+                            <li><a class="dropdown-item" href="{% url 'solutions:list' %}?author={{ user.username }}">
+                                <i class="bi bi-person-badge me-2"></i>My Solutions</a>
                             </li>
-                            {% if user.is_authenticated %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'solutions:list' %}?author={{ user.username }}">
-                                    <i class="bi bi-person-badge me-2"></i>My Solutions</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if '/tags/' in request.path %}active{% endif %}" href="{% url 'tags:list' %}">
-                            <i class="bi bi-tags me-1"></i> Tags
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if '/docs/mcp/' in request.path %}active{% endif %}" href="{% url 'core:mcp_docs' %}">
-                            <i class="bi bi-robot me-1"></i> MCP Integration
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <!-- Notifications Bell -->
-                        <li class="nav-item dropdown me-2">
-                            <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-bell fs-5"></i>
-                                {% if unread_notifications_count > 0 %}
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/tags/' in request.path %}active{% endif %}" href="{% url 'tags:list' %}">
+                        <i class="bi bi-tags me-1"></i> Tags
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/docs/mcp/' in request.path %}active{% endif %}"
+                       href="{% url 'core:mcp_docs' %}">
+                        <i class="bi bi-robot me-1"></i> MCP Integration
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <!-- Notifications Bell -->
+                    <li class="nav-item dropdown me-2">
+                        <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-bell fs-5"></i>
+                            {% if unread_notifications_count > 0 %}
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
                                     {{ unread_notifications_count }}
                                     <span class="visually-hidden">unread notifications</span>
                                 </span>
-                                {% endif %}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationsDropdown">
-                                <li>
-                                    <div class="dropdown-header d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-0">Notifications</h6>
-                                        <a href="{% url 'notifications:mark_all_as_read' %}" class="text-decoration-none mark-all-as-read">
-                                            <small>Mark all as read</small>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end notification-dropdown"
+                            aria-labelledby="notificationsDropdown">
+                            <li>
+                                <div class="dropdown-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Notifications</h6>
+                                    <a href="{% url 'notifications:mark_all_as_read' %}"
+                                       class="text-decoration-none mark-all-as-read">
+                                        <small>Mark all as read</small>
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
-                                {% with notifications=user.notifications.all|slice:":5" %}
-                                    {% if notifications %}
-                                        {% for notification in notifications %}
-                                            <li>
-                                                <a class="dropdown-item {% if not notification.is_read %}fw-bold{% endif %}"
-                                                   href="{% url 'notifications:mark_as_read' notification.id %}">
-                                                    <div class="d-flex">
-                                                        <div class="me-2">
-                                                            {% if notification.actor.profile.profile_image %}
-                                                                <img src="{{ notification.actor.profile.profile_image.url }}"
-                                                                     class="avatar-sm" alt="{{ notification.actor.username }}">
-                                                            {% else %}
-                                                                <div class="avatar-sm bg-primary d-flex align-items-center justify-content-center">
-                                                                    <span class="text-white">{{ notification.actor.username.0|upper }}</span>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-                                                        <div>
-                                                            <p class="mb-0">
-                                                                <strong>{{ notification.actor.username }}</strong>
-                                                                {{ notification.verb }}
-                                                            </p>
-                                                            <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                        <li><hr class="dropdown-divider"></li>
+                            {% with notifications=user.notifications.all|slice:":5" %}
+                                {% if notifications %}
+                                    {% for notification in notifications %}
                                         <li>
-                                            <a class="dropdown-item text-center" href="{% url 'notifications:list' %}">
-                                                View all notifications
+                                            <a class="dropdown-item {% if not notification.is_read %}fw-bold{% endif %}"
+                                               href="{% url 'notifications:mark_as_read' notification.id %}">
+                                                <div class="d-flex">
+                                                    <div class="me-2">
+                                                        {% if notification.actor.profile.profile_image %}
+                                                            <img src="{{ notification.actor.profile.profile_image.url }}"
+                                                                 class="avatar-sm"
+                                                                 alt="{{ notification.actor.username }}">
+                                                        {% else %}
+                                                            <div class="avatar-sm bg-primary d-flex align-items-center justify-content-center">
+                                                                <span class="text-white">{{ notification.actor.username.0|upper }}</span>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0">
+                                                            <strong>{{ notification.actor.username }}</strong>
+                                                            {{ notification.verb }}
+                                                        </p>
+                                                        <small class="text-muted">{{ notification.created_at|timesince }}
+                                                            ago</small>
+                                                    </div>
+                                                </div>
                                             </a>
                                         </li>
-                                    {% else %}
-                                        <li>
-                                            <div class="dropdown-item text-center text-muted py-3">
-                                                No notifications yet
-                                            </div>
-                                        </li>
-                                    {% endif %}
-                                {% endwith %}
-                            </ul>
-                        </li>
-                        <!-- User Dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle user-nav-item" href="#" id="userDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                {% if user.profile.profile_image %}
-                                    <img src="{{ user.profile.profile_image.url }}" alt="{{ user.username }}" class="avatar-sm">
+                                    {% endfor %}
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-center" href="{% url 'notifications:list' %}">
+                                            View all notifications
+                                        </a>
+                                    </li>
                                 {% else %}
-                                    <div class="avatar-sm bg-primary d-flex align-items-center justify-content-center">
-                                        <span>{{ user.username.0|upper }}</span>
-                                    </div>
+                                    <li>
+                                        <div class="dropdown-item text-center text-muted py-3">
+                                            No notifications yet
+                                        </div>
+                                    </li>
                                 {% endif %}
-                                <span class="user-name d-none d-lg-inline">{{ user.username }}</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="/users/profile/">
-                                    <i class="bi bi-person me-2"></i>Profile</a>
-                                </li>
-                                <li><a class="dropdown-item" href="/users/settings/">
-                                    <i class="bi bi-gear me-2"></i>Settings</a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/users/logout/">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Logout</a>
-                                </li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/users/login/">
-                                <i class="bi bi-box-arrow-in-right me-1"></i> Login
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-primary btn-sm text-white ms-2 px-3" href="/users/register/">
-                                Register
-                            </a>
-                        </li>
-                    {% endif %}
+                            {% endwith %}
+                        </ul>
+                    </li>
+                    <!-- User Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-nav-item" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.profile.profile_image %}
+                                <img src="{{ user.profile.profile_image.url }}" alt="{{ user.username }}"
+                                     class="avatar-sm">
+                            {% else %}
+                                <div class="avatar-sm bg-primary d-flex align-items-center justify-content-center">
+                                    <span>{{ user.username.0|upper }}</span>
+                                </div>
+                            {% endif %}
+                            <span class="user-name d-none d-lg-inline">{{ user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/users/profile/">
+                                <i class="bi bi-person me-2"></i>Profile</a>
+                            </li>
+                            <li><a class="dropdown-item" href="/users/settings/">
+                                <i class="bi bi-gear me-2"></i>Settings</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/users/logout/">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/login/">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary btn-sm text-white ms-2 px-3" href="/users/register/">
+                            Register
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{# Main content #}
+<main class="container py-4">
+    {# Messages #}
+    {% bootstrap_messages %}
+
+    {# Content block for page-specific content #}
+    {% block content %}{% endblock %}
+</main>
+
+{# Footer #}
+<footer class="py-4 mt-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-5">
+                <h5 class="text-primary mb-3">
+                    <i class="bi bi-braces-asterisk me-2"></i>Solutionist
+                </h5>
+                <p>A modern, collaborative, developer-focused solution-sharing platform.</p>
+                <div class="social-links mt-3">
+                    <a href="#" class="me-2 fs-5"><i class="bi bi-github"></i></a>
+                    <a href="#" class="me-2 fs-5"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="me-2 fs-5"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h5 class="mb-3">Links</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/about/"><i class="bi bi-info-circle me-2"></i>About</a></li>
+                    <li class="mb-2"><a href="/contact/"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+                    <li class="mb-2"><a href="/terms/"><i class="bi bi-file-text me-2"></i>Terms</a></li>
+                    <li class="mb-2"><a href="/privacy/"><i class="bi bi-shield-lock me-2"></i>Privacy</a></li>
                 </ul>
             </div>
-        </div>
-    </nav>
-
-    {# Main content #}
-    <main class="container py-4">
-        {# Messages #}
-        {% bootstrap_messages %}
-
-        {# Content block for page-specific content #}
-        {% block content %}{% endblock %}
-    </main>
-
-    {# Footer #}
-    <footer class="py-4 mt-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-5">
-                    <h5 class="text-primary mb-3">
-                        <i class="bi bi-braces-asterisk me-2"></i>Solutionist
-                    </h5>
-                    <p>A modern, collaborative, developer-focused solution-sharing platform.</p>
-                    <div class="social-links mt-3">
-                        <a href="#" class="me-2 fs-5"><i class="bi bi-github"></i></a>
-                        <a href="#" class="me-2 fs-5"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="me-2 fs-5"><i class="bi bi-linkedin"></i></a>
+            <div class="col-md-4">
+                <h5 class="mb-3">Newsletter</h5>
+                <p>Subscribe to get updates on new features and tips.</p>
+                <form>
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Email address">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <h5 class="mb-3">Links</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="/about/"><i class="bi bi-info-circle me-2"></i>About</a></li>
-                        <li class="mb-2"><a href="/contact/"><i class="bi bi-envelope me-2"></i>Contact</a></li>
-                        <li class="mb-2"><a href="/terms/"><i class="bi bi-file-text me-2"></i>Terms</a></li>
-                        <li class="mb-2"><a href="/privacy/"><i class="bi bi-shield-lock me-2"></i>Privacy</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5 class="mb-3">Newsletter</h5>
-                    <p>Subscribe to get updates on new features and tips.</p>
-                    <form>
-                        <div class="input-group">
-                            <input type="email" class="form-control" placeholder="Email address">
-                            <button class="btn btn-primary" type="button">Subscribe</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <hr class="my-4 bg-light">
-            <div class="text-center">
-                <p class="mb-0">&copy; {% now "Y" %} Solutionist. All rights reserved.</p>
+                </form>
             </div>
         </div>
-    </footer>
+        <hr class="my-4 bg-light">
+        <div class="text-center">
+            <p class="mb-0">&copy; {% now "Y" %} Solutionist. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
 
-    {# Bootstrap JS #}
-    {% bootstrap_javascript %}
+{# Bootstrap JS #}
+{% bootstrap_javascript %}
 
-    {# Custom JS #}
-    <script src="{% static 'js/custom.js' %}"></script>
-    <script src="{% static 'js/notifications.js' %}"></script>
+{# Custom JS #}
+<script src="{% static 'js/custom.js' %}"></script>
+<script src="{% static 'js/notifications.js' %}"></script>
 
-    {# Additional JS block for page-specific scripts #}
-    {% block extra_js %}{% endblock %}
+{# Additional JS block for page-specific scripts #}
+{% block extra_js %}{% endblock %}
 </body>
 </html>

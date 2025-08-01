@@ -4,684 +4,695 @@
 {% block title %}{{ solution.title }} - Solutionist{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
-<style>
-    .solution-header {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        padding: 2rem 0;
-        color: white;
-        border-radius: 0 0 1rem 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .solution-container {
-        margin-top: -4rem;
-    }
-
-    .solution-content img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .solution-content pre {
-        padding: 1rem;
-        border-radius: 0.5rem;
-        background-color: #f8f9fa;
-        margin-bottom: 1.5rem;
-    }
-
-    .solution-content code {
-        font-family: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    }
-
-    .solution-content table {
-        width: 100%;
-        margin-bottom: 1.5rem;
-        border-collapse: collapse;
-    }
-
-    .solution-content th, .solution-content td {
-        padding: 0.75rem;
-        border: 1px solid #dee2e6;
-    }
-
-    .solution-content th {
-        background-color: #f8f9fa;
-    }
-
-    .solution-card {
-        border-radius: 1rem;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-        overflow: hidden;
-        border: none;
-    }
-
-    .solution-title {
-        font-size: 1.75rem;
-        font-weight: 700;
-    }
-
-    .solution-meta {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .meta-item {
-        display: flex;
-        align-items: center;
-        color: rgba(255,255,255,0.8);
-        font-size: 0.9rem;
-    }
-
-    .meta-item i {
-        margin-right: 0.35rem;
-    }
-
-    .author-info {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .author-avatar {
-        width: 3rem;
-        height: 3rem;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .avatar-placeholder {
-        width: 3rem;
-        height: 3rem;
-        border-radius: 50%;
-        background-color: var(--primary-light);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        font-weight: 500;
-    }
-
-    .author-name {
-        font-weight: 600;
-        color: #333;
-    }
-
-    .tag-badge {
-        display: inline-block;
-        padding: 0.35em 0.65em;
-        font-size: 0.75em;
-        font-weight: 500;
-        line-height: 1;
-        color: #fff;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: baseline;
-        border-radius: 0.375rem;
-        background-color: var(--primary);
-        text-decoration: none;
-        transition: all 0.2s ease;
-        margin-right: 0.35rem;
-        margin-bottom: 0.35rem;
-    }
-
-    .tag-badge:hover {
-        background-color: var(--primary-dark);
-        color: white;
-    }
-
-    .solution-actions {
-        display: flex;
-        gap: 0.75rem;
-    }
-
-    /* Rating styles */
-    .rating-stars {
-        font-size: 1.5rem;
-        line-height: 1;
-        color: #ccc;
-    }
-
-    .rating-stars .star.filled {
-        color: #ffc107;
-    }
-
-    /* Improved star rating input styles */
-    .rating-input {
-        display: flex;
-        flex-direction: row-reverse;
-        margin-right: 10px;
-    }
-
-    .star-label {
-        font-size: 1.5rem;
-        color: #ccc;
-        cursor: pointer;
-        padding: 0 2px;
-    }
-
-    .star-label.selected {
-        color: #ffc107;
-    }
-
-    /* The key improvement: when hovering, all previous stars should be highlighted */
-    .rating-input:not(:hover) .star-label.selected .star-icon,
-    .rating-input:not(:hover) .star-label.selected ~ .star-label .star-icon {
-        color: #ffc107;
-    }
-
-    .rating-input .star-label:hover .star-icon,
-    .rating-input .star-label:hover ~ .star-label .star-icon {
-        color: #ffc107;
-    }
-
-    .star-icon {
-        line-height: 1;
-    }
-
-    .rating-radio {
-        position: absolute;
-        opacity: 0;
-    }
-
-    /* Sidebar styles */
-    .sidebar-card {
-        border-radius: 1rem;
-        overflow: hidden;
-        margin-bottom: 1.5rem;
-    }
-
-    .sidebar-card .card-header {
-        background-color: #f8f9fa;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-        padding: 1rem 1.25rem;
-        font-weight: 600;
-    }
-
-    /* Comments section */
-    .comment {
-        margin-bottom: 1.5rem;
-    }
-
-    .comment-card {
-        border-radius: 1rem;
-        overflow: hidden;
-    }
-
-    .comment-header {
-        display: flex;
-        justify-content: space-between;
-        padding: 1rem;
-        background-color: #f8f9fa;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .comment-avatar {
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .comment-author {
-        font-weight: 600;
-    }
-
-    .comment-body {
-        padding: 1rem;
-    }
-
-    .comment-actions {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .comment-reply {
-        margin-left: 2.5rem;
-        margin-top: 1rem;
-    }
-
-    @media (max-width: 768px) {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <style>
         .solution-header {
-            border-radius: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 2rem 0;
+            color: white;
+            border-radius: 0 0 1rem 1rem;
+            margin-bottom: 2rem;
         }
 
         .solution-container {
-            margin-top: -2rem;
+            margin-top: -4rem;
         }
 
-        .sidebar {
-            margin-top: 2rem;
+        .solution-content img {
+            max-width: 100%;
+            height: auto;
         }
-    }
-</style>
+
+        .solution-content pre {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f8f9fa;
+            margin-bottom: 1.5rem;
+        }
+
+        .solution-content code {
+            font-family: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        .solution-content table {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-collapse: collapse;
+        }
+
+        .solution-content th, .solution-content td {
+            padding: 0.75rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .solution-content th {
+            background-color: #f8f9fa;
+        }
+
+        .solution-card {
+            border-radius: 1rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: none;
+        }
+
+        .solution-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .solution-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .meta-item i {
+            margin-right: 0.35rem;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .author-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .avatar-placeholder {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .tag-badge {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 500;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.375rem;
+            background-color: var(--primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin-right: 0.35rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .tag-badge:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .solution-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Rating styles */
+        .rating-stars {
+            font-size: 1.5rem;
+            line-height: 1;
+            color: #ccc;
+        }
+
+        .rating-stars .star.filled {
+            color: #ffc107;
+        }
+
+        /* Improved star rating input styles */
+        .rating-input {
+            display: flex;
+            flex-direction: row-reverse;
+            margin-right: 10px;
+        }
+
+        .star-label {
+            font-size: 1.5rem;
+            color: #ccc;
+            cursor: pointer;
+            padding: 0 2px;
+        }
+
+        .star-label.selected {
+            color: #ffc107;
+        }
+
+        /* The key improvement: when hovering, all previous stars should be highlighted */
+        .rating-input:not(:hover) .star-label.selected .star-icon,
+        .rating-input:not(:hover) .star-label.selected ~ .star-label .star-icon {
+            color: #ffc107;
+        }
+
+        .rating-input .star-label:hover .star-icon,
+        .rating-input .star-label:hover ~ .star-label .star-icon {
+            color: #ffc107;
+        }
+
+        .star-icon {
+            line-height: 1;
+        }
+
+        .rating-radio {
+            position: absolute;
+            opacity: 0;
+        }
+
+        /* Sidebar styles */
+        .sidebar-card {
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-card .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Comments section */
+        .comment {
+            margin-bottom: 1.5rem;
+        }
+
+        .comment-card {
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-author {
+            font-weight: 600;
+        }
+
+        .comment-body {
+            padding: 1rem;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .comment-reply {
+            margin-left: 2.5rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .solution-header {
+                border-radius: 0;
+            }
+
+            .solution-container {
+                margin-top: -2rem;
+            }
+
+            .sidebar {
+                margin-top: 2rem;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-<!-- Solution Header -->
-<div class="solution-header">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-2">
-                        <li class="breadcrumb-item"><a href="{% url 'solutions:list' %}" class="text-white">Solutions</a></li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">{{ solution.title }}</li>
-                    </ol>
-                </nav>
-                <h1 class="solution-title mb-3">{{ solution.title }}</h1>
-                <div class="solution-meta">
-                    <div class="meta-item">
-                        <i class="bi bi-person"></i>
-                        <span>{{ solution.author.username }}</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="bi bi-calendar3"></i>
-                        <span>{{ solution.created_at|date:"M d, Y" }}</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="bi bi-eye"></i>
-                        <span>{{ solution.view_count }} views</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="bi bi-chat-left-text"></i>
-                        <span>{{ solution.comments.count }} comments</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                {% if user.is_authenticated and user == solution.author %}
-                    <div class="solution-actions">
-                        <a href="{% url 'solutions:edit' solution.slug %}" class="btn btn-light">
-                            <i class="bi bi-pencil"></i> Edit
-                        </a>
-                        <a href="{% url 'solutions:delete' solution.slug %}" class="btn btn-outline-light">
-                            <i class="bi bi-trash"></i> Delete
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Main Content -->
-<div class="container solution-container">
-    <div class="row">
-        <!-- Solution Content -->
-        <div class="col-lg-8">
-            <div class="card solution-card mb-4">
-                <div class="card-body">
-                    <!-- Author Info -->
-                    <div class="author-info">
-                        {% if solution.author.profile.profile_image %}
-                            <a href="{% url 'users:user_profile' username=solution.author.username %}">
-                                <img src="{{ solution.author.profile.profile_image.url }}" alt="{{ solution.author.username }}" class="author-avatar">
-                            </a>
-                        {% else %}
-                            <a href="{% url 'users:user_profile' username=solution.author.username %}" class="author-avatar d-flex align-items-center justify-content-center">
-                                {{ solution.author.username.0|upper }}
-                            </a>
-                        {% endif %}
-                        <div class="d-flex flex-column">
-                            <a href="{% url 'users:user_profile' username=solution.author.username %}" class="author-name text-decoration-none">{{ solution.author.username }}</a>
-                            <div class="text-muted">
-                                Posted on {{ solution.created_at|date:"M d, Y" }}
-                                {% if solution.created_at != solution.updated_at %}
-                                    (Updated: {{ solution.updated_at|date:"M d, Y" }})
-                                {% endif %}
-                            </div>
+    <!-- Solution Header -->
+    <div class="solution-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-2">
+                            <li class="breadcrumb-item"><a href="{% url 'solutions:list' %}" class="text-white">Solutions</a>
+                            </li>
+                            <li class="breadcrumb-item active text-white" aria-current="page">{{ solution.title }}</li>
+                        </ol>
+                    </nav>
+                    <h1 class="solution-title mb-3">{{ solution.title }}</h1>
+                    <div class="solution-meta">
+                        <div class="meta-item">
+                            <i class="bi bi-person"></i>
+                            <span>{{ solution.author.username }}</span>
                         </div>
-                    </div>
-                    
-                    <!-- Rating Component -->
-                    {% include "solutions/includes/rating_component.html" with solution=solution user_rating=user_rating %}
-
-                    <!-- Tags -->
-                    <div class="tags-container mb-4">
-                        {% for tag in solution.tags.all %}
-                            <a href="{% url 'solutions:list' %}?tags={{ tag.name }}" class="tag-badge">
-                                {{ tag.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                    
-                    <!-- Rendered markdown content -->
-                    <div class="solution-content">
-                        {{ solution.content_html|safe }}
-                    </div>
-                </div>
-                <div class="card-footer bg-light">
-                    <div class="d-flex justify-content-between">
-                        <a href="{% url 'solutions:history' solution.slug %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-clock-history"></i>
-                            Version History ({{ solution.get_version_count }})
-                        </a>
-
-                        <a href="#comments" class="btn btn-sm btn-outline-primary">
+                        <div class="meta-item">
+                            <i class="bi bi-calendar3"></i>
+                            <span>{{ solution.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="bi bi-eye"></i>
+                            <span>{{ solution.view_count }} views</span>
+                        </div>
+                        <div class="meta-item">
                             <i class="bi bi-chat-left-text"></i>
-                            Comments ({{ solution.comments.count }})
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comments Section -->
-            <div id="comments" class="mt-5">
-                <h3 class="mb-4">
-                    <i class="bi bi-chat-quote me-2"></i>
-                    Comments ({{ solution.comments.count }})
-                </h3>
-                {% include "comments/comments_section.html" with solution=solution comments=comments comment_form=comment_form reply_form=reply_form %}
-            </div>
-        </div>
-        
-        <!-- Sidebar -->
-        <div class="col-lg-4 sidebar">
-            <!-- Author Card -->
-            <div class="card sidebar-card mb-4">
-                <div class="card-header">
-                    <i class="bi bi-person-circle me-2"></i>About the Author
-                </div>
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        {% if solution.author.profile.profile_image %}
-                            <a href="{% url 'users:user_profile' username=solution.author.username %}">
-                                <img src="{{ solution.author.profile.profile_image.url }}" alt="{{ solution.author.username }}"
-                                     class="rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
-                            </a>
-                        {% else %}
-                            <a href="{% url 'users:user_profile' username=solution.author.username %}"
-                               class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                               style="width: 64px; height: 64px; text-decoration: none;">
-                                <span>{{ solution.author.username.0|upper }}</span>
-                            </a>
-                        {% endif %}
-                        <div class="ms-3">
-                            <a href="{% url 'users:user_profile' username=solution.author.username %}" class="text-decoration-none">
-                                <h5 class="mb-0">{{ solution.author.username }}</h5>
-                            </a>
-                            <div class="text-muted">
-                                Member since {{ solution.author.date_joined|date:"M Y" }}
-                            </div>
+                            <span>{{ solution.comments.count }} comments</span>
                         </div>
                     </div>
-
-                    {% if solution.author.profile.bio %}
-                        <p>{{ solution.author.profile.bio|truncatewords:30 }}</p>
-                    {% else %}
-                        <p class="text-muted">This user hasn't added a bio yet.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    {% if user.is_authenticated and user == solution.author %}
+                        <div class="solution-actions">
+                            <a href="{% url 'solutions:edit' solution.slug %}" class="btn btn-light">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a href="{% url 'solutions:delete' solution.slug %}" class="btn btn-outline-light">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Related Solutions -->
-            <div class="card sidebar-card">
-                <div class="card-header">
-                    <i class="bi bi-link-45deg me-2"></i>Related Solutions
-                </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        {% for related in related_solutions %}
-                            <li class="list-group-item border-0">
-                                <a href="{% url 'solutions:detail' related.slug %}" class="d-block text-decoration-none">
-                                    <h6 class="mb-1 text-truncate">{{ related.title }}</h6>
-                                    <div class="d-flex align-items-center small text-muted">
-                                        <div class="me-2"><i class="bi bi-person-circle"></i> {{ related.author.username }}</div>
-                                        <div><i class="bi bi-star-fill text-warning"></i> {{ related.get_average_rating }}</div>
-                                    </div>
+    <!-- Main Content -->
+    <div class="container solution-container">
+        <div class="row">
+            <!-- Solution Content -->
+            <div class="col-lg-8">
+                <div class="card solution-card mb-4">
+                    <div class="card-body">
+                        <!-- Author Info -->
+                        <div class="author-info">
+                            {% if solution.author.profile.profile_image %}
+                                <a href="{% url 'users:user_profile' username=solution.author.username %}">
+                                    <img src="{{ solution.author.profile.profile_image.url }}"
+                                         alt="{{ solution.author.username }}" class="author-avatar">
                                 </a>
-                            </li>
-                        {% empty %}
-                            <li class="list-group-item border-0 text-muted">No related solutions found.</li>
-                        {% endfor %}
-                    </ul>
+                            {% else %}
+                                <a href="{% url 'users:user_profile' username=solution.author.username %}"
+                                   class="author-avatar d-flex align-items-center justify-content-center">
+                                    {{ solution.author.username.0|upper }}
+                                </a>
+                            {% endif %}
+                            <div class="d-flex flex-column">
+                                <a href="{% url 'users:user_profile' username=solution.author.username %}"
+                                   class="author-name text-decoration-none">{{ solution.author.username }}</a>
+                                <div class="text-muted">
+                                    Posted on {{ solution.created_at|date:"M d, Y" }}
+                                    {% if solution.created_at != solution.updated_at %}
+                                        (Updated: {{ solution.updated_at|date:"M d, Y" }})
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rating Component -->
+                        {% include "solutions/includes/rating_component.html" with solution=solution user_rating=user_rating %}
+
+                        <!-- Tags -->
+                        <div class="tags-container mb-4">
+                            {% for tag in solution.tags.all %}
+                                <a href="{% url 'solutions:list' %}?tags={{ tag.name }}" class="tag-badge">
+                                    {{ tag.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Rendered markdown content -->
+                        <div class="solution-content">
+                            {{ solution.content_html|safe }}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'solutions:history' solution.slug %}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-clock-history"></i>
+                                Version History ({{ solution.get_version_count }})
+                            </a>
+
+                            <a href="#comments" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-chat-left-text"></i>
+                                Comments ({{ solution.comments.count }})
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments Section -->
+                <div id="comments" class="mt-5">
+                    <h3 class="mb-4">
+                        <i class="bi bi-chat-quote me-2"></i>
+                        Comments ({{ solution.comments.count }})
+                    </h3>
+                    {% include "comments/comments_section.html" with solution=solution comments=comments comment_form=comment_form reply_form=reply_form %}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4 sidebar">
+                <!-- Author Card -->
+                <div class="card sidebar-card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-person-circle me-2"></i>About the Author
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            {% if solution.author.profile.profile_image %}
+                                <a href="{% url 'users:user_profile' username=solution.author.username %}">
+                                    <img src="{{ solution.author.profile.profile_image.url }}"
+                                         alt="{{ solution.author.username }}"
+                                         class="rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
+                                </a>
+                            {% else %}
+                                <a href="{% url 'users:user_profile' username=solution.author.username %}"
+                                   class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                   style="width: 64px; height: 64px; text-decoration: none;">
+                                    <span>{{ solution.author.username.0|upper }}</span>
+                                </a>
+                            {% endif %}
+                            <div class="ms-3">
+                                <a href="{% url 'users:user_profile' username=solution.author.username %}"
+                                   class="text-decoration-none">
+                                    <h5 class="mb-0">{{ solution.author.username }}</h5>
+                                </a>
+                                <div class="text-muted">
+                                    Member since {{ solution.author.date_joined|date:"M Y" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if solution.author.profile.bio %}
+                            <p>{{ solution.author.profile.bio|truncatewords:30 }}</p>
+                        {% else %}
+                            <p class="text-muted">This user hasn't added a bio yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Related Solutions -->
+                <div class="card sidebar-card">
+                    <div class="card-header">
+                        <i class="bi bi-link-45deg me-2"></i>Related Solutions
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for related in related_solutions %}
+                                <li class="list-group-item border-0">
+                                    <a href="{% url 'solutions:detail' related.slug %}"
+                                       class="d-block text-decoration-none">
+                                        <h6 class="mb-1 text-truncate">{{ related.title }}</h6>
+                                        <div class="d-flex align-items-center small text-muted">
+                                            <div class="me-2"><i
+                                                    class="bi bi-person-circle"></i> {{ related.author.username }}</div>
+                                            <div>
+                                                <i class="bi bi-star-fill text-warning"></i> {{ related.get_average_rating }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                {% empty %}
+                                <li class="list-group-item border-0 text-muted">No related solutions found.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
-<script>
-    // Initialize syntax highlighting and Mermaid
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Initialize Mermaid
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'default',
-            securityLevel: 'loose',
-            flowchart: { htmlLabels: true }
-        });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script>
+        // Initialize syntax highlighting and Mermaid
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Initialize Mermaid
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                flowchart: {htmlLabels: true}
+            });
 
-        // Process Mermaid diagrams in two ways:
+            // Process Mermaid diagrams in two ways:
 
-        // 1. Handle already rendered code blocks with language-mermaid class
-        document.querySelectorAll('pre code.language-mermaid').forEach((el) => {
-            const preElement = el.parentElement;
+            // 1. Handle already rendered code blocks with language-mermaid class
+            document.querySelectorAll('pre code.language-mermaid').forEach((el) => {
+                const preElement = el.parentElement;
 
-            // Create a mermaid div to replace the code block
-            const mermaidDiv = document.createElement('div');
-            mermaidDiv.className = 'mermaid';
-            mermaidDiv.textContent = el.textContent;
-
-            // Replace the pre>code with the mermaid div
-            if (preElement && preElement.parentElement) {
-                preElement.parentElement.replaceChild(mermaidDiv, preElement);
-            }
-        });
-
-        // 2. Look for mermaid code blocks that might be processed by markdown
-        document.querySelectorAll('pre').forEach((pre) => {
-            // Check if this might be a mermaid code block
-            const codeEl = pre.querySelector('code');
-            if (codeEl && codeEl.className.includes('language-mermaid')) {
-                // Already handled by the above selector
-                return;
-            }
-
-            // Check if this might be an unprocessed mermaid block
-            const text = pre.textContent.trim();
-            if (text.startsWith('graph ') ||
-                text.startsWith('flowchart ') ||
-                text.startsWith('sequenceDiagram') ||
-                text.startsWith('classDiagram') ||
-                text.startsWith('stateDiagram') ||
-                text.startsWith('erDiagram') ||
-                text.startsWith('gantt') ||
-                text.startsWith('pie')) {
-
-                // This looks like mermaid content
+                // Create a mermaid div to replace the code block
                 const mermaidDiv = document.createElement('div');
                 mermaidDiv.className = 'mermaid';
-                mermaidDiv.textContent = text;
+                mermaidDiv.textContent = el.textContent;
 
-                // Replace the pre element with the mermaid div
-                if (pre.parentElement) {
-                    pre.parentElement.replaceChild(mermaidDiv, pre);
+                // Replace the pre>code with the mermaid div
+                if (preElement && preElement.parentElement) {
+                    preElement.parentElement.replaceChild(mermaidDiv, preElement);
                 }
+            });
+
+            // 2. Look for mermaid code blocks that might be processed by markdown
+            document.querySelectorAll('pre').forEach((pre) => {
+                // Check if this might be a mermaid code block
+                const codeEl = pre.querySelector('code');
+                if (codeEl && codeEl.className.includes('language-mermaid')) {
+                    // Already handled by the above selector
+                    return;
+                }
+
+                // Check if this might be an unprocessed mermaid block
+                const text = pre.textContent.trim();
+                if (text.startsWith('graph ') ||
+                    text.startsWith('flowchart ') ||
+                    text.startsWith('sequenceDiagram') ||
+                    text.startsWith('classDiagram') ||
+                    text.startsWith('stateDiagram') ||
+                    text.startsWith('erDiagram') ||
+                    text.startsWith('gantt') ||
+                    text.startsWith('pie')) {
+
+                    // This looks like mermaid content
+                    const mermaidDiv = document.createElement('div');
+                    mermaidDiv.className = 'mermaid';
+                    mermaidDiv.textContent = text;
+
+                    // Replace the pre element with the mermaid div
+                    if (pre.parentElement) {
+                        pre.parentElement.replaceChild(mermaidDiv, pre);
+                    }
+                }
+            });
+
+            // Try to render all mermaid diagrams
+            try {
+                mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+            } catch (error) {
+                console.error('Mermaid initialization error:', error);
+            }
+
+            // Then initialize highlight.js for code syntax highlighting
+            document.querySelectorAll('pre code:not(.language-mermaid)').forEach((el) => {
+                hljs.highlightElement(el);
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Toggle reply forms
+            document.querySelectorAll('.reply-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.getAttribute('data-comment-id');
+                    document.getElementById(`reply-form-${commentId}`).style.display = 'block';
+                    this.style.display = 'none';
+                });
+            });
+
+            document.querySelectorAll('.cancel-reply').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.getAttribute('data-comment-id');
+                    document.getElementById(`reply-form-${commentId}`).style.display = 'none';
+                    document.querySelector(`.reply-btn[data-comment-id="${commentId}"]`).style.display = 'inline-block';
+                });
+            });
+
+            // Improved AJAX for ratings
+            const ratingForm = document.getElementById('rating-form');
+            const feedbackDiv = document.getElementById('rating-feedback');
+
+            if (ratingForm) {
+                ratingForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // Show "Submitting..." message
+                    feedbackDiv.innerHTML = '<div class="alert alert-info">Submitting your rating...</div>';
+                    feedbackDiv.style.display = 'block';
+
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(data => {
+                                    throw new Error(data.error || 'Error submitting rating');
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                // Update UI with new rating data
+                                const ratingStars = document.querySelectorAll('.rating-stars .star');
+                                ratingStars.forEach((star, index) => {
+                                    if (index < data.average_rating) {
+                                        star.classList.add('filled');
+                                    } else {
+                                        star.classList.remove('filled');
+                                    }
+                                });
+
+                                // Update rating text
+                                const ratingTextElement = document.querySelector('.rating-text');
+                                if (data.rating_count > 0) {
+                                    ratingTextElement.innerHTML = `<span class="rating-value">${data.average_rating}</span>/5 <span class="rating-count text-muted">(${data.rating_count} rating${data.rating_count !== 1 ? 's' : ''})</span>`;
+                                }
+
+                                // Highlight user's selected rating
+                                document.querySelectorAll('.star-label').forEach((label, index) => {
+                                    if (index < data.user_rating) {
+                                        label.classList.add('selected');
+                                    } else {
+                                        label.classList.remove('selected');
+                                    }
+                                });
+
+                                // Show success message
+                                feedbackDiv.innerHTML = `<div class="alert alert-success">${data.message || 'Rating submitted successfully!'}</div>`;
+
+                                // Hide success message after 3 seconds
+                                setTimeout(() => {
+                                    feedbackDiv.style.display = 'none';
+                                }, 3000);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            feedbackDiv.innerHTML = `<div class="alert alert-danger">${error.message || 'There was a problem submitting your rating.'}</div>`;
+                        });
+                });
+            }
+
+            // Handle rating removal
+            const unrateForm = document.getElementById('unrate-form');
+            if (unrateForm) {
+                unrateForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    feedbackDiv.innerHTML = '<div class="alert alert-info">Removing your rating...</div>';
+                    feedbackDiv.style.display = 'block';
+
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(data => {
+                                    throw new Error(data.error || 'Error removing rating');
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                // Update UI to reflect rating removal
+                                const ratingStars = document.querySelectorAll('.rating-stars .star');
+                                ratingStars.forEach((star, index) => {
+                                    if (index < data.average_rating) {
+                                        star.classList.add('filled');
+                                    } else {
+                                        star.classList.remove('filled');
+                                    }
+                                });
+
+                                // Update rating text
+                                const ratingTextElement = document.querySelector('.rating-text');
+                                if (data.rating_count > 0) {
+                                    ratingTextElement.innerHTML = `<span class="rating-value">${data.average_rating}</span>/5 <span class="rating-count text-muted">(${data.rating_count} rating${data.rating_count !== 1 ? 's' : ''})</span>`;
+                                } else {
+                                    ratingTextElement.innerHTML = '<span class="text-muted">No ratings yet</span>';
+                                }
+
+                                // Remove selected class from labels
+                                document.querySelectorAll('.star-label').forEach(label => {
+                                    label.classList.remove('selected');
+                                });
+
+                                // Clear radio button selection
+                                document.querySelectorAll('.rating-radio').forEach(radio => {
+                                    radio.checked = false;
+                                });
+
+                                // Show success message
+                                feedbackDiv.innerHTML = '<div class="alert alert-success">Your rating has been removed.</div>';
+
+                                // Reload the page to update the form state
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 1500);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            feedbackDiv.innerHTML = `<div class="alert alert-danger">${error.message || 'There was a problem removing your rating.'}</div>`;
+                        });
+                });
             }
         });
-
-        // Try to render all mermaid diagrams
-        try {
-            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
-        } catch (error) {
-            console.error('Mermaid initialization error:', error);
-        }
-
-        // Then initialize highlight.js for code syntax highlighting
-        document.querySelectorAll('pre code:not(.language-mermaid)').forEach((el) => {
-            hljs.highlightElement(el);
-        });
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Toggle reply forms
-        document.querySelectorAll('.reply-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const commentId = this.getAttribute('data-comment-id');
-                document.getElementById(`reply-form-${commentId}`).style.display = 'block';
-                this.style.display = 'none';
-            });
-        });
-
-        document.querySelectorAll('.cancel-reply').forEach(button => {
-            button.addEventListener('click', function() {
-                const commentId = this.getAttribute('data-comment-id');
-                document.getElementById(`reply-form-${commentId}`).style.display = 'none';
-                document.querySelector(`.reply-btn[data-comment-id="${commentId}"]`).style.display = 'inline-block';
-            });
-        });
-
-        // Improved AJAX for ratings
-        const ratingForm = document.getElementById('rating-form');
-        const feedbackDiv = document.getElementById('rating-feedback');
-
-        if (ratingForm) {
-            ratingForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                // Show "Submitting..." message
-                feedbackDiv.innerHTML = '<div class="alert alert-info">Submitting your rating...</div>';
-                feedbackDiv.style.display = 'block';
-
-                fetch(this.action, {
-                    method: 'POST',
-                    body: new FormData(this),
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            throw new Error(data.error || 'Error submitting rating');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        // Update UI with new rating data
-                        const ratingStars = document.querySelectorAll('.rating-stars .star');
-                        ratingStars.forEach((star, index) => {
-                            if (index < data.average_rating) {
-                                star.classList.add('filled');
-                            } else {
-                                star.classList.remove('filled');
-                            }
-                        });
-
-                        // Update rating text
-                        const ratingTextElement = document.querySelector('.rating-text');
-                        if (data.rating_count > 0) {
-                            ratingTextElement.innerHTML = `<span class="rating-value">${data.average_rating}</span>/5 <span class="rating-count text-muted">(${data.rating_count} rating${data.rating_count !== 1 ? 's' : ''})</span>`;
-                        }
-
-                        // Highlight user's selected rating
-                        document.querySelectorAll('.star-label').forEach((label, index) => {
-                            if (index < data.user_rating) {
-                                label.classList.add('selected');
-                            } else {
-                                label.classList.remove('selected');
-                            }
-                        });
-
-                        // Show success message
-                        feedbackDiv.innerHTML = `<div class="alert alert-success">${data.message || 'Rating submitted successfully!'}</div>`;
-
-                        // Hide success message after 3 seconds
-                        setTimeout(() => {
-                            feedbackDiv.style.display = 'none';
-                        }, 3000);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    feedbackDiv.innerHTML = `<div class="alert alert-danger">${error.message || 'There was a problem submitting your rating.'}</div>`;
-                });
-            });
-        }
-
-        // Handle rating removal
-        const unrateForm = document.getElementById('unrate-form');
-        if (unrateForm) {
-            unrateForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                feedbackDiv.innerHTML = '<div class="alert alert-info">Removing your rating...</div>';
-                feedbackDiv.style.display = 'block';
-
-                fetch(this.action, {
-                    method: 'POST',
-                    body: new FormData(this),
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            throw new Error(data.error || 'Error removing rating');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        // Update UI to reflect rating removal
-                        const ratingStars = document.querySelectorAll('.rating-stars .star');
-                        ratingStars.forEach((star, index) => {
-                            if (index < data.average_rating) {
-                                star.classList.add('filled');
-                            } else {
-                                star.classList.remove('filled');
-                            }
-                        });
-
-                        // Update rating text
-                        const ratingTextElement = document.querySelector('.rating-text');
-                        if (data.rating_count > 0) {
-                            ratingTextElement.innerHTML = `<span class="rating-value">${data.average_rating}</span>/5 <span class="rating-count text-muted">(${data.rating_count} rating${data.rating_count !== 1 ? 's' : ''})</span>`;
-                        } else {
-                            ratingTextElement.innerHTML = '<span class="text-muted">No ratings yet</span>';
-                        }
-
-                        // Remove selected class from labels
-                        document.querySelectorAll('.star-label').forEach(label => {
-                            label.classList.remove('selected');
-                        });
-
-                        // Clear radio button selection
-                        document.querySelectorAll('.rating-radio').forEach(radio => {
-                            radio.checked = false;
-                        });
-
-                        // Show success message
-                        feedbackDiv.innerHTML = '<div class="alert alert-success">Your rating has been removed.</div>';
-
-                        // Reload the page to update the form state
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1500);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    feedbackDiv.innerHTML = `<div class="alert alert-danger">${error.message || 'There was a problem removing your rating.'}</div>`;
-                });
-            });
-        }
-    });
-</script>
+    </script>
 {% endblock %}

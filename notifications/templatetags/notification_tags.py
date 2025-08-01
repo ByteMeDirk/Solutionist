@@ -2,6 +2,7 @@ from django import template
 
 register = template.Library()
 
+
 @register.simple_tag
 def unread_notifications_count(user):
     """Return the count of unread notifications for a user."""

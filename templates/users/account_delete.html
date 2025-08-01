@@ -4,31 +4,32 @@
 {% block title %}Delete Account - Solutionist{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow-sm border-danger">
-            <div class="card-header bg-danger text-white">
-                <h4 class="mb-0">Delete Account</h4>
-            </div>
-            <div class="card-body">
-                <div class="alert alert-warning">
-                    <h5 class="alert-heading">Warning!</h5>
-                    <p>You are about to delete your account. This action cannot be undone.</p>
-                    <p>All your data, including your profile information and contributions, will be permanently removed.</p>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Delete Account</h4>
                 </div>
-                
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    
-                    {% bootstrap_form form %}
-                    
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{% url 'users:profile' %}" class="btn btn-secondary">Cancel</a>
-                        <button type="submit" class="btn btn-danger">Delete My Account</button>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h5 class="alert-heading">Warning!</h5>
+                        <p>You are about to delete your account. This action cannot be undone.</p>
+                        <p>All your data, including your profile information and contributions, will be permanently
+                            removed.</p>
                     </div>
-                </form>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% bootstrap_form form %}
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'users:profile' %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-danger">Delete My Account</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

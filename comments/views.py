@@ -1,12 +1,13 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
 
-from solutions.models import Solution
-from .models import Comment
-from .forms import CommentForm, ReplyForm
 from notifications.utils import create_notification
+from solutions.models import Solution
+
+from .forms import CommentForm, ReplyForm
+from .models import Comment
 
 
 @login_required
@@ -14,7 +15,7 @@ def add_comment(request, slug):
     """Add a new comment to a solution."""
     solution = get_object_or_404(Solution, slug=slug)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -29,15 +30,15 @@ def add_comment(request, slug):
                     actor=request.user,
                     verb="commented on your solution",
                     content_object=comment,
-                    description=f"New comment on '{solution.title}'"
+                    description=f"New comment on '{solution.title}'",
                 )
 
-            messages.success(request, 'Your comment was added successfully.')
-            return redirect('solutions:detail', slug=slug)
+            messages.success(request, "Your comment was added successfully.")
+            return redirect("solutions:detail", slug=slug)
     else:
         form = CommentForm()
 
-    return redirect('solutions:detail', slug=slug)
+    return redirect("solutions:detail", slug=slug)
 
 
 @login_required
@@ -46,7 +47,7 @@ def add_reply(request, slug, comment_id):
     solution = get_object_or_404(Solution, slug=slug)
     parent_comment = get_object_or_404(Comment, id=comment_id, solution=solution)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ReplyForm(request.POST)
         if form.is_valid():
             reply = form.save(commit=False)
@@ -62,12 +63,12 @@ def add_reply(request, slug, comment_id):
                     actor=request.user,
                     verb="replied to your comment",
                     content_object=reply,
-                    description=f"New reply to your comment on '{solution.title}'"
+                    description=f"New reply to your comment on '{solution.title}'",
                 )
 
-            messages.success(request, 'Your reply was added successfully.')
+            messages.success(request, "Your reply was added successfully.")
 
-    return redirect('solutions:detail', slug=slug)
+    return redirect("solutions:detail", slug=slug)
 
 
 @login_required
@@ -76,12 +77,12 @@ def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id, author=request.user)
     solution_slug = comment.solution.slug
 
-    if request.method == 'POST':
+    if request.method == "POST":
         comment.delete()
-        messages.success(request, 'Your comment was deleted successfully.')
+        messages.success(request, "Your comment was deleted successfully.")
 
         # If AJAX request, return JSON response
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({'status': 'success'})
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({"status": "success"})
 
-    return redirect('solutions:detail', slug=solution_slug)
+    return redirect("solutions:detail", slug=solution_slug)

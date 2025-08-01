@@ -163,6 +163,7 @@
 
                             <div class="d-flex justify-content-between">
                                 <a href="
+
                                         {% if solution %}{% url 'solutions:detail' solution.slug %}{% else %}{% url 'solutions:list' %}{% endif %}"
                                    class="btn btn-secondary">
                                     Cancel
@@ -242,7 +243,9 @@ graph TD
     B -->|No| D[Debug]
     D --> B
 ```</code></pre>
-                                <p><small>Supports flowcharts, sequence diagrams, class diagrams, and more. <a href="https://mermaid.js.org/intro/syntax-reference.html" target="_blank">Learn more</a></small></p>
+                                <p><small>Supports flowcharts, sequence diagrams, class diagrams, and more. <a
+                                        href="https://mermaid.js.org/intro/syntax-reference.html" target="_blank">Learn
+                                    more</a></small></p>
                                 <h6>Tables</h6>
                                 <pre><code>| Header 1 | Header 2 |
 |----------|----------|

@@ -6,22 +6,22 @@ class Tag(models.Model):
     """
     Model for categorizing solutions with tags.
     """
+
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=100, unique=True, allow_unicode=False)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
-        ordering = ['name']
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
-    
+        ordering = ["name"]
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
+
     def __str__(self):
         return self.name
-    
+
     def save(self, *args, **kwargs):
-        # Convert name to lowercase before saving
-        self.name = self.name.lower()
+        # Only create slug if it doesn't exist yet, preserve the original name case
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
@@ -34,11 +34,13 @@ class Tag(models.Model):
         """
         tags = []
         for name in tag_names:
-            name = name.strip().lower()
+            name = name.strip()
             if name:
-                tag, _ = cls.objects.get_or_create(
-                    name=name,
-                    defaults={'slug': slugify(name)}
+                # Normalize the name for case-insensitive lookup
+                normalized_name = name.lower()
+                tag, created = cls.objects.get_or_create(
+                    name__iexact=normalized_name,
+                    defaults={"name": name, "slug": slugify(name)},
                 )
                 tags.append(tag)
         return tags

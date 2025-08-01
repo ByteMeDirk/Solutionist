@@ -39,7 +39,7 @@
         <div id="comments-container">
             {% for comment in comments %}
                 {% include 'comments/comment.html' with comment=comment reply_form=reply_form %}
-            {% empty %}
+                {% empty %}
                 <div class="text-muted text-center p-3">
                     <p>No comments yet. Be the first to share your thoughts!</p>
                 </div>

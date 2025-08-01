@@ -1,16 +1,20 @@
 # Solutionist
 
-A modern, collaborative, developer-focused solution-sharing platform inspired by StackOverflow but with a gist-like solutions repository.
+A modern, collaborative, developer-focused solution-sharing platform inspired by StackOverflow but with a gist-like
+solutions repository.
 
 ## Project Vision
 
-Solutionist aims to create a community where developers can share, discover, and collaborate on high-quality solutions to common programming problems. Unlike traditional Q&A platforms, Solutionist focuses on curated, well-documented solutions that can be easily referenced, forked, and improved upon.
+Solutionist aims to create a community where developers can share, discover, and collaborate on high-quality solutions
+to common programming problems. Unlike traditional Q&A platforms, Solutionist focuses on curated, well-documented
+solutions that can be easily referenced, forked, and improved upon.
 
 ## Features
 
 Solutionist offers a rich set of features designed to enhance collaboration and knowledge sharing:
 
 ### Solutions Management
+
 - **Solutions List**: Browse all available solutions with filtering options.
   ![Solutions List](/static/images/SolutionsListFeature.png)
 
@@ -21,10 +25,12 @@ Solutionist offers a rich set of features designed to enhance collaboration and 
   ![Create or Edit Solution](/static/images/SolutionCreateOrEditFeature.png)
 
 ### Rich Content Support
+
 - **Markdown & Mermaid Diagrams**: Write content with Markdown formatting and create diagrams using Mermaid.
   ![Markdown and Mermaid Support](/static/images/MarkdownAndMermaidFeature.png)
 
 ### Version Control
+
 - **Version History**: Track changes to solutions over time.
   ![Version History](/static/images/VersionHistoryFeature.png)
 
@@ -32,6 +38,7 @@ Solutionist offers a rich set of features designed to enhance collaboration and 
   ![Version Comparison](/static/images/VersionComparisonFeature.png)
 
 ### User Profiles
+
 - **User Detail**: View detailed user profiles with their contributions.
   ![User Detail](/static/images/UserDetailFeature.png)
 
@@ -39,6 +46,7 @@ Solutionist offers a rich set of features designed to enhance collaboration and 
   ![User Profile](/static/images/UserProfileFeature.png)
 
 ### Organization & Discovery
+
 - **Tagging System**: Organize and discover solutions using tags.
   ![Tags Feature](/static/images/TagsFeature.png)
 
@@ -46,8 +54,9 @@ Solutionist offers a rich set of features designed to enhance collaboration and 
   ![Search Feature](/static/images/SearchFeature.png)
 
 ### Communication
+
 - **Comments Section**: Discuss solutions with other users through comments.
-  
+
 - **Notifications**: Stay updated with an integrated notification system.
   ![Notification Bell](/static/images/NotificationBellFeature.png)
   ![Notification List](/static/images/NotificationListFeature.png)

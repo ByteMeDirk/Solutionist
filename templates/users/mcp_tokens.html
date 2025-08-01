@@ -4,27 +4,28 @@
 {% block title %}MCP Tokens - Solutionist{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="mb-4">MCP Tokens</h1>
-            <p class="lead">
-                MCP (Model Context Protocol) tokens allow you to access your solutions through AI assistants and other integrations.
-            </p>
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="mb-4">MCP Tokens</h1>
+                <p class="lead">
+                    MCP (Model Context Protocol) tokens allow you to access your solutions through AI assistants and
+                    other integrations.
+                </p>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">Your MCP Tokens</h5>
-                </div>
-                <div class="card-body">
-                    {% if tokens %}
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Your MCP Tokens</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if tokens %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <th>Name</th>
                                         <th>Created</th>
@@ -33,208 +34,217 @@
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     {% for token in tokens %}
-                                    <tr>
-                                        <td>{{ token.name }}</td>
-                                        <td>{{ token.created_at|date:"M d, Y" }}</td>
-                                        <td>
-                                            {% if token.last_used %}
-                                                {{ token.last_used|date:"M d, Y" }}
-                                            {% else %}
-                                                Never
-                                            {% endif %}
-                                        </td>
-                                        <td>{{ token.expires_at|date:"M d, Y" }}</td>
-                                        <td>
-                                            {% if token.is_valid %}
-                                                <span class="badge bg-success">Active</span>
-                                            {% else %}
-                                                <span class="badge bg-secondary">Inactive</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-primary view-token"
-                                                        data-token="{{ token.token }}" data-bs-toggle="modal" data-bs-target="#viewTokenModal">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <form method="post" action="{% url 'users:revoke_mcp_token' token.id %}" class="d-inline">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="bi bi-x-circle"></i>
+                                        <tr>
+                                            <td>{{ token.name }}</td>
+                                            <td>{{ token.created_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                {% if token.last_used %}
+                                                    {{ token.last_used|date:"M d, Y" }}
+                                                {% else %}
+                                                    Never
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ token.expires_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                {% if token.is_valid %}
+                                                    <span class="badge bg-success">Active</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-primary view-token"
+                                                            data-token="{{ token.token }}" data-bs-toggle="modal"
+                                                            data-bs-target="#viewTokenModal">
+                                                        <i class="bi bi-eye"></i>
                                                     </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                                    <form method="post"
+                                                          action="{% url 'users:revoke_mcp_token' token.id %}"
+                                                          class="d-inline">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            You don't have any MCP tokens yet. Create one to get started with MCP integrations.
-                        </div>
-                    {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                You don't have any MCP tokens yet. Create one to get started with MCP integrations.
+                            </div>
+                        {% endif %}
 
-                    <div class="mt-3">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTokenModal">
-                            <i class="bi bi-plus-circle me-2"></i>Create New Token
-                        </button>
+                        <div class="mt-3">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTokenModal">
+                                <i class="bi bi-plus-circle me-2"></i>Create New Token
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">How to Use MCP Tokens</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>What is MCP?</h6>
+                        <p>
+                            The Model Context Protocol (MCP) allows AI assistants to directly interact with Solutionist
+                            on your behalf.
+                            With MCP, you can:
+                        </p>
+                        <ul>
+                            <li>Ask AI assistants to read your solutions or search for specific solutions</li>
+                            <li>Create new solutions or update existing ones through AI assistants</li>
+                            <li>Get personalized solution recommendations while coding</li>
+                        </ul>
+
+                        <h6 class="mt-4">Using Your Token with AI Assistants</h6>
+                        <p>
+                            When an AI assistant needs to access your Solutionist account, you can provide your MCP
+                            token.
+                            Here's a typical workflow:
+                        </p>
+                        <ol>
+                            <li>Tell your AI assistant that you want to use Solutionist integration</li>
+                            <li>When prompted, provide your token</li>
+                            <li>The assistant can now read and write solutions on your behalf</li>
+                        </ol>
+                        <div class="alert alert-warning">
+                            <strong>Security Note:</strong> Treat your MCP tokens like passwords. Never share them
+                            publicly.
+                            You can revoke tokens at any time if you suspect they've been compromised.
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header bg-info text-white">
-                    <h5 class="card-title mb-0">How to Use MCP Tokens</h5>
-                </div>
-                <div class="card-body">
-                    <h6>What is MCP?</h6>
-                    <p>
-                        The Model Context Protocol (MCP) allows AI assistants to directly interact with Solutionist on your behalf.
-                        With MCP, you can:
-                    </p>
-                    <ul>
-                        <li>Ask AI assistants to read your solutions or search for specific solutions</li>
-                        <li>Create new solutions or update existing ones through AI assistants</li>
-                        <li>Get personalized solution recommendations while coding</li>
-                    </ul>
-
-                    <h6 class="mt-4">Using Your Token with AI Assistants</h6>
-                    <p>
-                        When an AI assistant needs to access your Solutionist account, you can provide your MCP token.
-                        Here's a typical workflow:
-                    </p>
-                    <ol>
-                        <li>Tell your AI assistant that you want to use Solutionist integration</li>
-                        <li>When prompted, provide your token</li>
-                        <li>The assistant can now read and write solutions on your behalf</li>
-                    </ol>
-                    <div class="alert alert-warning">
-                        <strong>Security Note:</strong> Treat your MCP tokens like passwords. Never share them publicly.
-                        You can revoke tokens at any time if you suspect they've been compromised.
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="card-title mb-0">MCP Endpoint</h5>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card mb-4">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="card-title mb-0">MCP Endpoint</h5>
-                </div>
-                <div class="card-body">
-                    <p>The MCP endpoint for this account is:</p>
-                    <div class="input-group">
-                        <input type="text" class="form-control" value="{{ mcp_endpoint }}" readonly>
-                        <button class="btn btn-outline-secondary copy-button" type="button" data-clipboard-text="{{ mcp_endpoint }}">
-                            <i class="bi bi-clipboard"></i>
-                        </button>
+                    <div class="card-body">
+                        <p>The MCP endpoint for this account is:</p>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="{{ mcp_endpoint }}" readonly>
+                            <button class="btn btn-outline-secondary copy-button" type="button"
+                                    data-clipboard-text="{{ mcp_endpoint }}">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <p class="text-muted mt-2 small">
+                            This is the base URL for MCP requests. Your token will be used for authentication.
+                        </p>
                     </div>
-                    <p class="text-muted mt-2 small">
-                        This is the base URL for MCP requests. Your token will be used for authentication.
-                    </p>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Create Token Modal -->
-<div class="modal fade" id="createTokenModal" tabindex="-1" aria-labelledby="createTokenModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post" action="{% url 'users:create_mcp_token' %}">
-                {% csrf_token %}
+    <!-- Create Token Modal -->
+    <div class="modal fade" id="createTokenModal" tabindex="-1" aria-labelledby="createTokenModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="{% url 'users:create_mcp_token' %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createTokenModalLabel">Create New MCP Token</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="tokenName" class="form-label">Token Name</label>
+                            <input type="text" class="form-control" id="tokenName" name="name" required
+                                   placeholder="e.g., Work Computer, GitHub Copilot">
+                            <div class="form-text">
+                                Choose a name that helps you remember where you'll use this token.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tokenExpiry" class="form-label">Expiration</label>
+                            <select class="form-select" id="tokenExpiry" name="expiry">
+                                <option value="30">30 days</option>
+                                <option value="90">90 days</option>
+                                <option value="180">180 days</option>
+                                <option value="365" selected>1 year</option>
+                                <option value="0">Never expires</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Token</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Token Modal -->
+    <div class="modal fade" id="viewTokenModal" tabindex="-1" aria-labelledby="viewTokenModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createTokenModalLabel">Create New MCP Token</h5>
+                    <h5 class="modal-title" id="viewTokenModalLabel">Your MCP Token</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="tokenName" class="form-label">Token Name</label>
-                        <input type="text" class="form-control" id="tokenName" name="name" required
-                               placeholder="e.g., Work Computer, GitHub Copilot">
-                        <div class="form-text">
-                            Choose a name that helps you remember where you'll use this token.
-                        </div>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        This is the only time you'll be able to see this token. Make sure to copy it now.
                     </div>
-                    <div class="mb-3">
-                        <label for="tokenExpiry" class="form-label">Expiration</label>
-                        <select class="form-select" id="tokenExpiry" name="expiry">
-                            <option value="30">30 days</option>
-                            <option value="90">90 days</option>
-                            <option value="180">180 days</option>
-                            <option value="365" selected>1 year</option>
-                            <option value="0">Never expires</option>
-                        </select>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control token-value" value="" readonly>
+                        <button class="btn btn-outline-primary copy-button" type="button">
+                            <i class="bi bi-clipboard"></i> Copy
+                        </button>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Token</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- View Token Modal -->
-<div class="modal fade" id="viewTokenModal" tabindex="-1" aria-labelledby="viewTokenModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewTokenModalLabel">Your MCP Token</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    This is the only time you'll be able to see this token. Make sure to copy it now.
-                </div>
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control token-value" value="" readonly>
-                    <button class="btn btn-outline-primary copy-button" type="button">
-                        <i class="bi bi-clipboard"></i> Copy
-                    </button>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize clipboard.js
-        new ClipboardJS('.copy-button');
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize clipboard.js
+            new ClipboardJS('.copy-button');
 
-        // Handle view token buttons
-        document.querySelectorAll('.view-token').forEach(button => {
-            button.addEventListener('click', function() {
-                const token = this.getAttribute('data-token');
-                document.querySelector('.token-value').value = token;
+            // Handle view token buttons
+            document.querySelectorAll('.view-token').forEach(button => {
+                button.addEventListener('click', function () {
+                    const token = this.getAttribute('data-token');
+                    document.querySelector('.token-value').value = token;
+                });
+            });
+
+            // Handle copy button feedback
+            document.querySelectorAll('.copy-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="bi bi-check"></i> Copied!';
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                    }, 2000);
+                });
             });
         });
-
-        // Handle copy button feedback
-        document.querySelectorAll('.copy-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="bi bi-check"></i> Copied!';
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                }, 2000);
-            });
-        });
-    });
-</script>
+    </script>
 {% endblock %}

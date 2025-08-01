@@ -4,183 +4,190 @@
 {% block title %}Compare Versions - {{ solution.title }} - Solutionist{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<style>
-    .diff-table {
-        width: 100%;
-        font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        font-size: 0.875rem;
-        border-collapse: collapse;
-    }
-    
-    .diff-table td {
-        padding: 0.25rem 0.5rem;
-        white-space: pre-wrap;
-        vertical-align: top;
-    }
-    
-    .diff-table .diff-line-num {
-        width: 3rem;
-        text-align: right;
-        color: #6c757d;
-        background-color: #f8f9fa;
-        border-right: 1px solid #dee2e6;
-        user-select: none;
-    }
-    
-    .diff-table .diff-text {
-        width: calc(100% - 3rem);
-    }
-    
-    .diff-table .diff-added {
-        background-color: #d4edda;
-    }
-    
-    .diff-table .diff-removed {
-        background-color: #f8d7da;
-    }
-    
-    .diff-table .diff-info {
-        background-color: #e2e3e5;
-        font-weight: bold;
-    }
-    
-    .version-info {
-        border-radius: 0.25rem;
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .version-a-info {
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-    }
-    
-    .version-b-info {
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-    }
-</style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .diff-table {
+            width: 100%;
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.875rem;
+            border-collapse: collapse;
+        }
+
+        .diff-table td {
+            padding: 0.25rem 0.5rem;
+            white-space: pre-wrap;
+            vertical-align: top;
+        }
+
+        .diff-table .diff-line-num {
+            width: 3rem;
+            text-align: right;
+            color: #6c757d;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            user-select: none;
+        }
+
+        .diff-table .diff-text {
+            width: calc(100% - 3rem);
+        }
+
+        .diff-table .diff-added {
+            background-color: #d4edda;
+        }
+
+        .diff-table .diff-removed {
+            background-color: #f8d7da;
+        }
+
+        .diff-table .diff-info {
+            background-color: #e2e3e5;
+            font-weight: bold;
+        }
+
+        .version-info {
+            border-radius: 0.25rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .version-a-info {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        .version-b-info {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'solutions:list' %}">Solutions</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'solutions:detail' solution.slug %}">{{ solution.title }}</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'solutions:history' solution.slug %}">Version History</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Compare Versions</li>
-                </ol>
-            </nav>
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'solutions:list' %}">Solutions</a></li>
+                        <li class="breadcrumb-item"><a
+                                href="{% url 'solutions:detail' solution.slug %}">{{ solution.title }}</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'solutions:history' solution.slug %}">Version
+                            History</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Compare Versions</li>
+                    </ol>
+                </nav>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h1 class="card-title h3 mb-0">Compare Versions: {{ solution.title }}</h1>
-                </div>
-                <div class="card-body">
-                    <form method="post" class="mb-4">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <label for="{{ form.version_a.id_for_label }}" class="form-label">From Version:</label>
-                                    {{ form.version_a }}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="card-title h3 mb-0">Compare Versions: {{ solution.title }}</h1>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" class="mb-4">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="{{ form.version_a.id_for_label }}" class="form-label">From
+                                            Version:</label>
+                                        {{ form.version_a }}
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end justify-content-center">
+                                    <div class="form-group mb-3">
+                                        <i class="bi bi-arrow-left-right fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="{{ form.version_b.id_for_label }}" class="form-label">To
+                                            Version:</label>
+                                        {{ form.version_b }}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 d-flex align-items-end justify-content-center">
-                                <div class="form-group mb-3">
-                                    <i class="bi bi-arrow-left-right fs-3"></i>
-                                </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-arrows-angle-contract"></i> Compare Versions
+                                </button>
                             </div>
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <label for="{{ form.version_b.id_for_label }}" class="form-label">To Version:</label>
-                                    {{ form.version_b }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-arrows-angle-contract"></i> Compare Versions
-                            </button>
-                        </div>
-                    </form>
-                    
-                    {% if version_a and version_b %}
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="version-info version-a-info">
-                                    <h5>Version {{ version_a.version_number }}</h5>
-                                    <p class="mb-1">
-                                        <strong>Created by:</strong> {{ version_a.created_by.username }}<br>
-                                        <strong>Date:</strong> {{ version_a.created_at|date:"F j, Y, g:i a" }}
-                                    </p>
-                                    {% if version_a.change_comment %}
-                                        <p class="mb-0">
-                                            <strong>Comment:</strong> {{ version_a.change_comment }}
+                        </form>
+
+                        {% if version_a and version_b %}
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="version-info version-a-info">
+                                        <h5>Version {{ version_a.version_number }}</h5>
+                                        <p class="mb-1">
+                                            <strong>Created by:</strong> {{ version_a.created_by.username }}<br>
+                                            <strong>Date:</strong> {{ version_a.created_at|date:"F j, Y, g:i a" }}
                                         </p>
-                                    {% endif %}
+                                        {% if version_a.change_comment %}
+                                            <p class="mb-0">
+                                                <strong>Comment:</strong> {{ version_a.change_comment }}
+                                            </p>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="version-info version-b-info">
-                                    <h5>Version {{ version_b.version_number }}</h5>
-                                    <p class="mb-1">
-                                        <strong>Created by:</strong> {{ version_b.created_by.username }}<br>
-                                        <strong>Date:</strong> {{ version_b.created_at|date:"F j, Y, g:i a" }}
-                                    </p>
-                                    {% if version_b.change_comment %}
-                                        <p class="mb-0">
-                                            <strong>Comment:</strong> {{ version_b.change_comment }}
+                                <div class="col-md-6">
+                                    <div class="version-info version-b-info">
+                                        <h5>Version {{ version_b.version_number }}</h5>
+                                        <p class="mb-1">
+                                            <strong>Created by:</strong> {{ version_b.created_by.username }}<br>
+                                            <strong>Date:</strong> {{ version_b.created_at|date:"F j, Y, g:i a" }}
                                         </p>
-                                    {% endif %}
+                                        {% if version_b.change_comment %}
+                                            <p class="mb-0">
+                                                <strong>Comment:</strong> {{ version_b.change_comment }}
+                                            </p>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Differences</h5>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    {{ diff_html|safe }}
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Differences</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        {{ diff_html|safe }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between mt-4">
-                            <div>
-                                <a href="{% url 'solutions:version' solution.slug version_a.version_number %}" class="btn btn-outline-secondary">
-                                    <i class="bi bi-eye"></i> View Version {{ version_a.version_number }}
-                                </a>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <div>
+                                    <a href="{% url 'solutions:version' solution.slug version_a.version_number %}"
+                                       class="btn btn-outline-secondary">
+                                        <i class="bi bi-eye"></i> View Version {{ version_a.version_number }}
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="{% url 'solutions:version' solution.slug version_b.version_number %}"
+                                       class="btn btn-outline-secondary">
+                                        <i class="bi bi-eye"></i> View Version {{ version_b.version_number }}
+                                    </a>
+                                </div>
                             </div>
-                            <div>
-                                <a href="{% url 'solutions:version' solution.slug version_b.version_number %}" class="btn btn-outline-secondary">
-                                    <i class="bi bi-eye"></i> View Version {{ version_b.version_number }}
-                                </a>
+                        {% else %}
+                            <div class="alert alert-info">
+                                <p class="mb-0">Select two versions to compare and click the "Compare Versions"
+                                    button.</p>
                             </div>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            <p class="mb-0">Select two versions to compare and click the "Compare Versions" button.</p>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'solutions:history' solution.slug %}" class="btn btn-outline-primary">
-                        <i class="bi bi-arrow-left"></i> Back to Version History
-                    </a>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'solutions:history' solution.slug %}" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left"></i> Back to Version History
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

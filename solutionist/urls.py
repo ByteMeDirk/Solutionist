@@ -31,12 +31,10 @@ urlpatterns = [
     path("tags/", include("tags.urls")),
     path("comments/", include("comments.urls")),
     path("notifications/", include("notifications.urls")),
-
     # MCP API endpoint
     path("api/mcp/", mcp_endpoint, name="mcp_endpoint"),
-
     # Markdownx
-    path('markdownx/', include('markdownx.urls')),
+    path("markdownx/", include("markdownx.urls")),
 ]
 
 # Register custom error handlers

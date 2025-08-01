@@ -27,7 +27,8 @@
                     <!-- Rating input with stars in reverse order for proper hover effect -->
                     <div class="rating-input">
                         {% for i in '54321'|make_list %}
-                            <label class="star-label {% if user_rating == i|add:'0' %}selected{% endif %}" title="{{ i|add:'0' }} star{{ i|add:'0'|pluralize }}">
+                            <label class="star-label {% if user_rating == i|add:'0' %}selected{% endif %}"
+                                   title="{{ i|add:'0' }} star{{ i|add:'0'|pluralize }}">
                                 <input type="radio" name="value" value="{{ i|add:'0' }}"
                                        {% if user_rating == i|add:'0' %}checked{% endif %}
                                        class="rating-radio">
@@ -37,7 +38,8 @@
                     </div>
                     <button type="submit" class="btn btn-sm btn-primary ms-2">Submit</button>
                     {% if user_rating %}
-                        <form method="post" action="{% url 'solutions:unrate' solution.slug %}" id="unrate-form" class="ms-2">
+                        <form method="post" action="{% url 'solutions:unrate' solution.slug %}" id="unrate-form"
+                              class="ms-2">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-outline-secondary">Remove Rating</button>
                         </form>

@@ -4,437 +4,447 @@
 {% block title %}{% if search_query %}{{ search_query }} - {% endif %}Solutions - Solutionist{% endblock %}
 
 {% block extra_css %}
-<style>
-    .search-container {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        padding: 2rem 0;
-        margin-bottom: 2rem;
-        color: white;
-        border-radius: 0 0 1rem 1rem;  /* Added bottom rounded corners */
-    }
+    <style>
+        .search-container {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            color: white;
+            border-radius: 0 0 1rem 1rem; /* Added bottom rounded corners */
+        }
 
-    .search-box {
-        position: relative;
-        max-width: 800px;
-        margin: 0 auto;
-    }
+        .search-box {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-    .search-input {
-        width: 100%;
-        padding: 1rem 1.5rem;
-        font-size: 1.1rem;
-        border: none;
-        border-radius: 2rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        padding-right: 4rem;
-    }
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding-right: 4rem;
+        }
 
-    .search-button {
-        position: absolute;
-        right: 0.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--primary);
-        color: white;
-        border: none;
-        width: 3rem;
-        height: 3rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
+        .search-button {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-    .search-button:hover {
-        background: var(--primary-dark);
-    }
+        .search-button:hover {
+            background: var(--primary-dark);
+        }
 
-    .search-suggestions {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        margin-top: 0.5rem;
-        display: none;
-        z-index: 1000;
-    }
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 0.5rem;
+            display: none;
+            z-index: 1000;
+        }
 
-    .suggestion-item {
-        padding: 0.75rem 1.5rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: background-color 0.2s ease;
-        color: #212529;  /* Dark text color for visibility */
-    }
+        .suggestion-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s ease;
+            color: #212529; /* Dark text color for visibility */
+        }
 
-    .suggestion-item:hover {
-        background-color: #f8f9fa;
-        color: var(--primary);  /* Change text color on hover */
-    }
+        .suggestion-item:hover {
+            background-color: #f8f9fa;
+            color: var(--primary); /* Change text color on hover */
+        }
 
-    .suggestion-item i {
-        color: var(--primary);
-        width: 1.2rem;  /* Fixed width for icons to align text */
-    }
+        .suggestion-item i {
+            color: var(--primary);
+            width: 1.2rem; /* Fixed width for icons to align text */
+        }
 
-    .search-stats {
-        color: #6c757d;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-    }
+        .search-stats {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
 
-    .search-highlight {
-        background-color: rgba(var(--primary-rgb), 0.1);
-        padding: 0.1em 0;
-        border-radius: 2px;
-        color: var(--primary);
-        font-weight: 500;
-    }
+        .search-highlight {
+            background-color: rgba(var(--primary-rgb), 0.1);
+            padding: 0.1em 0;
+            border-radius: 2px;
+            color: var(--primary);
+            font-weight: 500;
+        }
 
-    .filters-bar {
-        background: white;
-        border-radius: 1rem;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+        .filters-bar {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
 
-    .tag-chip {
-        display: inline-flex;
-        align-items: center;
-        background: #e9ecef;
-        padding: 0.25rem 0.75rem;
-        border-radius: 1rem;
-        font-size: 0.9rem;
-        margin: 0.25rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
+        .tag-chip {
+            display: inline-flex;
+            align-items: center;
+            background: #e9ecef;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-    .tag-chip:hover {
-        background: var(--primary);
-        color: white;
-    }
+        .tag-chip:hover {
+            background: var(--primary);
+            color: white;
+        }
 
-    .sort-dropdown .dropdown-item.active {
-        background-color: var(--primary);
-        color: white;
-    }
+        .sort-dropdown .dropdown-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
 
-    /* Add pagination styles */
-    .pagination {
-        margin: 2rem 0;
-        justify-content: center;
-    }
+        /* Add pagination styles */
+        .pagination {
+            margin: 2rem 0;
+            justify-content: center;
+        }
 
-    .pagination .page-item .page-link {
-        padding: 0.5rem 1rem;
-        margin: 0 0.25rem;
-        border-radius: 0.5rem;
-        border: none;
-        color: var(--text-dark);
-        transition: all 0.2s ease;
-    }
+        .pagination .page-item .page-link {
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            border-radius: 0.5rem;
+            border: none;
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+        }
 
-    .pagination .page-item .page-link:hover {
-        background-color: var(--primary);
-        color: white;
-    }
+        .pagination .page-item .page-link:hover {
+            background-color: var(--primary);
+            color: white;
+        }
 
-    .pagination .page-item.active .page-link {
-        background-color: var(--primary);
-        color: white;
-    }
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary);
+            color: white;
+        }
 
-    .pagination .page-item.disabled .page-link {
-        background-color: #f8f9fa;
-        color: #6c757d;
-    }
+        .pagination .page-item.disabled .page-link {
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
 
-    .pagination-info {
-        text-align: center;
-        color: #6c757d;
-        margin-top: -1rem;
-        margin-bottom: 2rem;
-        font-size: 0.9rem;
-    }
-</style>
+        .pagination-info {
+            text-align: center;
+            color: #6c757d;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-<!-- Search Container -->
-<div class="search-container">
+    <!-- Search Container -->
+    <div class="search-container">
+        <div class="container">
+            <div class="search-box">
+                <form method="get" action="{% url 'solutions:list' %}" id="searchForm">
+                    <input type="text"
+                           name="q"
+                           class="search-input"
+                           placeholder="Search solutions..."
+                           value="{{ search_query }}"
+                           autocomplete="off"
+                           id="searchInput">
+                    <button type="submit" class="search-button">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
-        <div class="search-box">
-            <form method="get" action="{% url 'solutions:list' %}" id="searchForm">
-                <input type="text"
-                       name="q"
-                       class="search-input"
-                       placeholder="Search solutions..."
-                       value="{{ search_query }}"
-                       autocomplete="off"
-                       id="searchInput">
-                <button type="submit" class="search-button">
-                    <i class="bi bi-search"></i>
-                </button>
-            </form>
-            <div class="search-suggestions" id="searchSuggestions"></div>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-    <!-- Search Results Stats -->
-    {% if search_query %}
-        <div class="search-stats">
-            Found {{ total_results }} result{{ total_results|pluralize }} ({{ search_time }} seconds)
-        </div>
-    {% endif %}
-
-    <!-- Filters Bar -->
-    <div class="filters-bar d-flex flex-wrap align-items-center gap-3">
-        <div class="sort-dropdown">
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    <i class="bi bi-sort-down"></i> Sort by
-                </button>
-                <ul class="dropdown-menu">
-                    {% if search_query %}
-                        <li>
-                            <a class="dropdown-item {% if search_form.sort_by.value == 'relevance' %}active{% endif %}"
-                               href="?q={{ search_query }}&sort_by=relevance">
-                                <i class="bi bi-lightning"></i> Most Relevant
-                            </a>
-                        </li>
-                    {% endif %}
-                    <li>
-                        <a class="dropdown-item {% if search_form.sort_by.value == 'date_desc' %}active{% endif %}"
-                           href="?{% if search_query %}q={{ search_query }}&{% endif %}sort_by=date_desc">
-                            <i class="bi bi-calendar"></i> Newest First
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item {% if search_form.sort_by.value == 'rating_desc' %}active{% endif %}"
-                           href="?{% if search_query %}q={{ search_query }}&{% endif %}sort_by=rating_desc">
-                            <i class="bi bi-star"></i> Highest Rated
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item {% if search_form.sort_by.value == 'views_desc' %}active{% endif %}"
-                           href="?{% if search_query %}q={{ search_query }}&{% endif %}sort_by=views_desc">
-                            <i class="bi bi-eye"></i> Most Viewed
-                        </a>
-                    </li>
-                </ul>
+        <!-- Search Results Stats -->
+        {% if search_query %}
+            <div class="search-stats">
+                Found {{ total_results }} result{{ total_results|pluralize }} ({{ search_time }} seconds)
             </div>
-        </div>
-
-        <div class="popular-tags flex-grow-1">
-            <span class="text-muted me-2">Popular:</span>
-            {% for tag in popular_tags|slice:":5" %}
-                <span class="tag-chip" onclick="addTagToSearch('{{ tag.name }}')">
-                    {{ tag.name }}
-                </span>
-            {% endfor %}
-        </div>
-
-        {% if search_query or search_form.sort_by.value %}
-            <a href="{% url 'solutions:list' %}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-x-circle"></i> Clear Filters
-            </a>
         {% endif %}
-    </div>
 
-    <!-- Results -->
-    <div class="results-container">
-        {% for solution in page_obj %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="h5 card-title mb-2">
-                        <a href="{% url 'solutions:detail' solution.slug %}" class="text-decoration-none">
-                            {{ solution.highlighted_title|default:solution.title }}
-                        </a>
-                    </h2>
-
-                    {% if solution.highlighted_summary|default:solution.summary %}
-                        <p class="card-text text-muted mb-2">
-                            {{ solution.highlighted_summary|default:solution.summary }}
-                        </p>
-                    {% endif %}
-
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                        {% for tag in solution.tags.all %}
-                            <a href="?tags={{ tag.name }}" class="badge bg-secondary text-decoration-none">
-                                {{ tag.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center text-muted small">
-                        <div class="d-flex align-items-center gap-3">
-                            <a href="{% url 'users:user_profile' username=solution.author.username %}"
-                               class="text-decoration-none text-muted">
-                                <i class="bi bi-person"></i> {{ solution.author.username }}
-                            </a>
-                            <span>
-                                <i class="bi bi-calendar"></i> {{ solution.created_at|date:"M d, Y" }}
-                            </span>
-                        </div>
-                        <div class="d-flex gap-3">
-                            {% if solution.get_average_rating > 0 %}
-                                <span class="text-warning">
-                                    <i class="bi bi-star-fill"></i> {{ solution.get_average_rating }}
-                                </span>
-                            {% endif %}
-                            <span>
-                                <i class="bi bi-eye"></i> {{ solution.view_count }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% empty %}
-            <div class="text-center py-5">
-                <div class="mb-3">
-                    <i class="bi bi-search display-1 text-muted"></i>
-                </div>
-                {% if search_query %}
-                    <h3>No results found for "{{ search_query }}"</h3>
-                    <p class="text-muted">Try different keywords or remove some filters</p>
-                {% else %}
-                    <h3>No solutions available yet</h3>
-                    <p class="text-muted">Be the first to share a solution!</p>
-                {% endif %}
-            </div>
-        {% endfor %}
-
-        <!-- Pagination -->
-        {% if page_obj.has_other_pages %}
-            <div class="pagination-info">
-                Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} results
-            </div>
-            <nav aria-label="Search results pages">
-                <ul class="pagination">
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}" aria-label="First">
-                                <i class="bi bi-chevron-double-left"></i>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}" aria-label="Previous">
-                                <i class="bi bi-chevron-left"></i>
-                            </a>
-                        </li>
-                    {% endif %}
-
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ num }}</span>
-                            </li>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}">{{ num }}</a>
+        <!-- Filters Bar -->
+        <div class="filters-bar d-flex flex-wrap align-items-center gap-3">
+            <div class="sort-dropdown">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-sort-down"></i> Sort by
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% if search_query %}
+                            <li>
+                                <a class="dropdown-item {% if search_form.sort_by.value == 'relevance' %}active{% endif %}"
+                                   href="?q={{ search_query }}&sort_by=relevance">
+                                    <i class="bi bi-lightning"></i> Most Relevant
+                                </a>
                             </li>
                         {% endif %}
-                    {% endfor %}
+                        <li>
+                            <a class="dropdown-item {% if search_form.sort_by.value == 'date_desc' %}active{% endif %}"
+                               href="?{% if search_query %}q={{ search_query }}&{% endif %}sort_by=date_desc">
+                                <i class="bi bi-calendar"></i> Newest First
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {% if search_form.sort_by.value == 'rating_desc' %}active{% endif %}"
+                               href="?{% if search_query %}q={{ search_query }}&{% endif %}sort_by=rating_desc">
+                                <i class="bi bi-star"></i> Highest Rated
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {% if search_form.sort_by.value == 'views_desc' %}active{% endif %}"
+                               href="?{% if search_query %}q={{ search_query }}&{% endif %}sort_by=views_desc">
+                                <i class="bi bi-eye"></i> Most Viewed
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-                    {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}" aria-label="Next">
-                                <i class="bi bi-chevron-right"></i>
+            <div class="popular-tags flex-grow-1">
+                <span class="text-muted me-2">Popular:</span>
+                {% for tag in popular_tags|slice:":5" %}
+                    <span class="tag-chip" onclick="addTagToSearch('{{ tag.name }}')">
+                    {{ tag.name }}
+                </span>
+                {% endfor %}
+            </div>
+
+            {% if search_query or search_form.sort_by.value %}
+                <a href="{% url 'solutions:list' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-x-circle"></i> Clear Filters
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Results -->
+        <div class="results-container">
+            {% for solution in page_obj %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="h5 card-title mb-2">
+                            <a href="{% url 'solutions:detail' solution.slug %}" class="text-decoration-none">
+                                {{ solution.highlighted_title|default:solution.title }}
                             </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}" aria-label="Last">
-                                <i class="bi bi-chevron-double-right"></i>
-                            </a>
-                        </li>
+                        </h2>
+
+                        {% if solution.highlighted_summary|default:solution.summary %}
+                            <p class="card-text text-muted mb-2">
+                                {{ solution.highlighted_summary|default:solution.summary }}
+                            </p>
+                        {% endif %}
+
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            {% for tag in solution.tags.all %}
+                                <a href="?tags={{ tag.name }}" class="badge bg-secondary text-decoration-none">
+                                    {{ tag.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center text-muted small">
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="{% url 'users:user_profile' username=solution.author.username %}"
+                                   class="text-decoration-none text-muted">
+                                    <i class="bi bi-person"></i> {{ solution.author.username }}
+                                </a>
+                                <span>
+                                <i class="bi bi-calendar"></i> {{ solution.created_at|date:"M d, Y" }}
+                            </span>
+                            </div>
+                            <div class="d-flex gap-3">
+                                {% if solution.get_average_rating > 0 %}
+                                    <span class="text-warning">
+                                    <i class="bi bi-star-fill"></i> {{ solution.get_average_rating }}
+                                </span>
+                                {% endif %}
+                                <span>
+                                <i class="bi bi-eye"></i> {{ solution.view_count }}
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-search display-1 text-muted"></i>
+                    </div>
+                    {% if search_query %}
+                        <h3>No results found for "{{ search_query }}"</h3>
+                        <p class="text-muted">Try different keywords or remove some filters</p>
+                    {% else %}
+                        <h3>No solutions available yet</h3>
+                        <p class="text-muted">Be the first to share a solution!</p>
                     {% endif %}
-                </ul>
-            </nav>
-        {% endif %}
+                </div>
+            {% endfor %}
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="pagination-info">
+                    Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }}
+                    results
+                </div>
+                <nav aria-label="Search results pages">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}"
+                                   aria-label="First">
+                                    <i class="bi bi-chevron-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=
+                                        {{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}"
+                                   aria-label="Previous">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=
+                                            {{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=
+                                        {{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}"
+                                   aria-label="Next">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=
+                                        {{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if search_form.sort_by.value %}&sort_by={{ search_form.sort_by.value }}{% endif %}{% if search_form.tags.value %}&tags={{ search_form.tags.value }}{% endif %}"
+                                   aria-label="Last">
+                                    <i class="bi bi-chevron-double-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
     </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const searchSuggestions = document.getElementById('searchSuggestions');
-    let searchTimeout;
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const searchSuggestions = document.getElementById('searchSuggestions');
+            let searchTimeout;
 
-    // Handle search input
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const query = this.value.trim();
+            // Handle search input
+            searchInput.addEventListener('input', function () {
+                clearTimeout(searchTimeout);
+                const query = this.value.trim();
 
-        if (query.length > 1) {
-            searchTimeout = setTimeout(() => {
-                fetch(`{% url 'solutions:list' %}?q=${encodeURIComponent(query)}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.suggestions && data.suggestions.length > 0) {
-                        searchSuggestions.innerHTML = data.suggestions.map(suggestion => `
+                if (query.length > 1) {
+                    searchTimeout = setTimeout(() => {
+                        fetch(`{% url 'solutions:list' %}?q=${encodeURIComponent(query)}`, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.suggestions && data.suggestions.length > 0) {
+                                    searchSuggestions.innerHTML = data.suggestions.map(suggestion => `
                             <div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">
                                 <i class="bi bi-${suggestion.startsWith('#') ? 'tag' : 'search'}"></i>
                                 ${suggestion}
                             </div>
                         `).join('');
-                        searchSuggestions.style.display = 'block';
-                    } else {
-                        searchSuggestions.style.display = 'none';
-                    }
-                });
-            }, 300);
-        } else {
-            searchSuggestions.style.display = 'none';
-        }
-    });
+                                    searchSuggestions.style.display = 'block';
+                                } else {
+                                    searchSuggestions.style.display = 'none';
+                                }
+                            });
+                    }, 300);
+                } else {
+                    searchSuggestions.style.display = 'none';
+                }
+            });
 
-    // Hide suggestions when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
-            searchSuggestions.style.display = 'none';
-        }
-    });
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                    searchSuggestions.style.display = 'none';
+                }
+            });
 
-    // Handle Enter key in search
-    searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
+            // Handle Enter key in search
+            searchInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('searchForm').submit();
+                }
+            });
+        });
+
+        function selectSuggestion(suggestion) {
+            document.getElementById('searchInput').value = suggestion;
             document.getElementById('searchForm').submit();
         }
-    });
-});
 
-function selectSuggestion(suggestion) {
-    document.getElementById('searchInput').value = suggestion;
-    document.getElementById('searchForm').submit();
-}
+        function addTagToSearch(tag) {
+            const searchInput = document.getElementById('searchInput');
+            const currentQuery = searchInput.value.trim();
+            const hashTag = `#${tag}`;
 
-function addTagToSearch(tag) {
-    const searchInput = document.getElementById('searchInput');
-    const currentQuery = searchInput.value.trim();
-    const hashTag = `#${tag}`;
-
-    if (!currentQuery.includes(hashTag)) {
-        searchInput.value = currentQuery ? `${currentQuery} ${hashTag}` : hashTag;
-    }
-    document.getElementById('searchForm').submit();
-}
-</script>
+            if (!currentQuery.includes(hashTag)) {
+                searchInput.value = currentQuery ? `${currentQuery} ${hashTag}` : hashTag;
+            }
+            document.getElementById('searchForm').submit();
+        }
+    </script>
 {% endblock %}

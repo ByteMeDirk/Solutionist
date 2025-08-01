@@ -1,7 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
+
 from .models import Notification
 
-def create_notification(recipient, actor, verb, content_object, description=''):
+
+def create_notification(recipient, actor, verb, content_object, description=""):
     """
     Create a new notification.
 
@@ -22,7 +24,7 @@ def create_notification(recipient, actor, verb, content_object, description=''):
         verb=verb,
         content_type=ContentType.objects.get_for_model(content_object),
         object_id=content_object.id,
-        description=description
+        description=description,
     )
 
     return notification

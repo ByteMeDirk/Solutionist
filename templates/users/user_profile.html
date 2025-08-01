@@ -4,205 +4,212 @@
 {% block title %}{{ viewed_user.username }}'s Profile - Solutionist{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row">
-        <!-- Profile Sidebar -->
-        <div class="col-md-4">
-            <!-- User Card -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body text-center">
-                    {% if profile.profile_image %}
-                        <img src="{{ profile.profile_image.url }}" alt="{{ viewed_user.username }}"
-                             class="rounded-circle img-fluid mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-                    {% else %}
-                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                             style="width: 150px; height: 150px; font-size: 3rem;">
-                            {{ viewed_user.username|first|upper }}
-                        </div>
-                    {% endif %}
-
-                    <h4>{{ viewed_user.get_full_name|default:viewed_user.username }}</h4>
-                    <p class="text-muted mb-2">@{{ viewed_user.username }}</p>
-                    <p class="text-muted">
-                        <i class="bi bi-calendar3"></i> Member since {{ viewed_user.date_joined|date:"F Y" }}
-                        ({{ stats.member_days }} days)
-                    </p>
-                </div>
-            </div>
-
-            <!-- Stats Card -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-graph-up"></i> Statistics</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div class="p-3 border rounded text-center">
-                                <h3 class="mb-1">{{ stats.total_solutions }}</h3>
-                                <small class="text-muted">Solutions</small>
+    <div class="container py-4">
+        <div class="row">
+            <!-- Profile Sidebar -->
+            <div class="col-md-4">
+                <!-- User Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center">
+                        {% if profile.profile_image %}
+                            <img src="{{ profile.profile_image.url }}" alt="{{ viewed_user.username }}"
+                                 class="rounded-circle img-fluid mb-3"
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                                 style="width: 150px; height: 150px; font-size: 3rem;">
+                                {{ viewed_user.username|first|upper }}
                             </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-3 border rounded text-center">
-                                <h3 class="mb-1">{{ stats.total_views }}</h3>
-                                <small class="text-muted">Total Views</small>
-                            </div>
-                        </div>
-                        {% if stats.avg_rating > 0 %}
-                            <div class="col-12">
+                        {% endif %}
+
+                        <h4>{{ viewed_user.get_full_name|default:viewed_user.username }}</h4>
+                        <p class="text-muted mb-2">@{{ viewed_user.username }}</p>
+                        <p class="text-muted">
+                            <i class="bi bi-calendar3"></i> Member since {{ viewed_user.date_joined|date:"F Y" }}
+                            ({{ stats.member_days }} days)
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stats Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-graph-up"></i> Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-6">
                                 <div class="p-3 border rounded text-center">
-                                    <h3 class="mb-1 text-warning">
-                                        <i class="bi bi-star-fill"></i> {{ stats.avg_rating }}
-                                    </h3>
-                                    <small class="text-muted">Average Rating</small>
+                                    <h3 class="mb-1">{{ stats.total_solutions }}</h3>
+                                    <small class="text-muted">Solutions</small>
                                 </div>
                             </div>
+                            <div class="col-6">
+                                <div class="p-3 border rounded text-center">
+                                    <h3 class="mb-1">{{ stats.total_views }}</h3>
+                                    <small class="text-muted">Total Views</small>
+                                </div>
+                            </div>
+                            {% if stats.avg_rating > 0 %}
+                                <div class="col-12">
+                                    <div class="p-3 border rounded text-center">
+                                        <h3 class="mb-1 text-warning">
+                                            <i class="bi bi-star-fill"></i> {{ stats.avg_rating }}
+                                        </h3>
+                                        <small class="text-muted">Average Rating</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Tags -->
+                {% if top_tags %}
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-tags"></i> Most Used Tags</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for tag in top_tags %}
+                                    <a href="{% url 'solutions:list' %}?tags={{ tag.name }}&author={{ viewed_user.username }}"
+                                       class="badge bg-primary text-decoration-none">
+                                        {{ tag.name }} ({{ tag.usage_count }})
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-8">
+                <!-- About Section -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-person"></i> About</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if profile.bio %}
+                            <p>{{ profile.bio }}</p>
+                        {% else %}
+                            <p class="text-muted">No bio provided.</p>
                         {% endif %}
                     </div>
                 </div>
-            </div>
 
-            <!-- Top Tags -->
-            {% if top_tags %}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="bi bi-tags"></i> Most Used Tags</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap gap-2">
-                            {% for tag in top_tags %}
-                                <a href="{% url 'solutions:list' %}?tags={{ tag.name }}&author={{ viewed_user.username }}"
-                                   class="badge bg-primary text-decoration-none">
-                                    {{ tag.name }} ({{ tag.usage_count }})
-                                </a>
-                            {% endfor %}
+                <!-- Top Rated Solutions -->
+                {% if top_rated_solutions %}
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-star"></i> Top Rated Solutions</h5>
                         </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-
-        <!-- Main Content -->
-        <div class="col-md-8">
-            <!-- About Section -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-person"></i> About</h5>
-                </div>
-                <div class="card-body">
-                    {% if profile.bio %}
-                        <p>{{ profile.bio }}</p>
-                    {% else %}
-                        <p class="text-muted">No bio provided.</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Top Rated Solutions -->
-            {% if top_rated_solutions %}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="bi bi-star"></i> Top Rated Solutions</h5>
-                    </div>
-                    <div class="card-body">
-                        {% for solution in top_rated_solutions %}
-                            <div class="mb-3 {% if not forloop.last %}border-bottom pb-3{% endif %}">
-                                <h6>
-                                    <a href="{% url 'solutions:detail' solution.slug %}" class="text-decoration-none">
-                                        {{ solution.title }}
-                                    </a>
-                                </h6>
-                                {% if solution.summary %}
-                                    <p class="text-muted small mb-2">{{ solution.summary }}</p>
-                                {% endif %}
-                                <div class="d-flex gap-3 small text-muted">
+                        <div class="card-body">
+                            {% for solution in top_rated_solutions %}
+                                <div class="mb-3 {% if not forloop.last %}border-bottom pb-3{% endif %}">
+                                    <h6>
+                                        <a href="{% url 'solutions:detail' solution.slug %}"
+                                           class="text-decoration-none">
+                                            {{ solution.title }}
+                                        </a>
+                                    </h6>
+                                    {% if solution.summary %}
+                                        <p class="text-muted small mb-2">{{ solution.summary }}</p>
+                                    {% endif %}
+                                    <div class="d-flex gap-3 small text-muted">
                                     <span class="text-warning">
                                         <i class="bi bi-star-fill"></i> {{ solution.avg_rating|floatformat:1 }}
                                     </span>
-                                    <span><i class="bi bi-eye"></i> {{ solution.view_count }}</span>
-                                    <span><i class="bi bi-calendar"></i> {{ solution.created_at|date:"M d, Y" }}</span>
+                                        <span><i class="bi bi-eye"></i> {{ solution.view_count }}</span>
+                                        <span><i class="bi bi-calendar"></i>
+                                            {{ solution.created_at|date:"M d, Y" }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
 
-            <!-- Most Viewed Solutions -->
-            {% if most_viewed_solutions %}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="bi bi-eye"></i> Most Viewed Solutions</h5>
-                    </div>
-                    <div class="card-body">
-                        {% for solution in most_viewed_solutions %}
-                            <div class="mb-3 {% if not forloop.last %}border-bottom pb-3{% endif %}">
-                                <h6>
-                                    <a href="{% url 'solutions:detail' solution.slug %}" class="text-decoration-none">
-                                        {{ solution.title }}
-                                    </a>
-                                </h6>
-                                {% if solution.summary %}
-                                    <p class="text-muted small mb-2">{{ solution.summary }}</p>
-                                {% endif %}
-                                <div class="d-flex gap-3 small text-muted">
-                                    <span><i class="bi bi-eye"></i> {{ solution.view_count }}</span>
-                                    {% if solution.avg_rating %}
-                                        <span class="text-warning">
+                <!-- Most Viewed Solutions -->
+                {% if most_viewed_solutions %}
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-eye"></i> Most Viewed Solutions</h5>
+                        </div>
+                        <div class="card-body">
+                            {% for solution in most_viewed_solutions %}
+                                <div class="mb-3 {% if not forloop.last %}border-bottom pb-3{% endif %}">
+                                    <h6>
+                                        <a href="{% url 'solutions:detail' solution.slug %}"
+                                           class="text-decoration-none">
+                                            {{ solution.title }}
+                                        </a>
+                                    </h6>
+                                    {% if solution.summary %}
+                                        <p class="text-muted small mb-2">{{ solution.summary }}</p>
+                                    {% endif %}
+                                    <div class="d-flex gap-3 small text-muted">
+                                        <span><i class="bi bi-eye"></i> {{ solution.view_count }}</span>
+                                        {% if solution.avg_rating %}
+                                            <span class="text-warning">
                                             <i class="bi bi-star-fill"></i> {{ solution.avg_rating|floatformat:1 }}
                                         </span>
-                                    {% endif %}
-                                    <span><i class="bi bi-calendar"></i> {{ solution.created_at|date:"M d, Y" }}</span>
+                                        {% endif %}
+                                        <span><i class="bi bi-calendar"></i>
+                                            {{ solution.created_at|date:"M d, Y" }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
 
-            <!-- Recent Solutions -->
-            {% if recent_solutions %}
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Solutions</h5>
-                        {% if solutions.count > 5 %}
-                            <a href="{% url 'solutions:list' %}?author={{ viewed_user.username }}"
-                               class="btn btn-sm btn-light">View All</a>
-                        {% endif %}
-                    </div>
-                    <div class="card-body">
-                        {% for solution in recent_solutions %}
-                            <div class="mb-3 {% if not forloop.last %}border-bottom pb-3{% endif %}">
-                                <h6>
-                                    <a href="{% url 'solutions:detail' solution.slug %}" class="text-decoration-none">
-                                        {{ solution.title }}
-                                    </a>
-                                </h6>
-                                {% if solution.summary %}
-                                    <p class="text-muted small mb-2">{{ solution.summary }}</p>
-                                {% endif %}
-                                <div class="d-flex flex-wrap gap-2 mb-2">
-                                    {% for tag in solution.tags.all %}
-                                        <a href="{% url 'solutions:list' %}?tags={{ tag.name }}"
-                                           class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
-                                    {% endfor %}
-                                </div>
-                                <div class="d-flex gap-3 small text-muted">
-                                    <span><i class="bi bi-calendar"></i> {{ solution.created_at|date:"M d, Y" }}</span>
-                                    {% if solution.avg_rating %}
-                                        <span class="text-warning">
+                <!-- Recent Solutions -->
+                {% if recent_solutions %}
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Solutions</h5>
+                            {% if solutions.count > 5 %}
+                                <a href="{% url 'solutions:list' %}?author={{ viewed_user.username }}"
+                                   class="btn btn-sm btn-light">View All</a>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            {% for solution in recent_solutions %}
+                                <div class="mb-3 {% if not forloop.last %}border-bottom pb-3{% endif %}">
+                                    <h6>
+                                        <a href="{% url 'solutions:detail' solution.slug %}"
+                                           class="text-decoration-none">
+                                            {{ solution.title }}
+                                        </a>
+                                    </h6>
+                                    {% if solution.summary %}
+                                        <p class="text-muted small mb-2">{{ solution.summary }}</p>
+                                    {% endif %}
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        {% for tag in solution.tags.all %}
+                                            <a href="{% url 'solutions:list' %}?tags={{ tag.name }}"
+                                               class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="d-flex gap-3 small text-muted">
+                                        <span><i class="bi bi-calendar"></i>
+                                            {{ solution.created_at|date:"M d, Y" }}</span>
+                                        {% if solution.avg_rating %}
+                                            <span class="text-warning">
                                             <i class="bi bi-star-fill"></i> {{ solution.avg_rating|floatformat:1 }}
                                         </span>
-                                    {% endif %}
-                                    <span><i class="bi bi-eye"></i> {{ solution.view_count }}</span>
+                                        {% endif %}
+                                        <span><i class="bi bi-eye"></i> {{ solution.view_count }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

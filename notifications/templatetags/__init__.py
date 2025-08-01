@@ -1,7 +1,7 @@
 from django import template
-from django.db.models import Q
 
 register = template.Library()
+
 
 @register.simple_tag
 def unread_notifications_count(user):

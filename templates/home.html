@@ -541,7 +541,8 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="display-5 fw-bold">Powerful Features at Your Fingertips</h2>
-                <p class="lead text-muted">Explore the tools that make Solutionist the ultimate platform for developer solutions</p>
+                <p class="lead text-muted">Explore the tools that make Solutionist the ultimate platform for developer
+                    solutions</p>
             </div>
 
             <div class="row g-4 mb-5">
@@ -549,12 +550,15 @@
                     <div class="feature-card-showcase">
                         <div class="feature-img-container">
                             <span class="feature-badge">Core Feature</span>
-                            <img src="{% static 'images/SolutionsListFeature.png' %}" alt="Solutions List" class="feature-img">
+                            <img src="{% static 'images/SolutionsListFeature.png' %}" alt="Solutions List"
+                                 class="feature-img">
                         </div>
                         <div class="feature-content">
                             <h3><i class="bi bi-grid-3x3-gap"></i>Solutions Library</h3>
-                            <p>Browse and filter through our extensive collection of developer solutions with intuitive sorting options.</p>
-                            <a href="{% url 'solutions:list' %}" class="btn btn-sm btn-outline-primary">Explore Solutions</a>
+                            <p>Browse and filter through our extensive collection of developer solutions with intuitive
+                                sorting options.</p>
+                            <a href="{% url 'solutions:list' %}" class="btn btn-sm btn-outline-primary">Explore
+                                Solutions</a>
                         </div>
                     </div>
                 </div>
@@ -563,12 +567,15 @@
                     <div class="feature-card-showcase">
                         <div class="feature-img-container">
                             <span class="feature-badge">Essential</span>
-                            <img src="{% static 'images/SolutionDetailFeature.png' %}" alt="Solution Detail" class="feature-img">
+                            <img src="{% static 'images/SolutionDetailFeature.png' %}" alt="Solution Detail"
+                                 class="feature-img">
                         </div>
                         <div class="feature-content">
                             <h3><i class="bi bi-file-earmark-code"></i>Detailed Solutions</h3>
-                            <p>Get comprehensive solutions with rich formatting, code samples, and community insights.</p>
-                            <a href="{% url 'solutions:list' %}" class="btn btn-sm btn-outline-primary">View Examples</a>
+                            <p>Get comprehensive solutions with rich formatting, code samples, and community
+                                insights.</p>
+                            <a href="{% url 'solutions:list' %}" class="btn btn-sm btn-outline-primary">View
+                                Examples</a>
                         </div>
                     </div>
                 </div>
@@ -577,12 +584,14 @@
                     <div class="feature-card-showcase">
                         <div class="feature-img-container">
                             <span class="feature-badge">Powerful</span>
-                            <img src="{% static 'images/SolutionCreateOrEditFeature.png' %}" alt="Solution Creation" class="feature-img">
+                            <img src="{% static 'images/SolutionCreateOrEditFeature.png' %}" alt="Solution Creation"
+                                 class="feature-img">
                         </div>
                         <div class="feature-content">
                             <h3><i class="bi bi-pencil-square"></i>Create & Edit</h3>
                             <p>Share your knowledge with our intuitive solution editor featuring live preview.</p>
-                            <a href="{% url 'solutions:create' %}" class="btn btn-sm btn-outline-primary">Start Creating</a>
+                            <a href="{% url 'solutions:create' %}" class="btn btn-sm btn-outline-primary">Start
+                                Creating</a>
                         </div>
                     </div>
                 </div>
@@ -592,27 +601,33 @@
             <div class="feature-tabs">
                 <ul class="nav nav-pills mb-3 justify-content-center flex-wrap" id="feature-tabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="content-tab" data-bs-toggle="pill" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="true">
+                        <button class="nav-link active" id="content-tab" data-bs-toggle="pill" data-bs-target="#content"
+                                type="button" role="tab" aria-controls="content" aria-selected="true">
                             <i class="bi bi-markdown me-2"></i>Rich Content
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="version-tab" data-bs-toggle="pill" data-bs-target="#version" type="button" role="tab" aria-controls="version" aria-selected="false">
+                        <button class="nav-link" id="version-tab" data-bs-toggle="pill" data-bs-target="#version"
+                                type="button" role="tab" aria-controls="version" aria-selected="false">
                             <i class="bi bi-clock-history me-2"></i>Version Control
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="search-tab" data-bs-toggle="pill" data-bs-target="#search" type="button" role="tab" aria-controls="search" aria-selected="false">
+                        <button class="nav-link" id="search-tab" data-bs-toggle="pill" data-bs-target="#search"
+                                type="button" role="tab" aria-controls="search" aria-selected="false">
                             <i class="bi bi-search me-2"></i>Search & Discovery
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="profiles-tab" data-bs-toggle="pill" data-bs-target="#profiles" type="button" role="tab" aria-controls="profiles" aria-selected="false">
+                        <button class="nav-link" id="profiles-tab" data-bs-toggle="pill" data-bs-target="#profiles"
+                                type="button" role="tab" aria-controls="profiles" aria-selected="false">
                             <i class="bi bi-person-badge me-2"></i>User Profiles
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="notifications-tab" data-bs-toggle="pill" data-bs-target="#notifications" type="button" role="tab" aria-controls="notifications" aria-selected="false">
+                        <button class="nav-link" id="notifications-tab" data-bs-toggle="pill"
+                                data-bs-target="#notifications" type="button" role="tab" aria-controls="notifications"
+                                aria-selected="false">
                             <i class="bi bi-bell me-2"></i>Notifications
                         </button>
                     </li>
@@ -620,44 +635,68 @@
 
                 <div class="tab-content" id="feature-tabsContent">
                     <!-- Rich Content Tab -->
-                    <div class="tab-pane fade show active feature-tab-content" id="content" role="tabpanel" aria-labelledby="content-tab">
+                    <div class="tab-pane fade show active feature-tab-content" id="content" role="tabpanel"
+                         aria-labelledby="content-tab">
                         <div class="row align-items-center">
                             <div class="col-lg-6 mb-4 mb-lg-0">
                                 <h3 class="mb-4">Rich Content Support</h3>
                                 <p class="lead mb-4">Express your solutions clearly with our powerful content tools</p>
                                 <ul class="list-unstyled">
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Markdown Support</strong>: Format your solutions with headers, lists, code blocks, and more</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Mermaid Diagrams</strong>: Create flow charts, sequence diagrams, and other visualizations</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Syntax Highlighting</strong>: Beautiful code highlighting for all popular programming languages</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Live Preview</strong>: See how your solution will look as you type</li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Markdown
+                                        Support</strong>: Format your solutions with headers, lists, code blocks, and
+                                        more
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Mermaid
+                                        Diagrams</strong>: Create flow charts, sequence diagrams, and other
+                                        visualizations
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Syntax
+                                        Highlighting</strong>: Beautiful code highlighting for all popular programming
+                                        languages
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Live
+                                        Preview</strong>: See how your solution will look as you type
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-lg-6">
-                                <img src="{% static 'images/MarkdownAndMermaidFeature.png' %}" alt="Markdown and Mermaid Support" class="feature-screenshot">
+                                <img src="{% static 'images/MarkdownAndMermaidFeature.png' %}"
+                                     alt="Markdown and Mermaid Support" class="feature-screenshot">
                             </div>
                         </div>
                     </div>
 
                     <!-- Version Control Tab -->
-                    <div class="tab-pane fade feature-tab-content" id="version" role="tabpanel" aria-labelledby="version-tab">
+                    <div class="tab-pane fade feature-tab-content" id="version" role="tabpanel"
+                         aria-labelledby="version-tab">
                         <div class="row align-items-center">
                             <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
                                 <h3 class="mb-4">Version Control</h3>
                                 <p class="lead mb-4">Track how solutions evolve over time</p>
                                 <ul class="list-unstyled">
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Solution History</strong>: See all previous versions of a solution</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Version Comparison</strong>: Visual comparison between any two versions</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Revert Changes</strong>: Restore previous versions if needed</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Contribution Tracking</strong>: See who contributed to each revision</li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Solution
+                                        History</strong>: See all previous versions of a solution
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Version
+                                        Comparison</strong>: Visual comparison between any two versions
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Revert
+                                        Changes</strong>: Restore previous versions if needed
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Contribution
+                                        Tracking</strong>: See who contributed to each revision
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-lg-6 order-lg-1">
                                 <div class="row">
                                     <div class="col-12 mb-4">
-                                        <img src="{% static 'images/VersionHistoryFeature.png' %}" alt="Version History" class="feature-screenshot">
+                                        <img src="{% static 'images/VersionHistoryFeature.png' %}" alt="Version History"
+                                             class="feature-screenshot">
                                     </div>
                                     <div class="col-12">
-                                        <img src="{% static 'images/VersionComparisonFeature.png' %}" alt="Version Comparison" class="feature-screenshot">
+                                        <img src="{% static 'images/VersionComparisonFeature.png' %}"
+                                             alt="Version Comparison" class="feature-screenshot">
                                     </div>
                                 </div>
                             </div>
@@ -665,25 +704,36 @@
                     </div>
 
                     <!-- Search & Discovery Tab -->
-                    <div class="tab-pane fade feature-tab-content" id="search" role="tabpanel" aria-labelledby="search-tab">
+                    <div class="tab-pane fade feature-tab-content" id="search" role="tabpanel"
+                         aria-labelledby="search-tab">
                         <div class="row align-items-center">
                             <div class="col-lg-6 mb-4 mb-lg-0">
                                 <h3 class="mb-4">Search & Discovery</h3>
                                 <p class="lead mb-4">Find exactly what you need, when you need it</p>
                                 <ul class="list-unstyled">
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Powerful Search</strong>: Find solutions by keyword, language, or problem type</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Tag System</strong>: Browse solutions by technology, language, or concept</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Auto-suggestions</strong>: Get search recommendations as you type</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Filters</strong>: Narrow down results by date, popularity, or complexity</li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Powerful
+                                        Search</strong>: Find solutions by keyword, language, or problem type
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Tag
+                                        System</strong>: Browse solutions by technology, language, or concept
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Auto-suggestions</strong>:
+                                        Get search recommendations as you type
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Filters</strong>:
+                                        Narrow down results by date, popularity, or complexity
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
                                     <div class="col-12 mb-4">
-                                        <img src="{% static 'images/SearchFeature.png' %}" alt="Search Feature" class="feature-screenshot">
+                                        <img src="{% static 'images/SearchFeature.png' %}" alt="Search Feature"
+                                             class="feature-screenshot">
                                     </div>
                                     <div class="col-12">
-                                        <img src="{% static 'images/TagsFeature.png' %}" alt="Tags Feature" class="feature-screenshot">
+                                        <img src="{% static 'images/TagsFeature.png' %}" alt="Tags Feature"
+                                             class="feature-screenshot">
                                     </div>
                                 </div>
                             </div>
@@ -691,25 +741,36 @@
                     </div>
 
                     <!-- User Profiles Tab -->
-                    <div class="tab-pane fade feature-tab-content" id="profiles" role="tabpanel" aria-labelledby="profiles-tab">
+                    <div class="tab-pane fade feature-tab-content" id="profiles" role="tabpanel"
+                         aria-labelledby="profiles-tab">
                         <div class="row align-items-center">
                             <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
                                 <h3 class="mb-4">User Profiles</h3>
                                 <p class="lead mb-4">Build your developer reputation and showcase your expertise</p>
                                 <ul class="list-unstyled">
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Contribution History</strong>: View all solutions you've created or edited</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Profile Customization</strong>: Add your photo, bio, and professional links</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Expertise Badges</strong>: Earn recognition for your knowledge in specific areas</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Activity Feed</strong>: Track your engagement with the platform</li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Contribution
+                                        History</strong>: View all solutions you've created or edited
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Profile
+                                        Customization</strong>: Add your photo, bio, and professional links
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Expertise
+                                        Badges</strong>: Earn recognition for your knowledge in specific areas
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Activity
+                                        Feed</strong>: Track your engagement with the platform
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-lg-6 order-lg-1">
                                 <div class="row">
                                     <div class="col-12 mb-4">
-                                        <img src="{% static 'images/UserDetailFeature.png' %}" alt="User Detail" class="feature-screenshot">
+                                        <img src="{% static 'images/UserDetailFeature.png' %}" alt="User Detail"
+                                             class="feature-screenshot">
                                     </div>
                                     <div class="col-12">
-                                        <img src="{% static 'images/UserProfileFeature.png' %}" alt="User Profile" class="feature-screenshot">
+                                        <img src="{% static 'images/UserProfileFeature.png' %}" alt="User Profile"
+                                             class="feature-screenshot">
                                     </div>
                                 </div>
                             </div>
@@ -717,25 +778,36 @@
                     </div>
 
                     <!-- Notifications Tab -->
-                    <div class="tab-pane fade feature-tab-content" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                    <div class="tab-pane fade feature-tab-content" id="notifications" role="tabpanel"
+                         aria-labelledby="notifications-tab">
                         <div class="row align-items-center">
                             <div class="col-lg-6 mb-4 mb-lg-0">
                                 <h3 class="mb-4">Smart Notifications</h3>
                                 <p class="lead mb-4">Stay informed about activity relevant to you</p>
                                 <ul class="list-unstyled">
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Real-time Alerts</strong>: Receive notifications when someone comments on your solutions</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Subscription Updates</strong>: Follow specific solutions to get updated when they change</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>@Mentions</strong>: Get notified when someone mentions you in a comment</li>
-                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Customizable Preferences</strong>: Control which notifications you receive</li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Real-time
+                                        Alerts</strong>: Receive notifications when someone comments on your solutions
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Subscription
+                                        Updates</strong>: Follow specific solutions to get updated when they change
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>@Mentions</strong>:
+                                        Get notified when someone mentions you in a comment
+                                    </li>
+                                    <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Customizable
+                                        Preferences</strong>: Control which notifications you receive
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
                                     <div class="col-12 mb-4">
-                                        <img src="{% static 'images/NotificationBellFeature.png' %}" alt="Notification Bell" class="feature-screenshot">
+                                        <img src="{% static 'images/NotificationBellFeature.png' %}"
+                                             alt="Notification Bell" class="feature-screenshot">
                                     </div>
                                     <div class="col-12">
-                                        <img src="{% static 'images/NotificationListFeature.png' %}" alt="Notification List" class="feature-screenshot">
+                                        <img src="{% static 'images/NotificationListFeature.png' %}"
+                                             alt="Notification List" class="feature-screenshot">
                                     </div>
                                 </div>
                             </div>

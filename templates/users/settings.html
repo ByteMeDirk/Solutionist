@@ -4,198 +4,202 @@
 {% block title %}User Settings{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Account</h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    <a href="{% url 'users:profile' %}" class="list-group-item list-group-item-action {% if active_tab == 'profile' %}active{% endif %}">
-                        <i class="fas fa-user me-2"></i> Profile
-                    </a>
-                    <a href="{% url 'users:settings' %}" class="list-group-item list-group-item-action {% if active_tab == 'settings' %}active{% endif %}">
-                        <i class="fas fa-cog me-2"></i> Settings
-                    </a>
-                    <a href="{% url 'users:password_change' %}" class="list-group-item list-group-item-action {% if active_tab == 'password' %}active{% endif %}">
-                        <i class="fas fa-key me-2"></i> Change Password
-                    </a>
-                    <a href="{% url 'users:mcp_tokens' %}" class="list-group-item list-group-item-action {% if active_tab == 'mcp_tokens' %}active{% endif %}">
-                        <i class="fas fa-key me-2"></i> API Tokens
-                    </a>
-                    <a href="{% url 'users:delete' %}" class="list-group-item list-group-item-action text-danger">
-                        <i class="fas fa-trash-alt me-2"></i> Delete Account
-                    </a>
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Account</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="{% url 'users:profile' %}"
+                           class="list-group-item list-group-item-action {% if active_tab == 'profile' %}active{% endif %}">
+                            <i class="fas fa-user me-2"></i> Profile
+                        </a>
+                        <a href="{% url 'users:settings' %}"
+                           class="list-group-item list-group-item-action {% if active_tab == 'settings' %}active{% endif %}">
+                            <i class="fas fa-cog me-2"></i> Settings
+                        </a>
+                        <a href="{% url 'users:password_change' %}"
+                           class="list-group-item list-group-item-action {% if active_tab == 'password' %}active{% endif %}">
+                            <i class="fas fa-key me-2"></i> Change Password
+                        </a>
+                        <a href="{% url 'users:mcp_tokens' %}"
+                           class="list-group-item list-group-item-action {% if active_tab == 'mcp_tokens' %}active{% endif %}">
+                            <i class="fas fa-key me-2"></i> API Tokens
+                        </a>
+                        <a href="{% url 'users:delete' %}" class="list-group-item list-group-item-action text-danger">
+                            <i class="fas fa-trash-alt me-2"></i> Delete Account
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-9">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title mb-0">Settings</h4>
-                </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">Settings</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
 
-                        <div class="mb-4">
-                            <h5>Theme Preferences</h5>
-                            <hr>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">{{ form.theme.label }}</label>
-                                <p class="form-text">{{ form.theme.help_text }}</p>
-                                <div class="mt-2">
-                                    {% for radio in form.theme %}
-                                    <div class="form-check">
-                                        {{ radio.tag }}
-                                        <label class="form-check-label" for="{{ radio.id_for_label }}">
-                                            {{ radio.choice_label }}
-                                        </label>
+                            <div class="mb-4">
+                                <h5>Theme Preferences</h5>
+                                <hr>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">{{ form.theme.label }}</label>
+                                    <p class="form-text">{{ form.theme.help_text }}</p>
+                                    <div class="mt-2">
+                                        {% for radio in form.theme %}
+                                            <div class="form-check">
+                                                {{ radio.tag }}
+                                                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                                    {{ radio.choice_label }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                    {% endfor %}
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="mb-4">
-                            <h5>Accessibility Options</h5>
-                            <hr>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">{{ form.font_size.label }}</label>
-                                <p class="form-text">{{ form.font_size.help_text }}</p>
-                                <div class="mt-2">
-                                    {% for radio in form.font_size %}
-                                    <div class="form-check">
-                                        {{ radio.tag }}
-                                        <label class="form-check-label" for="{{ radio.id_for_label }}">
-                                            {{ radio.choice_label }}
-                                        </label>
+                            <div class="mb-4">
+                                <h5>Accessibility Options</h5>
+                                <hr>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">{{ form.font_size.label }}</label>
+                                    <p class="form-text">{{ form.font_size.help_text }}</p>
+                                    <div class="mt-2">
+                                        {% for radio in form.font_size %}
+                                            <div class="form-check">
+                                                {{ radio.tag }}
+                                                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                                    {{ radio.choice_label }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                    {% endfor %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        {{ form.reduced_motion }}
+                                        <label class="form-check-label" for="{{ form.reduced_motion.id_for_label }}">
+                                            {{ form.reduced_motion.label }}
+                                        </label>
+                                        <p class="form-text">{{ form.reduced_motion.help_text }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        {{ form.high_contrast }}
+                                        <label class="form-check-label" for="{{ form.high_contrast.id_for_label }}">
+                                            {{ form.high_contrast.label }}
+                                        </label>
+                                        <p class="form-text">{{ form.high_contrast.help_text }}</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <div class="form-check form-switch">
-                                    {{ form.reduced_motion }}
-                                    <label class="form-check-label" for="{{ form.reduced_motion.id_for_label }}">
-                                        {{ form.reduced_motion.label }}
-                                    </label>
-                                    <p class="form-text">{{ form.reduced_motion.help_text }}</p>
-                                </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i> Save Settings
+                                </button>
                             </div>
-
-                            <div class="mb-3">
-                                <div class="form-check form-switch">
-                                    {{ form.high_contrast }}
-                                    <label class="form-check-label" for="{{ form.high_contrast.id_for_label }}">
-                                        {{ form.high_contrast.label }}
-                                    </label>
-                                    <p class="form-text">{{ form.high_contrast.help_text }}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i> Save Settings
-                            </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    // Initialize settings based on user preferences
-    document.addEventListener('DOMContentLoaded', function() {
-        applyUserSettings();
-    });
+    <script>
+        // Initialize settings based on user preferences
+        document.addEventListener('DOMContentLoaded', function () {
+            applyUserSettings();
+        });
 
-    // Apply user settings when they change
-    document.querySelector('form').addEventListener('change', function() {
-        // Preview changes as user selects options
-        const theme = document.querySelector('input[name="theme"]:checked').value;
-        const fontSize = document.querySelector('input[name="font_size"]:checked').value;
-        const reducedMotion = document.querySelector('input[name="reduced_motion"]').checked;
-        const highContrast = document.querySelector('input[name="high_contrast"]').checked;
+        // Apply user settings when they change
+        document.querySelector('form').addEventListener('change', function () {
+            // Preview changes as user selects options
+            const theme = document.querySelector('input[name="theme"]:checked').value;
+            const fontSize = document.querySelector('input[name="font_size"]:checked').value;
+            const reducedMotion = document.querySelector('input[name="reduced_motion"]').checked;
+            const highContrast = document.querySelector('input[name="high_contrast"]').checked;
 
-        updateTheme(theme);
-        updateFontSize(fontSize);
-        updateReducedMotion(reducedMotion);
-        updateHighContrast(highContrast);
-    });
+            updateTheme(theme);
+            updateFontSize(fontSize);
+            updateReducedMotion(reducedMotion);
+            updateHighContrast(highContrast);
+        });
 
-    function applyUserSettings() {
-        // Get current settings from form
-        const theme = document.querySelector('input[name="theme"]:checked').value;
-        const fontSize = document.querySelector('input[name="font_size"]:checked').value;
-        const reducedMotion = document.querySelector('input[name="reduced_motion"]').checked;
-        const highContrast = document.querySelector('input[name="high_contrast"]').checked;
+        function applyUserSettings() {
+            // Get current settings from form
+            const theme = document.querySelector('input[name="theme"]:checked').value;
+            const fontSize = document.querySelector('input[name="font_size"]:checked').value;
+            const reducedMotion = document.querySelector('input[name="reduced_motion"]').checked;
+            const highContrast = document.querySelector('input[name="high_contrast"]').checked;
 
-        updateTheme(theme);
-        updateFontSize(fontSize);
-        updateReducedMotion(reducedMotion);
-        updateHighContrast(highContrast);
-    }
+            updateTheme(theme);
+            updateFontSize(fontSize);
+            updateReducedMotion(reducedMotion);
+            updateHighContrast(highContrast);
+        }
 
-    function updateTheme(theme) {
-        const html = document.documentElement;
+        function updateTheme(theme) {
+            const html = document.documentElement;
 
-        if (theme === 'system') {
-            // Use system preference
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                html.setAttribute('data-bs-theme', 'dark');
-            } else {
-                html.setAttribute('data-bs-theme', 'light');
-            }
-
-            // Listen for system changes
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-                if (document.querySelector('input[name="theme"]:checked').value === 'system') {
-                    html.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+            if (theme === 'system') {
+                // Use system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    html.setAttribute('data-bs-theme', 'dark');
+                } else {
+                    html.setAttribute('data-bs-theme', 'light');
                 }
-            });
-        } else {
-            // Use selected theme
-            html.setAttribute('data-bs-theme', theme);
+
+                // Listen for system changes
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+                    if (document.querySelector('input[name="theme"]:checked').value === 'system') {
+                        html.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+                    }
+                });
+            } else {
+                // Use selected theme
+                html.setAttribute('data-bs-theme', theme);
+            }
         }
-    }
 
-    function updateFontSize(size) {
-        const html = document.documentElement;
+        function updateFontSize(size) {
+            const html = document.documentElement;
 
-        // Remove existing font size classes
-        html.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+            // Remove existing font size classes
+            html.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
 
-        // Add selected font size class
-        html.classList.add(`font-size-${size}`);
-    }
-
-    function updateReducedMotion(enabled) {
-        const html = document.documentElement;
-
-        if (enabled) {
-            html.classList.add('reduced-motion');
-        } else {
-            html.classList.remove('reduced-motion');
+            // Add selected font size class
+            html.classList.add(`font-size-${size}`);
         }
-    }
 
-    function updateHighContrast(enabled) {
-        const html = document.documentElement;
+        function updateReducedMotion(enabled) {
+            const html = document.documentElement;
 
-        if (enabled) {
-            html.classList.add('high-contrast');
-        } else {
-            html.classList.remove('high-contrast');
+            if (enabled) {
+                html.classList.add('reduced-motion');
+            } else {
+                html.classList.remove('reduced-motion');
+            }
         }
-    }
-</script>
+
+        function updateHighContrast(enabled) {
+            const html = document.documentElement;
+
+            if (enabled) {
+                html.classList.add('high-contrast');
+            } else {
+                html.classList.remove('high-contrast');
+            }
+        }
+    </script>
 {% endblock %}
