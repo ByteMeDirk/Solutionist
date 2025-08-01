@@ -417,8 +417,6 @@
                     {% else %}
                         <p class="text-muted">This user hasn't added a bio yet.</p>
                     {% endif %}
-
-                    <a href="#" class="btn btn-sm btn-outline-primary w-100">View Profile</a>
                 </div>
             </div>
 
@@ -452,13 +450,82 @@
 
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
 <script>
+    // Initialize syntax highlighting and Mermaid
     document.addEventListener('DOMContentLoaded', (event) => {
-        // Apply syntax highlighting to code blocks
-        document.querySelectorAll('pre code').forEach((el) => {
-            hljs.highlightElement(el);
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: { htmlLabels: true }
         });
 
+        // Process Mermaid diagrams in two ways:
+
+        // 1. Handle already rendered code blocks with language-mermaid class
+        document.querySelectorAll('pre code.language-mermaid').forEach((el) => {
+            const preElement = el.parentElement;
+
+            // Create a mermaid div to replace the code block
+            const mermaidDiv = document.createElement('div');
+            mermaidDiv.className = 'mermaid';
+            mermaidDiv.textContent = el.textContent;
+
+            // Replace the pre>code with the mermaid div
+            if (preElement && preElement.parentElement) {
+                preElement.parentElement.replaceChild(mermaidDiv, preElement);
+            }
+        });
+
+        // 2. Look for mermaid code blocks that might be processed by markdown
+        document.querySelectorAll('pre').forEach((pre) => {
+            // Check if this might be a mermaid code block
+            const codeEl = pre.querySelector('code');
+            if (codeEl && codeEl.className.includes('language-mermaid')) {
+                // Already handled by the above selector
+                return;
+            }
+
+            // Check if this might be an unprocessed mermaid block
+            const text = pre.textContent.trim();
+            if (text.startsWith('graph ') ||
+                text.startsWith('flowchart ') ||
+                text.startsWith('sequenceDiagram') ||
+                text.startsWith('classDiagram') ||
+                text.startsWith('stateDiagram') ||
+                text.startsWith('erDiagram') ||
+                text.startsWith('gantt') ||
+                text.startsWith('pie')) {
+
+                // This looks like mermaid content
+                const mermaidDiv = document.createElement('div');
+                mermaidDiv.className = 'mermaid';
+                mermaidDiv.textContent = text;
+
+                // Replace the pre element with the mermaid div
+                if (pre.parentElement) {
+                    pre.parentElement.replaceChild(mermaidDiv, pre);
+                }
+            }
+        });
+
+        // Try to render all mermaid diagrams
+        try {
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        } catch (error) {
+            console.error('Mermaid initialization error:', error);
+        }
+
+        // Then initialize highlight.js for code syntax highlighting
+        document.querySelectorAll('pre code:not(.language-mermaid)').forEach((el) => {
+            hljs.highlightElement(el);
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
         // Toggle reply forms
         document.querySelectorAll('.reply-btn').forEach(button => {
             button.addEventListener('click', function() {

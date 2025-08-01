@@ -52,16 +52,30 @@ class Solution(models.Model):
                 counter += 1
         
         # Generate HTML from markdown
-        self.content_html = markdown.markdown(
-            self.content,
-            extensions=[
-                'markdown.extensions.fenced_code',
-                'markdown.extensions.codehilite',
-                'markdown.extensions.tables',
-                'markdown.extensions.toc',
-            ]
-        )
-        
+        try:
+            # Try with mermaid extension
+            self.content_html = markdown.markdown(
+                self.content,
+                extensions=[
+                    'markdown.extensions.fenced_code',
+                    'markdown.extensions.codehilite',
+                    'markdown.extensions.tables',
+                    'markdown.extensions.toc',
+                    'mdx_mermaid',  # Updated to use mdx_mermaid (markdown-mermaid package)
+                ]
+            )
+        except ImportError:
+            # Fallback without mermaid extension
+            self.content_html = markdown.markdown(
+                self.content,
+                extensions=[
+                    'markdown.extensions.fenced_code',
+                    'markdown.extensions.codehilite',
+                    'markdown.extensions.tables',
+                    'markdown.extensions.toc',
+                ]
+            )
+
         # Generate summary if this is a new solution or content has changed
         if not self.pk or 'content' in kwargs.get('update_fields', []) or kwargs.get('force_summary', False):
             from .ai_services import generate_summary
