@@ -2,9 +2,6 @@
 
 {# Comments section #}
 <div class="card mt-4">
-    <div class="card-header bg-light">
-        <h4>Comments ({{ comments.count }})</h4>
-    </div>
     <div class="card-body">
         {% if user.is_authenticated %}
             {# Comment form for logged-in users #}

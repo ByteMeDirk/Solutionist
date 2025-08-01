@@ -69,8 +69,6 @@ def tag_detail(request, slug):
         request, "_dont_enforce_csrf_checks"
     ):
         # In tests, only show solutions that match exactly this tag
-        from django.db.models import Count
-
         # Filter to only solutions where this is the only tag
         solutions = solutions.annotate(tag_count=Count("tags")).filter(tag_count=1)
 
