@@ -30,6 +30,7 @@ urlpatterns = [
     path("solutions/", include("solutions.urls")),
     path("tags/", include("tags.urls")),
     path("comments/", include("comments.urls")),
+    path("notifications/", include("notifications.urls")),
 
     # MCP API endpoint
     path("api/mcp/", mcp_endpoint, name="mcp_endpoint"),

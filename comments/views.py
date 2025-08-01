@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from solutions.models import Solution
 from .models import Comment
 from .forms import CommentForm, ReplyForm
+from notifications.utils import create_notification
 
 
 @login_required
@@ -20,6 +21,17 @@ def add_comment(request, slug):
             comment.solution = solution
             comment.author = request.user
             comment.save()
+
+            # Create notification for the solution author
+            if solution.author != request.user:
+                create_notification(
+                    recipient=solution.author,
+                    actor=request.user,
+                    verb="commented on your solution",
+                    content_object=comment,
+                    description=f"New comment on '{solution.title}'"
+                )
+
             messages.success(request, 'Your comment was added successfully.')
             return redirect('solutions:detail', slug=slug)
     else:
@@ -42,6 +54,17 @@ def add_reply(request, slug, comment_id):
             reply.author = request.user
             reply.parent = parent_comment
             reply.save()
+
+            # Create notification for the parent comment author
+            if parent_comment.author != request.user:
+                create_notification(
+                    recipient=parent_comment.author,
+                    actor=request.user,
+                    verb="replied to your comment",
+                    content_object=reply,
+                    description=f"New reply to your comment on '{solution.title}'"
+                )
+
             messages.success(request, 'Your reply was added successfully.')
 
     return redirect('solutions:detail', slug=slug)

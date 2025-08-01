@@ -132,6 +132,23 @@
             text-decoration: none;
         }
 
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            padding: 0.25rem 0.45rem;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            min-width: 1.2rem;
+            height: 1.2rem;
+            line-height: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .navbar .dropdown-menu {
@@ -201,6 +218,74 @@
                 </ul>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
+                        <!-- Notifications Bell -->
+                        <li class="nav-item dropdown me-2">
+                            <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-bell fs-5"></i>
+                                {% if unread_notifications_count > 0 %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
+                                    {{ unread_notifications_count }}
+                                    <span class="visually-hidden">unread notifications</span>
+                                </span>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationsDropdown">
+                                <li>
+                                    <div class="dropdown-header d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">Notifications</h6>
+                                        <a href="{% url 'notifications:mark_all_as_read' %}" class="text-decoration-none mark-all-as-read">
+                                            <small>Mark all as read</small>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+
+                                {% with notifications=user.notifications.all|slice:":5" %}
+                                    {% if notifications %}
+                                        {% for notification in notifications %}
+                                            <li>
+                                                <a class="dropdown-item {% if not notification.is_read %}fw-bold{% endif %}"
+                                                   href="{% url 'notifications:mark_as_read' notification.id %}">
+                                                    <div class="d-flex">
+                                                        <div class="me-2">
+                                                            {% if notification.actor.profile.profile_image %}
+                                                                <img src="{{ notification.actor.profile.profile_image.url }}"
+                                                                     class="avatar-sm" alt="{{ notification.actor.username }}">
+                                                            {% else %}
+                                                                <div class="avatar-sm bg-primary d-flex align-items-center justify-content-center">
+                                                                    <span class="text-white">{{ notification.actor.username.0|upper }}</span>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div>
+                                                            <p class="mb-0">
+                                                                <strong>{{ notification.actor.username }}</strong>
+                                                                {{ notification.verb }}
+                                                            </p>
+                                                            <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item text-center" href="{% url 'notifications:list' %}">
+                                                View all notifications
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <div class="dropdown-item text-center text-muted py-3">
+                                                No notifications yet
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                {% endwith %}
+                            </ul>
+                        </li>
+                        <!-- User Dropdown -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle user-nav-item" href="#" id="userDropdown" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
@@ -299,6 +384,7 @@
 
     {# Custom JS #}
     <script src="{% static 'js/custom.js' %}"></script>
+    <script src="{% static 'js/notifications.js' %}"></script>
 
     {# Additional JS block for page-specific scripts #}
     {% block extra_js %}{% endblock %}

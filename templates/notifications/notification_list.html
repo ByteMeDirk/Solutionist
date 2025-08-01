@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Notifications | Solutionist{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                    <h3 class="mb-0 text-primary">Notifications</h3>
+                    <div>
+                        {% if notifications %}
+                            <a href="{% url 'notifications:mark_all_as_read' %}" class="btn btn-outline-primary btn-sm me-2 mark-all-as-read">
+                                <i class="bi bi-check-all"></i> Mark all as read
+                            </a>
+                            <a href="{% url 'notifications:delete_all' %}" class="btn btn-outline-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete all notifications?')">
+                                <i class="bi bi-trash"></i> Clear all
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if notifications %}
+                        <ul class="list-group list-group-flush notification-list">
+                            {% for notification in notifications %}
+                                <li class="list-group-item list-group-item-action {% if not notification.is_read %}bg-light{% endif %} p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                {% if notification.actor.profile.profile_image %}
+                                                    <img src="{{ notification.actor.profile.profile_image.url }}"
+                                                         class="avatar-sm me-3" alt="{{ notification.actor.username }}">
+                                                {% else %}
+                                                    <div class="avatar-sm bg-primary d-flex align-items-center justify-content-center me-3">
+                                                        <span class="text-white">{{ notification.actor.username.0|upper }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <strong>{{ notification.actor.username }}</strong>
+                                                    {{ notification.verb }}
+                                                    <small class="text-muted d-block">
+                                                        {{ notification.created_at|timesince }} ago
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            {% if notification.description %}
+                                                <p class="mb-0 text-muted">{{ notification.description }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <a href="{% url 'notifications:mark_as_read' notification.id %}"
+                                               class="btn btn-sm btn-primary me-2">
+                                                <i class="bi bi-box-arrow-up-right"></i> View
+                                            </a>
+                                            <a href="{% url 'notifications:delete' notification.id %}"
+                                               class="btn btn-sm btn-outline-danger"
+                                               onclick="return confirm('Delete this notification?')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-bell-slash fs-1 text-muted"></i>
+                            <p class="mt-3 mb-0 text-muted">You don't have any notifications yet</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

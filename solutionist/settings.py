@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "solutions.apps.SolutionsConfig",
     "tags.apps.TagsConfig",
     "comments.apps.CommentsConfig",
+    "notifications.apps.NotificationsConfig",
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "notifications.context_processors.notifications_processor",
             ],
         },
     },
